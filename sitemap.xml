@@ -3,26 +3,33 @@
   
   
   <url>
-    <loc>https://github.com/PicoleDeLimao/picoledelimao.github.io/blog/2014/09/16/title/</loc>
+    <loc>http://PicoleDeLimao.github.io/blog/2014/09/16/criando-seu-blog-no-github/</loc>
     
-    <lastmod>2014-09-16T21:32:29-03:00</lastmod>
+    <lastmod>2014-09-16T23:32:43-03:00</lastmod>
     
     <priority>0.8</priority>
   </url>
   
   
   <url>
-    <loc>https://github.com/PicoleDeLimao/picoledelimao.github.io/blog/archives/</loc>
-    <lastmod>2014-09-16T22:21:47-03:00</lastmod>
+    <loc>http://PicoleDeLimao.github.io/blog/archives/</loc>
+    <lastmod>2014-09-17T01:22:14-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://github.com/PicoleDeLimao/picoledelimao.github.io/</loc>
-    <lastmod>2014-09-16T22:21:47-03:00</lastmod>
+    <loc>http://PicoleDeLimao.github.io/</loc>
+    <lastmod>2014-09-17T01:22:14-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  
+  <url>
+    <loc>http://PicoleDeLimao.github.io/about/</loc>
+    <lastmod>2014-09-17T01:22:14-03:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   
   
