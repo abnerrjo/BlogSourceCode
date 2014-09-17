@@ -1,0 +1,12 @@
+---
+layout: post
+title: "Zombie Ninjas Attack: A survivor's retrospective"
+date: 2011-07-03 5:59
+comments: true
+external-url:
+categories:
+---
+
+```
+$ git clone git@github.com:imathis/octopress.git # fork octopress
+```
