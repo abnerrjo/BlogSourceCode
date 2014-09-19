@@ -89,6 +89,11 @@
 
 <p><img src="/images/pysnake.png" /><br/></p>
 
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/acc8e6fa70080901127c09a37013cfbee0b16231/PySnake.py" download="PySnake.py">Clique aqui para baixar</a></center>
+
+
+
+
 <!-- more -->
 
 
@@ -100,6 +105,9 @@ Além disso, filas foram usadas para compor o movimento característico da cobra
 
 <p>Vocês podem conferir o código-fonte abaixo. Divirtam-se!</p>
 
+<p><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></p>
+
+<div id="code">
 <div><script src='https://gist.github.com/300f93a9820c52e6a243.js?file=PySnake.py'></script>
 <noscript><pre><code>#!/usr/bin/python
 # encoding: utf-8
@@ -555,6 +563,22 @@ if __name__ == &#39;__main__&#39;:
 </div>
 
 
+<p></input></p>
+
+<script type="text/javascript">
+   document.getElementById('code').style.display = 'none';
+   function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+   }
+</script>
+
+</div>
+
+
   <footer>
     <p class="meta">
       
@@ -593,6 +617,8 @@ if __name__ == &#39;__main__&#39;:
         <a class="basic-alignment left" href="/blog/2014/09/16/criando-seu-blog-no-github/" title="Previous Post: Criando seu blog no Github">&laquo; Criando seu blog no Github</a>
       
       
+        <a class="basic-alignment right" href="/blog/2014/09/19/pypac/" title="Next Post: PyPac">PyPac &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -610,6 +636,10 @@ if __name__ == &#39;__main__&#39;:
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/19/pypac/">PyPac</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/09/17/pysnake/">PySnake</a>
