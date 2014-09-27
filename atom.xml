@@ -4,7 +4,7 @@
   <title><![CDATA[The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-09-26T22:03:22-03:00</updated>
+  <updated>2014-09-27T10:31:31-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -608,7 +608,7 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[PyPac]]></title>
+    <title type="html"><![CDATA[(Python 2.7) PyPac]]></title>
     <link href="http://PicoleDeLimao.github.io/blog/2014/09/19/pypac/"/>
     <updated>2014-09-19T10:04:09-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/09/19/pypac</id>
@@ -616,7 +616,10 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
 
 <p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/pypac.png" alt="" /></p>
 
-<p style="text-align:center;"><a href="https://gist.github.com/PicoleDeLimao/892bf12a4a185721485f/raw/40535d7d777cdcc4e701085d41a03af46777dbac/PyPac.py">Click here to download</a></p>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/22189a1fd7443e29256bef4f2ea2f6dd6a7c9f23/PyPac.py" download="PyPac.py">Click here to download</a></center>
+
+
+
 
 <!-- more -->
 
@@ -1117,7 +1120,7 @@ if __name__ == &#39;__main__&#39;:
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[PySnake]]></title>
+    <title type="html"><![CDATA[(Python 2.7) PySnake]]></title>
     <link href="http://PicoleDeLimao.github.io/blog/2014/09/17/pysnake/"/>
     <updated>2014-09-17T22:26:50-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/09/17/pysnake</id>
@@ -1125,7 +1128,10 @@ if __name__ == &#39;__main__&#39;:
 
 <p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/pysnake.png" alt="" /></p>
 
-<p style="text-align:center;"><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/acc8e6fa70080901127c09a37013cfbee0b16231/PySnake.py">Click here to download</a></p>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/916d003c2e82ef3d4026f4cf3e40ef31a6fd9f59/PySnake.py" download="PySnake.py">Click here to download</a></center>
+
+
+
 
 <!-- more -->
 
