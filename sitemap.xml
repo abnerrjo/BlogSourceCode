@@ -3,6 +3,14 @@
   
   
   <url>
+    <loc>http://PicoleDeLimao.github.io/blog/2014/09/26/criando-testes-de-unidade-em-php-com-o-phpunit/</loc>
+    
+    <lastmod>2014-09-26T19:04:37-03:00</lastmod>
+    
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://PicoleDeLimao.github.io/blog/2014/09/19/pypac/</loc>
     
     <lastmod>2014-09-19T10:04:09-03:00</lastmod>
@@ -29,21 +37,21 @@
   
   <url>
     <loc>http://PicoleDeLimao.github.io/blog/archives/</loc>
-    <lastmod>2014-09-19T10:46:38-03:00</lastmod>
+    <lastmod>2014-09-26T21:58:34-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/</loc>
-    <lastmod>2014-09-19T10:46:38-03:00</lastmod>
+    <lastmod>2014-09-26T21:58:34-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/about/</loc>
-    <lastmod>2014-09-19T10:46:38-03:00</lastmod>
+    <lastmod>2014-09-26T21:58:34-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
