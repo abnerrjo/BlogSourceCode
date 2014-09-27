@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Games | The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/games/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-09-27T10:31:31-03:00</updated>
+  <updated>2014-09-27T12:21:51-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -14,10 +14,396 @@
 
   
   <entry>
+    <title type="html"><![CDATA[(Python 2.7) PyInvaders]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/09/27/python-2-dot-7-pyinvaders/"/>
+    <updated>2014-09-27T12:16:32-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/09/27/python-2-dot-7-pyinvaders</id>
+    <content type="html"><![CDATA[<p>E mais um joguinho feito, desta vez uma cópia do Space Invaders.</p>
+
+<p style="text-align:center;"><img src="/images/posts/pyinvaders.png" alt="" /></p>
+
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/05364c4b67d5ed265871/raw/78e0cbdb9579f7883cbc5fc41dce6e603e9989e9/PyInvaders.py" download="PyInvaders.py">Click here to download</a></center>
+
+
+
+
+<!-- more -->
+
+
+<p>Não há nada de novo em relação aos outros joguinhos dessa série.
+Ah! Uma coisa interessante adicionada à série é a multiplataforma. Agora os joguinhos rodam tanto em Linux quanto no Windows! :D
+Estava usando as bibliotecas tty e termios para gerenciar os eventos do teclado, mas, infelizmente, essas bibliotecas não existem para Windows. Por isto, criei um módulo adicional que faz a mesma coisa usando o Tkinter.</p>
+
+<p>Vocês podem conferir o código-fonte abaixo. Divirtam-se!</p>
+
+<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+
+
+<div id="code">
+<div><script src='https://gist.github.com/05364c4b67d5ed265871.js?file=PyInvaders.py'></script>
+<noscript><pre><code>#!/usr/bin/python
+# -*-coding=utf-8 -*-
+#-----------------------------------------------------------
+# PyInvaders v3.0
+# Created by: Abner Matheus
+# E-mail: abner.math.c@gmail.com
+# Github: http://github.com/picoledelimao
+#-----------------------------------------------------------
+import time, os, platform, random, sys, select
+
+class GameObject(object):
+    def __init__(self, life, x, y, char):
+        self.life = life
+        self.x = x
+        self.y = y
+        self.char = char
+    def getX(self):
+        return self.x
+    def getY(self):
+        return self.y
+    def getChar(self):
+        return self.char
+    def getLife(self):
+        return self.life
+    def setX(self, x):
+        self.x = x
+    def setY(self, y):
+        self.y = y
+    def damage(self):
+        self.life -= 1
+    def dead(self):
+        return self.life &lt;= 0
+    
+class Game(object):
+    def __init__(self):
+        self.new_game()
+    def new_game(self):
+        self.spacecraft = GameObject(3, 13, 8, &quot;^&quot;)
+        self.aliens = []
+        self.create_aliens()
+        self.walls = []
+        self.create_walls()
+        self.shoots = []
+        self.shoots_aliens = []
+        self.terrain = []
+        self.create_terrain()
+        self.score = 0
+        self.cooldown = False
+        self.start_screen = False
+        self.mode_screen = False
+        self.difficulty = 0
+    def create_aliens(self):
+        for x in range(5):
+            for y in range(10):
+                alien = GameObject(5-x, x+1, 4+y, &quot;@&quot;)
+                self.aliens.append(alien)
+    def create_walls(self):
+        for i in range(4):
+            wall = GameObject(1, 12, 3+i*3, &quot;~&quot;)
+            self.walls.append(wall)
+    def create_terrain(self):
+        for x in range(15):
+            self.terrain.append([])
+            for y in range(15):
+                self.terrain[-1].append(&quot; &quot;)
+    def clear_terrain(self):
+        for x in range(15):
+            for y in range(15):
+                self.terrain[x][y] = &quot; &quot;
+    def draw_spacecraft(self):
+        self.terrain[self.spacecraft.getX()][self.spacecraft.getY()] = self.spacecraft.getChar()
+    def find_alien(self, x, y):
+        for i in range(len(self.aliens)):
+            alien = self.aliens[i]
+            if alien.getX() == x and alien.getY() == y:
+                return i
+    def find_wall(self, x, y):
+        for i in range(len(self.walls)):
+            wall = self.walls[i]
+            if wall.getX() == x and wall.getY() == y:
+                return i
+    def destroy_shoot(self, i):
+        self.shoots.pop(i)
+    def draw_shoots(self):
+        for i in range(len(self.shoots) - 1, -1, -1):
+            shoot = self.shoots[i]
+            x = shoot.getX()
+            y = shoot.getY()
+            a = self.find_alien(x, y)
+            if a != None:
+                self.aliens[a].damage()
+                if self.aliens[a].dead():
+                    self.aliens.pop(a)
+                    self.score += 10
+                self.destroy_shoot(i)
+            else:
+                if x &gt; 0:
+                    shoot.setX(x - 1)
+                else:
+                    self.destroy_shoot(i)
+        for shoot in self.shoots:
+            self.terrain[shoot.getX()][shoot.getY()] = shoot.getChar()
+    def destroy_shoot_aliens(self, i):
+        self.shoots_aliens.pop(i)
+    def alien_shoot(self):
+        x = random.randint(0, len(self.aliens)-1)
+        alien = self.aliens[x]
+        shoot = GameObject(1, alien.getX()+1, alien.getY(), &quot;:&quot;)
+        self.shoots_aliens.append(shoot)
+    def draw_shoots_aliens(self):
+        if int(time.localtime().tm_sec) % (4-self.difficulty) == 0:
+            self.alien_shoot()
+        for i in range(len(self.shoots_aliens) - 1, -1, -1):
+            shoot = self.shoots_aliens[i]
+            x = shoot.getX()
+            y = shoot.getY()
+            m = self.find_wall(x, y)
+            if m != None:
+                self.walls[m].damage()
+                if self.walls[m].dead():
+                    self.walls.pop(m)
+                self.destroy_shoot_aliens(i)
+            elif x == self.spacecraft.getX() and y == self.spacecraft.getY():
+                self.spacecraft.damage()
+                if self.spacecraft.dead():
+                    self.game_over()
+                self.destroy_shoot_aliens(i)
+            else:
+                if x &lt; 14:
+                    shoot.setX(x + 1)
+                else:
+                    self.destroy_shoot_aliens(i)
+        for shoot in self.shoots_aliens:
+            self.terrain[shoot.getX()][shoot.getY()] = shoot.getChar()
+    def draw_aliens(self):
+        for alien in self.aliens:
+            self.terrain[alien.getX()][alien.getY()] = alien.getChar()
+    def draw_walls(self):
+        for wall in self.walls:
+            self.terrain[wall.getX()][wall.getY()] = wall.getChar()
+    def draw_terrain(self):
+        for x in range(15):
+            print &quot;&quot;.join(self.terrain[x])
+    def update(self):
+        if int(time.localtime().tm_sec) % self.difficulty == 0:
+            self.cooldown = False
+        print (&quot;SCORE&lt;%d&gt;&quot; % self.score).center(20)
+        self.clear_terrain()
+        self.draw_spacecraft()
+        self.draw_shoots()
+        self.draw_shoots_aliens()
+        self.draw_aliens()
+        self.draw_walls()
+        self.draw_terrain()
+        print (&quot;LIVES: %d&quot; % self.spacecraft.getLife()).center(20)
+        if len(self.aliens) == 0:
+            self.win()
+            return False 
+        elif self.spacecraft.dead():
+			return False 
+        return True 
+    def move_right(self):
+        if self.spacecraft.getY() &lt; 14:
+            self.spacecraft.setY(self.spacecraft.getY() + 1)
+    def move_left(self):
+        if self.spacecraft.getY() &gt; 0:
+            self.spacecraft.setY(self.spacecraft.getY() - 1)
+    def shoot(self):
+        if not self.cooldown:
+            shoot = GameObject(1, 12, self.spacecraft.getY(), &quot;|&quot;)
+            self.shoots.append(shoot)
+            self.cooldown = True
+    def game_over(self):
+        clear_screen()
+        print &quot;GAME OVER!!&quot;
+        time.sleep(3)
+    def win(self):
+        clear_screen()
+        print &quot;YOU ROCK!!&quot;
+        time.sleep(3)
+    def is_start_screen(self):
+        return self.start_screen
+    def start(self):
+        if not self.mode_screen:
+            print &quot;&quot;&quot;
+                              ##          ##
+                                ##      ##           
+                              ##############
+                            ####  ######  ####
+                          ######################
+                          ##  ##############  ##        
+                          ##  ##          ##  ##
+                                ####  ####
+                                    ##
+                                  ##
+                                    ##
+                                      ##
+                                    ##
+                                  ##
+                                    ## &quot;&quot;&quot;
+            print &quot;\n&quot;
+            print &quot;PYINVADERS&quot;.center(70)
+            print &quot;========= CREATED BY: =========&quot;.center(70)
+            print &quot;ABNER MATHEUS (abner.math.c@gmail.com)&quot;.center(70)
+            print &quot;\n&quot;
+            print &quot;PRESS &#39;N&#39; TO START A NEW GAME OR &#39;ESC&#39; TO EXIT GAME.&quot;.center(70)
+        else:
+            if self.difficulty == 0:
+                print &quot;&quot;&quot;DIFFICULTY:
+1. EASY
+2. AVERAGE
+3. HARD
+
+===================================
+GAME CONTROLS:
+===================================
+&#39;A&#39; AND &#39;D&#39; TO MOVE THE SPACECRAFT.
+&#39;S&#39; TO SHOOT.
+                &quot;&quot;&quot;
+            else:
+                self.start_screen = True
+    def new(self):
+        self.mode_screen = True
+    def set_difficulty(self, n):
+        self.difficulty = n
+       
+def clear_screen():
+	if platform.system() == &quot;Windows&quot;: os.system(&quot;cls&quot;)
+	else: os.system(&quot;clear&quot;) 
+	
+#-------------------------------
+# IO MANAGER
+#--------------------------------
+def controller_windows():
+	import Tkinter
+	class Controller:
+		def __init__(self):
+			self.game = Game() 
+			self.start_game()
+		def press_key(self, key):
+			event = key.keysym.lower()
+			if event == &quot;escape&quot;:
+				self.console.destroy()
+			elif event == &quot;d&quot;:
+				self.game.move_right()
+			elif event == &quot;a&quot;:
+				self.game.move_left()
+			elif event == &quot;s&quot;:
+				self.game.shoot()
+			elif event == &quot;n&quot;:
+				self.game.new()
+			elif event == &quot;1&quot;:
+				self.game.set_difficulty(1)
+			elif event == &quot;2&quot;:
+				self.game.set_difficulty(2)
+			elif event == &quot;3&quot;:
+				self.game.set_difficulty(3)
+			return True
+		def loop(self): 
+			clear_screen()
+			if not self.game.is_start_screen():
+				self.game.start()
+			else:
+				self.game.update()
+			self.console.after(250, loop)
+		def start_game(self):
+			self.game.start()
+			self.console = Tkinter.Tk()
+			self.console.bind_all(&#39;&lt;Key&gt;&#39;, self.press_key)
+			self.console.withdraw()
+			try:
+				self.console.after(250, loop)
+				self.console.mainloop()
+			except KeyboardInterrupt: pass
+	Controller()
+	
+def controller_unix():
+	import termios, tty, thread
+	class NonBlockingConsole(object):
+		def __enter__(self):
+			self.old_settings = termios.tcgetattr(sys.stdin)
+			tty.setcbreak(sys.stdin.fileno())
+			return self
+		def __exit__(self, type, value, traceback):
+			termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
+		def get_data(self):
+			if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+				return sys.stdin.read(1)
+			return False
+	 
+	class Controller:
+		def __init__(self):
+			self.game = Game() 
+			self.start_game()
+		def press_key(self, nbc):
+			event = str(nbc.get_data())
+			if event == &#39;\x1b&#39;:
+				return False
+			elif event == &quot;d&quot;:
+				self.game.move_right()
+			elif event == &quot;a&quot;:
+				self.game.move_left()
+			elif event == &quot;s&quot;:
+				self.game.shoot()
+			elif event == &quot;n&quot;:
+				self.game.new()
+			elif event == &quot;1&quot;:
+				self.game.set_difficulty(1)
+			elif event == &quot;2&quot;:
+				self.game.set_difficulty(2)
+			elif event == &quot;3&quot;:
+				self.game.set_difficulty(3)
+			return True
+		def loop(self, threadName): 
+			while self.running:
+				time.sleep(250/1000.0)
+				clear_screen()
+				if not self.game.is_start_screen():
+					self.game.start()
+				else:
+					if not self.game.update():
+						self.game = Game()
+		def start_game(self):
+			self.running = True
+			thread.start_new_thread(self.loop, (&quot;Thread-1&quot;,))
+			try:
+				with NonBlockingConsole() as nbc:
+					while self.press_key(nbc): pass
+			except KeyboardInterrupt: pass
+			self.running = False
+	Controller()
+	
+if __name__ == &#39;__main__&#39;:
+    if platform.system() == &quot;Windows&quot;:
+        controller_windows()
+    else:
+        controller_unix()
+</code></pre></noscript></div>
+
+</div>
+
+
+<p></input></p>
+
+<script type="text/javascript">
+   document.getElementById('code').style.display = 'none';
+   function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+   }
+</script>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[(Python 2.7) PyPac]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/09/19/pypac/"/>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/09/19/python-2-dot-7-pypac/"/>
     <updated>2014-09-19T10:04:09-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/09/19/pypac</id>
+    <id>http://PicoleDeLimao.github.io/blog/2014/09/19/python-2-dot-7-pypac</id>
     <content type="html"><![CDATA[<p>E lá vai mais um jogo criado no Python 2.7, desta vez um clone do eterno clássico Pacman!</p>
 
 <p style="text-align:center;"><img src="/images/posts/pypac.png" alt="" /></p>
@@ -527,9 +913,9 @@ if __name__ == &#39;__main__&#39;:
   
   <entry>
     <title type="html"><![CDATA[(Python 2.7) PySnake]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/09/17/pysnake/"/>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/09/17/python-2-dot-7-pysnake/"/>
     <updated>2014-09-17T22:26:50-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/09/17/pysnake</id>
+    <id>http://PicoleDeLimao.github.io/blog/2014/09/17/python-2-dot-7-pysnake</id>
     <content type="html"><![CDATA[<p>Boa noite, leitores. Estou de férias! Uhuul! E para comemorar, voltei a fazer o que mais gosto de fazer, que é criar joguinhos, principalmente os de GUI mais tosca possível, como esse abaixo:</p>
 
 <p style="text-align:center;"><img src="/images/posts/pysnake.png" alt="" /></p>
