@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "PyPac"
+title: "(Python 2.7) PyPac"
 date: 2014-09-19 10:04:09 -0300
 comments: true
 categories: [Python, Games]
@@ -9,7 +9,7 @@ E lá vai mais um jogo criado no Python 2.7, desta vez um clone do eterno cláss
 
 ->![]({{ root_url }}/images/posts/pypac.png)<-
 
-->[Click here to download](https://gist.github.com/PicoleDeLimao/892bf12a4a185721485f/raw/40535d7d777cdcc4e701085d41a03af46777dbac/PyPac.py)<-
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/22189a1fd7443e29256bef4f2ea2f6dd6a7c9f23/PyPac.py" download="PyPac.py">Click here to download</a></center>
 
 <!-- more -->
 

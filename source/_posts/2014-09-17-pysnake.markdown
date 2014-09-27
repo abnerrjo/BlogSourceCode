@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "PySnake"
+title: "(Python 2.7) PySnake"
 date: 2014-09-17 22:26:50 -0300
 comments: true
 categories: [Python, Games]
@@ -9,7 +9,7 @@ Boa noite, leitores. Estou de férias! Uhuul! E para comemorar, voltei a fazer o
 
 ->![]({{ root_url }}/images/posts/pysnake.png)<-
 
-->[Click here to download](https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/acc8e6fa70080901127c09a37013cfbee0b16231/PySnake.py)<-
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/916d003c2e82ef3d4026f4cf3e40ef31a6fd9f59/PySnake.py" download="PySnake.py">Click here to download</a></center>
 
 <!-- more -->
 

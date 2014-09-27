@@ -73,9 +73,11 @@ Com isto ele irá gerar um arquivo no formato markdown dentro da pasta source/_p
 
 **Dica 1:**
 Você pode configurar um <i>preview</i> do post (o famoso <i>"read more"</i>). Basta adicionar a linha
+
 ``` HTML
 <!-- more -->
 ```
+
 onde você quiser que acabe o preview.
 
 **Dica 2:**
