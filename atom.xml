@@ -4,7 +4,7 @@
   <title><![CDATA[The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-09-27T12:21:51-03:00</updated>
+  <updated>2014-09-28T15:45:19-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -12,6 +12,26 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[(Java) Hashboom]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom/"/>
+    <updated>2014-09-28T15:19:25-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom</id>
+    <content type="html"><![CDATA[<p>E lá vai mais um joguinho que havia criado há um bom tempo já.</p>
+
+<p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/hashboom.png" alt="" /></p>
+
+<p style="text-align:center;"><a href="http://PicoleDeLimao.github.io/downloads/code/Hashboom.jar">Click here to download</a></p>
+
+<!-- More -->
+
+
+<p>Esse jogo foi desenvolvido usando a biblioteca Swing e um framework básico que já não lembro o nome. :P</p>
+
+<p>Divirta-se!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[(Python 2.7) PyInvaders]]></title>
@@ -22,7 +42,7 @@
 
 <p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/pyinvaders.png" alt="" /></p>
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/05364c4b67d5ed265871/raw/78e0cbdb9579f7883cbc5fc41dce6e603e9989e9/PyInvaders.py" download="PyInvaders.py">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/05364c4b67d5ed265871/raw/">Click here to download</a></center>
 
 
 
@@ -1002,7 +1022,7 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
 
 <p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/pypac.png" alt="" /></p>
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/22189a1fd7443e29256bef4f2ea2f6dd6a7c9f23/PyPac.py" download="PyPac.py">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/">Click here to download</a></center>
 
 
 
@@ -1514,7 +1534,7 @@ if __name__ == &#39;__main__&#39;:
 
 <p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/pysnake.png" alt="" /></p>
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/916d003c2e82ef3d4026f4cf3e40ef31a6fd9f59/PySnake.py" download="PySnake.py">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/">Click here to download</a></center>
 
 
 
