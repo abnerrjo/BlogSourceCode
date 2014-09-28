@@ -9,7 +9,7 @@ E mais um joguinho feito, desta vez uma cópia do Space Invaders.
 
 ->![]({{ root_url }}/images/posts/pyinvaders.png)<-
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/05364c4b67d5ed265871/raw/78e0cbdb9579f7883cbc5fc41dce6e603e9989e9/PyInvaders.py" download="PyInvaders.py">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/05364c4b67d5ed265871/raw/">Click here to download</a></center>
 
 <!-- more -->
 

@@ -9,7 +9,7 @@ E lá vai mais um jogo criado no Python 2.7, desta vez um clone do eterno cláss
 
 ->![]({{ root_url }}/images/posts/pypac.png)<-
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/22189a1fd7443e29256bef4f2ea2f6dd6a7c9f23/PyPac.py" download="PyPac.py">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/">Click here to download</a></center>
 
 <!-- more -->
 
