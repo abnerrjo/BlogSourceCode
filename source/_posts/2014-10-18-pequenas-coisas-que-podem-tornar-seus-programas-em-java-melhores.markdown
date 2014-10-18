@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Pequenas coisas que tornam seus programas melhores em Java"
+title: "Pequenas coisas que podem tornar seus programas em Java melhores"
 date: 2014-10-18 11:17:45 -0300
 comments: true
 categories: [Java, Tutoriais]
@@ -8,7 +8,7 @@ categories: [Java, Tutoriais]
 Há alguns meses venho lendo o livro [Refactoring: Improving the design of existing code](http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672), de Martin Fowler.
 O livro é clássico, e de certa forma mudou minha maneira de pensar em design de software, principalmente nas linguagens orientadas a objetos. 
 
-No livro existem dezenas ou até centenas de exemplos e dicas. Eu aqui reuni **cinco** dicas que considero mais fáceis e simples de serem aplicadas mas que ainda assim possuam algum impacto sobre a qualidade do software.
+No livro existem dezenas ou até centenas de exemplos e dicas. Eu aqui reuni **cinco** dicas que considero mais fáceis e simples de serem aplicadas mas que ainda assim possuam algum impacto sobre a qualidade do software. Essas dicas, embora tenham a influência do livro, também contam com minha própria experiência.
 
 Usarei Java porque tanto é a linguagem usada como modelo no livro quanto é a que eu mais tenho familiaridade.
 
@@ -315,7 +315,7 @@ A resposta é: **depende**. É verdade que a segunda solução deixou a classe "
 Portanto, um bom *rule of thumb* é o seguinte: Use enum quando você tiver **certeza** que as constantes daquele tipo não irão mudar. Caso contrário, polimorfismo é a melhor solução, pois para adicionar um novo valor, basta criar uma nova classe que implementa aquela interface, não afetando nenhum outro lugar.
 
 ## 5. Use afirmações ao invés de negações em condicionais
-Essa dica é realmente muito simples. Ela não vai alterar em nada a qualidade de seu código, mas vai torná-lo mais legível, o que é importante também! 
+Essa dica é realmente muito simples. Ela não vai alterar diretamente a qualidade de seu código, mas vai torná-lo mais legível, o que é importante também! 
 
 A questão aqui é que orações afirmativas são mais fáceis de se entender do que várias negativas coglomeradas. Exemplo:
 
