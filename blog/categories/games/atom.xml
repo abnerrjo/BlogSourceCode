@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Games | The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/games/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-10-18T15:02:24-03:00</updated>
+  <updated>2014-10-18T19:08:39-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -42,7 +42,7 @@
 
 <p style="text-align:center;"><img src="/images/posts/pyinvaders.png" alt="" /></p>
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/05364c4b67d5ed265871/raw/">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/05364c4b67d5ed265871/raw/20d1232a80ba6d335d78acb6f277d3855cb82395/PyInvaders.py" download="PyInvaders.py">Click here to download</a></center>
 
 
 
@@ -404,18 +404,6 @@ if __name__ == &#39;__main__&#39;:
 
 
 <p></input></p>
-
-<script type="text/javascript">
-   document.getElementById('code').style.display = 'none';
-   function toggle_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
-   }
-</script>
-
 ]]></content>
   </entry>
   
@@ -428,7 +416,7 @@ if __name__ == &#39;__main__&#39;:
 
 <p style="text-align:center;"><img src="/images/posts/pypac.png" alt="" /></p>
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/892bf12a4a185721485f/raw/22189a1fd7443e29256bef4f2ea2f6dd6a7c9f23/PyPac.py" download="PyPac.py">Click here to download</a></center>
 
 
 
@@ -916,18 +904,6 @@ if __name__ == &#39;__main__&#39;:
 
 
 <p></input></p>
-
-<script type="text/javascript">
-   document.getElementById('code').style.display = 'none';
-   function toggle_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
-   }
-</script>
-
 ]]></content>
   </entry>
   
@@ -940,7 +916,7 @@ if __name__ == &#39;__main__&#39;:
 
 <p style="text-align:center;"><img src="/images/posts/pysnake.png" alt="" /></p>
 
-<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/">Click here to download</a></center>
+<center><a href="https://gist.githubusercontent.com/PicoleDeLimao/300f93a9820c52e6a243/raw/916d003c2e82ef3d4026f4cf3e40ef31a6fd9f59/PySnake.py" download="PySnake.py">Click here to download</a></center>
 
 
 
@@ -1416,18 +1392,6 @@ if __name__ == &#39;__main__&#39;:
 
 
 <p></input></p>
-
-<script type="text/javascript">
-   document.getElementById('code').style.display = 'none';
-   function toggle_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
-   }
-</script>
-
 ]]></content>
   </entry>
   
