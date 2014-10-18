@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutoriais | The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/tutoriais/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-10-18T14:58:51-03:00</updated>
+  <updated>2014-10-18T15:02:24-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Pequenas Coisas Que Tornam Seus Programas Melhores Em Java]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-tornam-seus-programas-melhores-em-java/"/>
+    <title type="html"><![CDATA[Pequenas Coisas Que Podem Tornar Seus Programas Em Java Melhores]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores/"/>
     <updated>2014-10-18T11:17:45-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-tornam-seus-programas-melhores-em-java</id>
+    <id>http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores</id>
     <content type="html"><![CDATA[<p>Há alguns meses venho lendo o livro <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Refactoring: Improving the design of existing code</a>, de Martin Fowler.
 O livro é clássico, e de certa forma mudou minha maneira de pensar em design de software, principalmente nas linguagens orientadas a objetos.</p>
 
@@ -337,7 +337,7 @@ A maioria dos enums que implementam uma hierarquia podem ser convertidos para es
 
 <h2>5. Use afirmações ao invés de negações em condicionais</h2>
 
-<p>Essa dica é realmente muito simples. Ela não vai alterar em nada a qualidade de seu código, mas vai torná-lo mais legível, o que é importante também!</p>
+<p>Essa dica é realmente muito simples. Ela não vai alterar diretamente a qualidade de seu código, mas vai torná-lo mais legível, o que é importante também!</p>
 
 <p>A questão aqui é que orações afirmativas são mais fáceis de se entender do que várias negativas coglomeradas. Exemplo:</p>
 
