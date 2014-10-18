@@ -48,6 +48,7 @@ $db['default']['username'] = '';
 $db['default']['password'] = '';
 $db['default']['database'] = '';
 ``` 
+
 Basta preencher com as informações referentes ao seu banco de dados. 
 
 ## Criando as views
@@ -104,6 +105,7 @@ O arquivo de login poderia bem ser dessa maneira:
 </form>		
 <a href="<?php echo base_url(); ?>index.php/register">Não possuí conta? Clique aqui para se cadastrar!</a>	
 ```
+
 Considerando que a rota para logar seja **login**. Falaremos mais sobre isso mais a frente. Como você pode ver, é um form dos mais simples, o que há de diferente é o método "form_open". Ele é um método utilitário do CodeIgniter que cria um form já com o roteamento correto para nós.
 
 E o arquivo register poderia ser dessa maneira:
@@ -122,11 +124,11 @@ Considerando que a rota para cadastrar seja **new_register**. Perceba que coloqu
 E, por fim, o arquivos sucess e fail, que irão mostrar mensagens ao usuário dependendo de seu sucesso em logar. Esses não têm muito mistério:
 
 ``` PHP fail.php
-<p>Falha ao logar. <a href="index">Tente novamente.</a></p>
+Falha ao logar. <a href="index">Tente novamente.</a>
 ```
 
 ``` PHP success.php
-<p>Olá, <?php echo $usuario; ?>. Você logou com sucesso!</p>
+Olá, <?php echo $usuario; ?>. Você logou com sucesso!
 <a href="logout">Clique aqui para deslogar.</a>
 ``` 
 
@@ -173,6 +175,7 @@ class UserModel extends CI_Model {
 
 }?>
 ``` 
+
 Outra coisa importante é que podemos e devemos inicializar nosso banco de dados já no construtor da classe. Isso pode ser feito da seguinte maneira:
 
 ``` PHP usermodel.php
@@ -206,6 +209,7 @@ class UserModel extends CI_Model {
 	
 }?>
 ```
+
 O que eles fazem é, por incŕivel que pareça, logar e registrar! hehe
 
 Vamos começar pelo método de logar. O que ele faz é simples: Vasculha o banco de dados por um usuário que possuam o login e a senha informados. Caso seja encontrado, retorna true. 
@@ -222,6 +226,7 @@ function login($login, $password) {
 	$this->db->where("password", md5($password));
 }
 ``` 
+
 O que o código acima está fazendo? Simplesmente está fazendo um SELECT no banco de dados na tabela indicada pelo método "from" e com duas cláusulas WHERE. Em outras palavras, selecionando um usuário que possua o mesmo login e a mesma senha (encriptografada) passada. 
 
 Vamos agora executar a query usando o método "get" e verificando se alguma linha foi retornada usando o método "num_rows".
@@ -236,6 +241,7 @@ function login($login, $password) {
 	return $query->num_rows() > 0;
 }
 ```
+
 E assim o método login está pronto! Fácil, não é? 
 
 Vamos para o método register agora. Ele funciona de maneira semelhante, só que agora não estamos preocupados em selecionar usuários, mas sim em inserí-los. Felizmente, também existe um método mágico para esta tarefa:
@@ -258,6 +264,7 @@ function register($name, $login, $password) {
 	));
 }
 ```
+
 E aí foi criado um método auxiliar chamado "exists" para verificar se um dado login já está sendo usado. Ele é quase igualzinho ao login, só que desta vez não leva em consideração a senha. 
 
 O método register é ridiculamente fácil: Se não existir, ele insere no banco de dados. No método "db->insert" é passando o nome da tabela e uma array associativa, onde as chaves são os nomes das colunas e os valores serão os valores dessas colunas. 
@@ -300,6 +307,7 @@ class UserModel extends CI_Model {
 	
 }?>
 ```
+
 E com isso terminamos nosso model.
 
 ## Criando o controller
@@ -362,6 +370,7 @@ public function index() {
 	$this->view("auth/login");
 }
 ```
+
 Também precisamos de métodos para mostrar as páginas de registrar, sucesso e falha:
 
 ``` PHP user.php
@@ -401,6 +410,7 @@ $route['default_controller'] = "user";
 ```
 
 E agora vamos criar as rotas pros métodos já existentes no Controller:
+
 ``` PHP routes.php
 $route['index'] = "user/index";
 $route['success'] = "user/success";
@@ -517,6 +527,7 @@ public function login() {
 	}
 }
 ```
+
 Agora você se lembra que no arquivo "success.php" havia uma pegadinha, onde usávamos uma variável chamada $usuario e que eu disse que quem iria definir quem ela é seria o controller? Pois bem, chegou a hora. 
 
 Modifique o método "view", aquele responsável por renderizar a página, para receber um parâmetro opcional: $data, e faça com que as chamas de "load->view" passem esse parâmetro também.
@@ -652,7 +663,7 @@ class User extends CI_Controller {
 }
 ``` 
 
-<b>Uhuuu!!</b> E concluímos nossa aplicação! Se você rodar agora, verá que está tudo rodando perfeitamente (assim espero hehe). 
+**Uhuuu!!** E concluímos nossa aplicação! Se você rodar agora, verá que está tudo rodando perfeitamente (assim espero hehe). 
 
 -> ![]({{ root_url }}/images/posts/igniter-auth-1.png) <-
 
