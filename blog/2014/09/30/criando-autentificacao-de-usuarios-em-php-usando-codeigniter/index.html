@@ -144,8 +144,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>
-Basta preencher com as informações referentes ao seu banco de dados.</p>
+<p></p>
+
+<p>Basta preencher com as informações referentes ao seu banco de dados.</p>
 
 <h2>Criando as views</h2>
 
@@ -249,7 +250,7 @@ Basta preencher com as informações referentes ao seu banco de dados.</p>
 <p>E, por fim, o arquivos sucess e fail, que irão mostrar mensagens ao usuário dependendo de seu sucesso em logar. Esses não têm muito mistério:</p>
 
 <figure class='code'><figcaption><span>fail.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Falha</span> <span class="nx">ao</span> <span class="nx">logar</span><span class="o">.</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="o">&gt;</span><span class="nx">Tente</span> <span class="nx">novamente</span><span class="o">.&lt;/</span><span class="nx">a</span><span class="o">&gt;&lt;/</span><span class="nx">p</span><span class="o">&gt;</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Falha</span> <span class="nx">ao</span> <span class="nx">logar</span><span class="o">.</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="o">&gt;</span><span class="nx">Tente</span> <span class="nx">novamente</span><span class="o">.&lt;/</span><span class="nx">a</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -257,7 +258,7 @@ Basta preencher com as informações referentes ao seu banco de dados.</p>
 
 <figure class='code'><figcaption><span>success.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Olá</span><span class="p">,</span> <span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nv">$usuario</span><span class="p">;</span> <span class="cp">?&gt;</span><span class="x">. Você logou com sucesso!&lt;/p&gt;</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Olá</span><span class="p">,</span> <span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nv">$usuario</span><span class="p">;</span> <span class="cp">?&gt;</span><span class="x">. Você logou com sucesso!</span>
 </span><span class='line'><span class="x">&lt;a href=&quot;logout&quot;&gt;Clique aqui para deslogar.&lt;/a&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -328,8 +329,9 @@ Basta preencher com as informações referentes ao seu banco de dados.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>
-Outra coisa importante é que podemos e devemos inicializar nosso banco de dados já no construtor da classe. Isso pode ser feito da seguinte maneira:</p>
+<p></p>
+
+<p>Outra coisa importante é que podemos e devemos inicializar nosso banco de dados já no construtor da classe. Isso pode ser feito da seguinte maneira:</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -412,8 +414,9 @@ Outra coisa importante é que podemos e devemos inicializar nosso banco de dados
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>
-O que o código acima está fazendo? Simplesmente está fazendo um SELECT no banco de dados na tabela indicada pelo método &ldquo;from&rdquo; e com duas cláusulas WHERE. Em outras palavras, selecionando um usuário que possua o mesmo login e a mesma senha (encriptografada) passada.</p>
+<p></p>
+
+<p>O que o código acima está fazendo? Simplesmente está fazendo um SELECT no banco de dados na tabela indicada pelo método &ldquo;from&rdquo; e com duas cláusulas WHERE. Em outras palavras, selecionando um usuário que possua o mesmo login e a mesma senha (encriptografada) passada.</p>
 
 <p>Vamos agora executar a query usando o método &ldquo;get&rdquo; e verificando se alguma linha foi retornada usando o método &ldquo;num_rows&rdquo;.</p>
 
@@ -1110,7 +1113,7 @@ O que o código acima está fazendo? Simplesmente está fazendo um SELECT no ban
 
 <p></p>
 
-<p><b>Uhuuu!!</b> E concluímos nossa aplicação! Se você rodar agora, verá que está tudo rodando perfeitamente (assim espero hehe).</p>
+<p><strong>Uhuuu!!</strong> E concluímos nossa aplicação! Se você rodar agora, verá que está tudo rodando perfeitamente (assim espero hehe).</p>
 
 <p style="text-align:center;"> <img src="/images/posts/igniter-auth-1.png" alt="" /></p>
 
@@ -1135,6 +1138,12 @@ O que o código acima está fazendo? Simplesmente está fazendo um SELECT no ban
 <time class='entry-date' datetime='2014-09-30T07:45:45-03:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>7:45 am</span></time>
       
 
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/tutoriais/'>tutoriais</a>
+  
+</span>
+
 
     </p>
     
@@ -1151,6 +1160,8 @@ O que o código acima está fazendo? Simplesmente está fazendo um SELECT no ban
       
         <a class="basic-alignment left" href="/blog/2014/09/28/java-hashboom/" title="Previous Post: (Java) Hashboom">&laquo; (Java) Hashboom</a>
       
+      
+        <a class="basic-alignment right" href="/blog/2014/10/18/pequenas-coisas-que-tornam-seus-programas-melhores-em-java/" title="Next Post: Pequenas coisas que tornam seus programas melhores em Java">Pequenas coisas que tornam seus programas melhores em Java &raquo;</a>
       
     </p>
   </footer>
@@ -1171,6 +1182,10 @@ O que o código acima está fazendo? Simplesmente está fazendo um SELECT no ban
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/10/18/pequenas-coisas-que-tornam-seus-programas-melhores-em-java/">Pequenas Coisas Que Tornam Seus Programas Melhores Em Java</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/09/30/criando-autentificacao-de-usuarios-em-php-usando-codeigniter/">Criando Autentificação De Usuários Em PHP Usando CodeIgniter</a>
       </li>
     
@@ -1184,10 +1199,6 @@ O que o código acima está fazendo? Simplesmente está fazendo um SELECT no ban
     
       <li class="post">
         <a href="/blog/2014/09/26/criando-testes-de-unidade-em-php-com-o-phpunit/">Criando Testes De Unidade Em PHP Com O PHPUnit</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/09/19/python-2-dot-7-pypac/">(Python 2.7) PyPac</a>
       </li>
     
   </ul>

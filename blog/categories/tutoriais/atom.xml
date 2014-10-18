@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tutoriais | The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/tutoriais/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-09-30T13:15:33-03:00</updated>
+  <updated>2014-10-18T14:54:10-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -12,6 +12,374 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pequenas Coisas Que Tornam Seus Programas Melhores Em Java]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-tornam-seus-programas-melhores-em-java/"/>
+    <updated>2014-10-18T11:17:45-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-tornam-seus-programas-melhores-em-java</id>
+    <content type="html"><![CDATA[<p>Há alguns meses venho lendo o livro <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Refactoring: Improving the design of existing code</a>, de Martin Fowler.
+O livro é clássico, e de certa forma mudou minha maneira de pensar em design de software, principalmente nas linguagens orientadas a objetos.</p>
+
+<p>No livro existem dezenas ou até centenas de exemplos e dicas. Eu aqui reuni <strong>cinco</strong> dicas que considero mais fáceis e simples de serem aplicadas mas que ainda assim possuam algum impacto sobre a qualidade do software.</p>
+
+<p>Usarei Java porque tanto é a linguagem usada como modelo no livro quanto é a que eu mais tenho familiaridade.</p>
+
+<!-- more -->
+
+
+<h2>1. Não crie um método &ldquo;set&rdquo; para um atributo se você não vai alterá-lo</h2>
+
+<p>Essa dica parece ser besta, e é mesmo, mas muuuuitas pessoas acabam criando métodos &ldquo;get&rdquo; e &ldquo;set&rdquo; desnecessariamente.
+Embora isso não vá causar uma catástrofe à curto prazo, isso acaba violando um dos princípios do paradigma orientado a objetos, que é o controle da informação.</p>
+
+<p>Quando você permite que seus dados sejam abertos à modificação sem necessidade, e que a alteração até cause algum mau-funcionamento, então você está deixando uma brecha para um possível bug no futuro.</p>
+
+<h2>2. Não permita classes modificarem coleções de outras</h2>
+
+<p>Essa dica parece ser contraditória e até errônea a princípio. Na verdade, classes podem e devem modificar coleções e dados de outra classe (dentro de um limite), o que não é <em>legal</em> é que essa modificação seja feita de maneira <strong>direta</strong>. Nada melhor do que um exemplo para ilustrar o que quero dizer.</p>
+
+<pre><code class="Java Sistema.java">public class Sistema {
+
+    private Set&lt;Usuario&gt; usuarios;
+
+    public void setUsers(Set&lt;Usuario&gt; usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public Set&lt;Usuario&gt; getUsuarios() {
+        return this.usuarios;
+    }
+
+    ...
+
+}
+</code></pre>
+
+<pre><code class="Java InvasorDePrivacidade.java">public class InvasorDePrivacidade {
+
+    private Sistema sistema;
+
+    public boolean adicionaUsuario(String login, String senha) {
+        return sistema.getUsuarios().add(new Usuario(login, senha));
+    }
+
+    public boolean removeUsuario(Usuario usuario) {
+        return sistema.getUsuarios().remove(usuario);
+    }
+
+    ...
+
+}
+</code></pre>
+
+<p>Esse foi um exemplo bem simples. Qual o problema desse design?</p>
+
+<p>O problema é que a classe &ldquo;InvasorDePrivacidade&rdquo; está adicionando e removendo elementos da coleção &ldquo;usuarios&rdquo; de Sistema de maneira direta. O que isso pode acarretar? Um grande decréscimo de <strong>segurança</strong>. Agora qualquer classe do programa pode remover ou adicionar usuários no sistema! Não existe mais controle ou &ldquo;sentinela&rdquo; do que é permitido ser adicionado ou removido.</p>
+
+<p>Outro problema presente ali, desta vez um pouco mais sutil, é a criação do objeto do tipo &ldquo;Usuario&rdquo; dentro de um local inapropriado. Se formos espalhar a construção de objetos em vários pontos do nosso programa, o que acontecerá se quisermos alterar o construtor, adicionando ou removendo parâmetros? Usaríamos overload para usar o &ldquo;novo&rdquo; construtor nas novas chamadas? Procuraríamos e atualizariamos as chamadas antigas ao construtor um por um? E se o construtor lançar exceções? Também teríamos que tratar essas exceções em todos os pontos onde o construtor é chamado?</p>
+
+<p>Tudo isso poderia ser resolvido se passarsemos a responsabilidade de adicionar ou remover usuários exclusivamente à classe &ldquo;Sistema&rdquo;, proibindo outras classes de fazer isso.</p>
+
+<pre><code class="Java Sistema.java">public class Sistema {
+
+    private Set&lt;Usuario&gt; usuarios;
+
+    public void setUsers(Set&lt;Usuario&gt; usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public Set&lt;Usuario&gt; getUsuarios() {
+        return this.usuarios;
+    }
+
+    public boolean adicionaUsuario(String login, String senha) {
+        return this.usuarios.add(new Usuario(login, senha));
+    }
+
+    public boolean removeUsuario(Usuario usuario) {
+        return this.usuarios.remove(usuario);
+    }
+
+    ...
+
+}
+</code></pre>
+
+<pre><code class="Java InvasorDePrivacidade.java">public class InvasorDePrivacidade {
+
+    private Sistema sistema;
+
+    public boolean adicionaUsuario(String login, String senha) {
+        return sistema.adicionaUsuario(login, senha);
+    }
+
+    public boolean removeUsuario(Usuario usuario) {
+        return sistema.remove(usuario);
+    }
+
+    ...
+
+}
+</code></pre>
+
+<p>O problema de segurança foi resolvido na classe &ldquo;InvasorDePrivacidade&rdquo;, mas a brecha ainda existe para outras classes através dos métodos &ldquo;set&rdquo; e &ldquo;get&rdquo; da classe &ldquo;Sistema&rdquo;.</p>
+
+<p>O problema do &ldquo;set&rdquo; recai à dica #1 deste tutorial. Ele é realmente necessário? A resposta é <strong>não</strong>. Métodos &ldquo;set&rdquo; para coleções quase nunca são necessários.</p>
+
+<p>O &ldquo;get&rdquo; realmente parece ser inevitável. Em uma hora ou outra teremos que acessar a lista de usuários. Porém, podemos minimizar o problema ao fazer com que a lista retornada pelo método &ldquo;get&rdquo; seja:</p>
+
+<ol>
+<li>Uma cópia da original. Portanto, modificações feitas através do método get não irão afetar em nada.</li>
+<li>Uma <em>unmodifiable collection</em>.</li>
+</ol>
+
+
+<p>A segunda opção parece ser a mais elegante. Java permite o uso de uma <em>unmodifiable collection</em>, que basicamente é uma cópia da coleção original, com a diferença de que ele não apenas não permite que se altere a lista como lança exceção ao fazê-lo. Isso já é um grande auxílio na hora de debugar o programa.</p>
+
+<p>Se você acessar a classe &ldquo;Collections&rdquo;, verá vários métodos utilitários que tornam coleções do tipo &ldquo;unmodifiable&rdquo;. Os métodos mais comuns são:</p>
+
+<ul>
+<li>Collections.unmodifiableList(listaOriginal);</li>
+<li>Collections.unmodifiableSet(setOriginal);</li>
+<li>Collections.unmodifiableMap(mapaOriginal);</li>
+<li>Collections.unmodifiableCollection(collectionOriginal);</li>
+</ul>
+
+
+<p>Com isto nossa classe ficará assim:</p>
+
+<pre><code class="Java Sistema.java">import java.util.Collections;
+
+public class Sistema {
+
+  private Set&lt;Usuario&gt; usuarios;
+
+  public Set&lt;Usuario&gt; getUsuarios() {
+      return Collections.unmodifiableSet(this.usuarios);
+  }
+
+  public boolean adicionaUsuario(String login, String senha) {
+      return this.usuarios.add(new Usuario(login, senha));
+  }
+
+  public boolean removeUsuario(Usuario usuario) {
+      return this.usuarios.remove(usuario);
+  }
+
+  ...
+
+}
+</code></pre>
+
+<h2>3. Marque um método como público apenas se for estritamente necessário</h2>
+
+<p>O valor de uma classe poderia ser definido como o valor de sua interface. Interface não representando uma estrutura de dados abstrata, mas o conjunto de métodos e atributos que compõe uma classe. Quanto mais significativa e simples essa interface, maiores são as chances dela ser reutilizada, o que é muito bom por si só.</p>
+
+<p>Uma maneira de simplificar a interface das classes é esconder tudo que não é essencial para outras classes.</p>
+
+<p>Claro, métodos auxiliares são importantes, até para simplificar a lógica de outros métodos, mas eles só possuem razão de ser dentro daquela classe. Não há porque mostrar ao mundo que eles existem.</p>
+
+<p>Para esses casos, use &ldquo;private&rdquo; ou quando não for possível, &ldquo;protected&rdquo;.</p>
+
+<h2>4. Saiba quando usar Enum e quando usar herança</h2>
+
+<p>Enum é um grande aliado. Ele permite criar uma quantidade definida de constantes. Entretanto, é comum usar enum dentro de condicionais (geralmente um <em>switch case</em>) para variar um comportamento de um método. Aqui vai um exemplo:</p>
+
+<pre><code class="Java Cargo.java">public enum Cargo {
+
+    ESTAGIARIO, JUNIOR, EXPERT, PLENO
+
+}
+</code></pre>
+
+<pre><code class="Java Desenvolvedor.java ">public class Desenvolvedor {
+
+    private Cargo cargo;
+
+    public double getSalario() {
+        switch(this.cargo) {
+            case ESTAGIARIO:
+                return 500;
+            case JUNIOR:
+                return 1000;
+            case EXPERT:
+                return 2000;
+            case PLENO:
+                return 4000;
+            default:
+                throw new CargoException("Cargo inválido.");
+        }
+    }
+
+    public boolean promove() {
+        switch(this.cargo) {
+            case ESTAGIARIO:
+                this.cargo = Cargo.JUNIOR;
+                break;
+            case JUNIOR:
+                this.cargo = Cargo.EXPERT;
+                break;
+            case EXPERT:
+                this.cargo = Cargo.PLENO;
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    ... 
+
+} 
+</code></pre>
+
+<p>Esse problema poderia ser resolvido de maneira diferente usando herança e polimorfismo:</p>
+
+<pre><code class="Java Cargo.java">public interface Cargo {
+
+    public double getSalario();
+    public boolean promove(Desenvolvedor contexto);
+
+}
+</code></pre>
+
+<pre><code class="Java Estagiario.java">public class Estagiario implements Cargo {
+
+    @Override
+    public double getSalario() {
+        return 500;
+    }
+
+    @Override
+    public boolean promove(Desenvolvedor contexto) {
+        contexto.setCargo(Cargo.JUNIOR);
+        return true;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Junior.java">public class Junior implements Cargo {
+
+    @Override
+    public double getSalario() {
+        return 1000;
+    }
+
+    @Override
+    public boolean promove(Desenvolvedor contexto) {
+        contexto.setCargo(Cargo.EXPERT);
+        return true;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Expert.java">public class Expert implements Cargo {
+
+    @Override
+    public double getSalario() {
+        return 2000;
+    }
+
+    @Override
+    public boolean promove(Desenvolvedor contexto) {
+        contexto.setCargo(Cargo.PLENO);
+        return true;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Pleno.java">public class Pleno implements Cargo {
+
+    @Override
+    public double getSalario() {
+        return 4000;
+    }
+
+    @Override
+    public boolean promove(Desenvolvedor contexto) {
+        return false;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Desenvolvedor.java">public class Desenvolvedor {
+
+    private Cargo cargo;
+
+    protected void setCargo(Cargo cargo) {
+        this.cargo = cargo;
+    }
+
+    public double getSalario() {
+        return this.cargo.getSalario();
+    }
+
+    public boolean promove() {
+        return this.cargo.promove(this);
+    }
+
+}
+</code></pre>
+
+<p>Como você pode ver, este exemplo usa o <em>design pattern</em> <strong>State</strong> do Gang of Four.
+A maioria dos enums que implementam uma hierarquia podem ser convertidos para esse padrão, que em suma é composição + polimorfismo.</p>
+
+<p>A questão é: Qual das duas soluções é a melhor?</p>
+
+<p>A resposta é: <strong>depende</strong>. É verdade que a segunda solução deixou a classe &ldquo;Desenvolvedor&rdquo; mais simples, mas por outro lado aumentou o número de classes do sistema. O enum, embora mais enxulto, é menos flexível: Se você quiser adicionar mais uma constante, terá que alterar todas as condicionais que envolvam aquele enum. E isso é <strong>muito</strong> ruim.</p>
+
+<p>Portanto, um bom <em>rule of thumb</em> é o seguinte: Use enum quando você tiver <strong>certeza</strong> que as constantes daquele tipo não irão mudar. Caso contrário, polimorfismo é a melhor solução, pois para adicionar um novo valor, basta criar uma nova classe que implementa aquela interface, não afetando nenhum outro lugar.</p>
+
+<h2>5. Use afirmações ao invés de negações em condicionais</h2>
+
+<p>Essa dica é realmente muito simples. Ela não vai alterar em nada a qualidade de seu código, mas vai torná-lo mais legível, o que é importante também!</p>
+
+<p>A questão aqui é que orações afirmativas são mais fáceis de se entender do que várias negativas coglomeradas. Exemplo:</p>
+
+<pre><code>Não é o caso que eu não queira ir ao shopping.
+</code></pre>
+
+<p>Poderia ser reescrito da seguinte forma:</p>
+
+<pre><code>Eu quero ir ao shopping.
+</code></pre>
+
+<p>Claro, ao custo de um pouco da perda de semântica, um efeito coleteral que não existe em linguagens de programação. Exemplo:</p>
+
+<pre><code class="Java">public String getMensagemDeErro() {
+    if (!(this.getPessoa() instanceof Programador)) {
+        return "Estamos em manutenção. Volte em breve.";
+    } else  {
+        return "Erro 303. Linha 202. NullPointerException.";
+    }
+}
+</code></pre>
+
+<p>Poderia ser reescrito da seguinte forma:</p>
+
+<pre><code class="Java">public String getMensagemDeErro() {
+    if (this.getPessoa() instanceof Programador) {
+        return "Erro 303. Linha 202. NullPointerException.";
+    } else  {
+        return "Estamos em manutenção. Volte em breve.";
+    }
+}
+</code></pre>
+
+<p>Obviamente o efeito é quase imperceptível, mas isso por minha falta de criatividade em pensar em exemplos mais elaborados. :)</p>
+
+<h2>Conclusão</h2>
+
+<p>Algumas dicas foram bem óbvias e intuitivas, outras nem tanto. Eu também evitei extrair os exemplos diretamente do livro, queria misturar um pouco da minha experiência. O livro do Martin Fowler é fantástico, e recomendo fortamente que todos leiam.</p>
+
+<p>Até a próxima, e lembrem-se: Refatoramento hoje, refatoramento amanhã, refatoramento sempre!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Criando Autentificação De Usuários Em PHP Usando CodeIgniter]]></title>
@@ -22,7 +390,7 @@
 
 <p>CodeIgniter é esse framework! Ele é totalmente <em>clean</em> e intuitivo, contém apenas as funcionalidades realmente básicas. Hoje aprenderemos a criar autentificação de usuários (cadastrar e logar) usando ele! <em>Let&rsquo;s rock, baby!</em></p>
 
-<p><strong> Sem paciência pra ler? <a href="{{%20root_url%20}}/downloads/code/auth.zip">Clique aqui para baixar o exemplo completo</a> </strong></p>
+<p><strong> Sem paciência pra ler? <a href="/downloads/code/auth.zip">Clique aqui para baixar o exemplo completo</a> </strong></p>
 
 <!-- more -->
 
@@ -130,16 +498,12 @@ $db['default']['database'] = '';
 
 <p>E, por fim, o arquivos sucess e fail, que irão mostrar mensagens ao usuário dependendo de seu sucesso em logar. Esses não têm muito mistério:</p>
 
-<p>&#8220;` PHP fail.php</p>
+<pre><code class="PHP fail.php">Falha ao logar. &lt;a href="index"&gt;Tente novamente.&lt;/a&gt;
+</code></pre>
 
-<p>Falha ao logar. <a href="index">Tente novamente.</a></p>
-
-
-<pre><code></code></pre>
-
-<p><p>Olá, &lt;?php echo $usuario; ?>. Você logou com sucesso!</p>
-<a href="logout">Clique aqui para deslogar.</a>
-&#8220;`</p>
+<pre><code class="PHP success.php">Olá, &lt;?php echo $usuario; ?&gt;. Você logou com sucesso!
+&lt;a href="logout"&gt;Clique aqui para deslogar.&lt;/a&gt;
+</code></pre>
 
 <p>Ops! Uma pegadinha no arquivo <em>success</em>: De onde vem essa variável &ldquo;$usuario&rdquo;? Ahá! Isso que é legal. Você pode usar alguns dados externos para montar suas views, no meu caso usei a variável &ldquo;$usuario&rdquo;, que eu imagino que deva armazenar o nome do usuário logado, mas quem irá se encarregar de mandar esses dados é o controller. Veremos isso mais a frente.</p>
 
@@ -411,13 +775,13 @@ public function success() {
 <pre><code class="PHP routes.php">$route['default_controller'] = "user";
 </code></pre>
 
-<p>E agora vamos criar as rotas pros métodos já existentes no Controller:
-<code>PHP routes.php
-$route['index'] = "user/index";
+<p>E agora vamos criar as rotas pros métodos já existentes no Controller:</p>
+
+<pre><code class="PHP routes.php">$route['index'] = "user/index";
 $route['success'] = "user/success";
 $route['fail'] = "user/fail";
 $route['register'] = "user/register";
-</code></p>
+</code></pre>
 
 <p>A síntaxe descrita ali encima é a seguinte:</p>
 
@@ -648,13 +1012,13 @@ class User extends CI_Controller {
 }
 </code></pre>
 
-<p><b>Uhuuu!!</b> E concluímos nossa aplicação! Se você rodar agora, verá que está tudo rodando perfeitamente (assim espero hehe).</p>
+<p><strong>Uhuuu!!</strong> E concluímos nossa aplicação! Se você rodar agora, verá que está tudo rodando perfeitamente (assim espero hehe).</p>
 
-<p style="text-align:center;"> <img src="{{%20root_url%20}}/images/posts/igniter-auth-1.png" alt="" /></p>
+<p style="text-align:center;"> <img src="/images/posts/igniter-auth-1.png" alt="" /></p>
 
-<p style="text-align:center;"> <img src="{{%20root_url%20}}/images/posts/igniter-auth-2.png" alt="" /></p>
+<p style="text-align:center;"> <img src="/images/posts/igniter-auth-2.png" alt="" /></p>
 
-<p style="text-align:center;"> <a href="{{%20root_url%20}}/downloads/code/auth.zip">Clique aqui para baixar o exemplo completo</a></p>
+<p style="text-align:center;"> <a href="/downloads/code/auth.zip">Clique aqui para baixar o exemplo completo</a></p>
 ]]></content>
   </entry>
   
@@ -716,7 +1080,136 @@ class User extends CI_Controller {
 
 <p>Calma, jovem gafanhoto. Já me encarregarei disto. Por motivos didáticos, vamos testar essa simples classe escrita em PHP que representa um número em notação científica.</p>
 
-<p>{% include_code ScientificNotation.php %}</p>
+<p><figure class='code'><figcaption><span> (ScientificNotation.php)</span> <a href='/downloads/code/ScientificNotation.php'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">ScientificNotation</span> <span class="p">{</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">private</span> <span class="nv">$mantissa</span><span class="p">;</span>
+</span><span class='line'>	<span class="k">private</span> <span class="nv">$exponent</span><span class="p">;</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">,</span> <span class="nv">$exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setMantissa</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setExponent</span><span class="p">(</span><span class="nv">$exponent</span><span class="p">);</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">getMantissa</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setMantissa</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">=</span> <span class="nv">$mantissa</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">getExponent</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setExponent</span><span class="p">(</span><span class="nv">$exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">=</span> <span class="nv">$exponent</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">add</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">if</span> <span class="p">(</span><span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t add two numbers with different exponents.&quot;</span><span class="p">);</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">+=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">subtract</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">if</span> <span class="p">(</span><span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t subtract two numbers with different exponents.&quot;</span><span class="p">);</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">-=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">multiply</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">*=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">+=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">divide</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">/=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">-=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">normalize</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">while</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>		<span class="k">while</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>Como você pode ver, esta é uma classe bem simples. Vamos lembrar um pouquinho de matemática de ensino médio para entender seu comportamento&hellip; (<a href="#tests">Clique aqui</a> caso queira pular essa parte)</p>
 
@@ -822,7 +1315,144 @@ class ScientificNotationTest extends PHPUnit_Framework_TestCase {
 
 <p>No final, éis nossa classe de testes completa:</p>
 
-<p>{% include_code ScientificNotationTest.php %}</p>
+<p><figure class='code'><figcaption><span> (ScientificNotationTest.php)</span> <a href='/downloads/code/ScientificNotationTest.php'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">ScientificNotationTest</span> <span class="k">extends</span> <span class="nx">PHPUnit_Framework_TestCase</span> <span class="p">{</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">require_once</span> <span class="s1">&#39;ScientificNotation.php&#39;</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testMultiply</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">multiply</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testDivide</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">divide</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testAdd</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="c1">//must be ok</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>		<span class="c1">//must throw exception</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="k">try</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fail</span><span class="p">();</span>
+</span><span class='line'>		<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testSubtract</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="c1">//must be ok</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">subtract</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>		<span class="c1">//must throw exception</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="k">try</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">subtract</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fail</span><span class="p">();</span>
+</span><span class='line'>		<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testNormalize</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$unmormalizedNumber1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">800.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$unnormalizedNumber2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">0.08</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">normalize</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">normalize</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure></p>
 
 <p>Para rodar o teste, digite no terminal:</p>
 
@@ -885,7 +1515,7 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
 
 <p>Irá gerar uma página HTML com os resultados. Quando abro ela análise os testes que fiz acima, visualizo a seguinte análise:</p>
 
-<p><img src="{{%20root_url%20}}/images/posts/phpunit-coverage.png" alt="" /></p>
+<p><img src="/images/posts/phpunit-coverage.png" alt="" /></p>
 
 <p>:)</p>
 ]]></content>
