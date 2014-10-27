@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Apps | The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/apps/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-10-18T19:08:39-03:00</updated>
+  <updated>2014-10-27T00:36:24-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Experiências Na Disciplina De Sistemas De Informação I]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i/"/>
+    <updated>2014-10-27T00:35:50-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i</id>
+    <content type="html"><![CDATA[<p>Na disciplina de Sistemas de Informação I aprendemos um pouco sobre sistemas web.</p>
+
+<p>Lá, nós utilizamos um framework chamado Play!, que é feito para Java e Scala.</p>
+
+<p>O Play! Framework não deixou nada a desejar. A parte de integração com o Scala realmente é uma mão na roda, tornando as coisas realmente mais simples do que se fossem feitas puramente em Java.</p>
+
+<p>Aqui vai alguns exemplos de sites que desenvolvi durante essa disciplina:</p>
+
+<h2>#Partiu</h2>
+
+<p style="text-align:center;"><img src="/images/posts/play-partiu.png" alt="" /></p>
+
+<!-- more -->
+
+
+<p></p>
+
+<center>Link: <a href="http://si1-partiu.herokuapp.com">http://si1-partiu.herokuapp.com</a>/<br/><br/>
+Repositório no Github: <a href="https://github.com/felipemdrs/Partiu_Projeto_SI1">https://github.com/felipemdrs/Partiu_Projeto_SI1</a></center>
+
+
+<p><br/></p>
+
+<p>Esse foi o projeto final da disciplina e foi feito em conjunto com outro colega, <a href="https://github.com/felipemdrs">Felipe Miranda</a>. Basicamente, é uma &ldquo;rede social&rdquo; de viagens, onde você cria um grupo para sua viagem e chama pessoas para compartilhar informações sobre essa viagem, parecido com os grupos de Facebook. Você pode definir uma viagem como público ou privada.</p>
+
+<h2>CCFest</h2>
+
+<p style="text-align:center;"><img src="/images/posts/play-ccfest.png" alt="" />
+Link: <a href="http://cchackfest.herokuapp.com/">http://cchackfest.herokuapp.com/</a><br/>
+Repositório no Github: <a href="https://github.com/PicoleDeLimao/hackfest2">https://github.com/PicoleDeLimao/hackfest2</a></p>
+
+<p>Originalmente feito também por <a href="https://github.com/felipemdrs">Felipe Miranda</a>, o desafio era pegar um sistema pronto de outro colega e evoluí-lo.</p>
+
+<p>Claro, eu nunca seria capaz de criar uma interface tão bonitinha :P</p>
+
+<p>Fui responsável pela parte de validação de usuário (anteriormente não havia opção de se cadastrar), possibilidade de adicionar um local ao evento e marcar como prioritário para hackers experientes (e a experiência aqui é ditada pela quantidade de eventos que você já participou), e outros pequenos detalhes.</p>
+
+<p>Além disso, outra coisa que aprendi com esse projeto foi a usar AJAX.</p>
+
+<h2>Conclusão</h2>
+
+<p>A experiência com essa disciplina foi muito positiva. Parti de experiência quase zero com websites até a possibilidade de criar sites com aparência &ldquo;profissional&rdquo;, se me permite dizer.</p>
+
+<p>Foram muitas as tecnologias aprendidas (Play!, MVC, Heroku, Hibernate, AJAX, Javascript, só para citar algumas :P) e muitas ainda a aprender. Mas vida de programador é assim mesmo. ;)</p>
+
+<p>É isso aí, até a próxima!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[(Python 2.7) Mesquita]]></title>
