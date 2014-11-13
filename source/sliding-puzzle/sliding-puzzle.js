@@ -7,7 +7,9 @@ Direcao = {
 
 function Puzzle(dimensao) {
 	this.tabuleiro = [];
+	this.movimentos = [];
 	this.dimensao = dimensao;
+	this.movimentoAnterior = null;
 	//preenche o array de acordo com a dimensao
 	for (var i = 0; i < dimensao; i++) {
 		this.tabuleiro.push([]);
@@ -73,6 +75,10 @@ Puzzle.prototype.move = function(num) {
 				this.swap(linha, coluna, linha - 1, coluna);
 				break;
 		}
+		if (movimento != null) {
+			this.movimentos.push(num);
+			this.movimentoAnterior = num;
+		}
 		return movimento;
 	}
 };
@@ -87,6 +93,60 @@ Puzzle.prototype.getMovimentosPossiveis = function() {
 			}
 		}
 	}
-	var rand = Math.floor(Math.random() * movimentosPossiveis.length);
-	return movimentosPossiveis[rand];
-}
+	return movimentosPossiveis;
+};
+
+Puzzle.prototype.calculaDistancia = function() {
+	var distancia = 0;
+	for (var i = 0; i < this.dimensao; i++) {
+		for (var j = 0; j < this.dimensao; j++) {
+			var num = this.tabuleiro[i][j];
+			if (num != 0) {
+				var linhaOriginal = Math.floor((num - 1) / this.dimensao);
+				var colunaColuna = (num - 1) % this.dimensao;
+				distancia += Math.abs(i - linhaOriginal) + Math.abs(j - colunaColuna);
+			}
+		}
+	}
+	return distancia;
+};
+
+Puzzle.prototype.getCopia = function() {
+	var novoPuzzle = new Puzzle(this.dimensao);
+	for (var i = 0; i < this.dimensao; i++) {
+		for (var j = 0; j < this.dimensao; j++) {
+			novoPuzzle.tabuleiro[i][j] = this.tabuleiro[i][j];
+		}
+	}
+	for (var i = 0; i < this.movimentos.length; i++) {
+		novoPuzzle.movimentos.push(this.movimentos[i]);
+	}
+	return novoPuzzle;
+};
+
+Puzzle.prototype.resolve = function() {
+	var candidatos = new MinHeap(null, function(a, b) {
+		return a.distancia - b.distancia;
+	});
+	var distanciaInicial = this.calculaDistancia();
+	var puzzleInicial = this.getCopia();
+	puzzleInicial.movimentos = [];
+	candidatos.push({puzzle: puzzleInicial, distancia: distanciaInicial});
+	while (candidatos.size() > 0) {
+		var candidato = candidatos.pop().puzzle;
+		var distancia = candidato.calculaDistancia();
+		if (distancia == 0) {
+			return candidato.movimentos;
+		}
+		var movimentosPossiveis = candidato.getMovimentosPossiveis();
+		for (var i = 0; i < movimentosPossiveis.length; i++) {
+			var numero = movimentosPossiveis[i];
+			if (numero != candidato.movimentoAnterior) {
+				var novoPuzzle = candidato.getCopia();
+				novoPuzzle.move(numero);
+				var novaDistancia = novoPuzzle.calculaDistancia() + novoPuzzle.movimentos.length;
+				candidatos.push({puzzle: novoPuzzle, distancia: novaDistancia});
+			}
+		}
+	}
+};

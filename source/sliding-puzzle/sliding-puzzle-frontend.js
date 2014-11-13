@@ -36,10 +36,12 @@ $(document).ready(function() {
 	}
 
 	function movimentarAleatoriamente(puzzle, ultimoASerMovimentado) {
-		var blocoASeMovimentar;
+		var movimentosPossiveis = puzzle.getMovimentosPossiveis();
+		var rand;
 		do {
-			blocoASeMovimentar = puzzle.getMovimentosPossiveis();
-		} while (blocoASeMovimentar == ultimoASerMovimentado);
+			rand = Math.floor(Math.random() * movimentosPossiveis.length);
+		} while (ultimoASerMovimentado == movimentosPossiveis[rand]);
+		var blocoASeMovimentar = movimentosPossiveis[rand];
 		var direcao = puzzle.move(blocoASeMovimentar);
 		movimentar("c" + blocoASeMovimentar, direcao);
 		return blocoASeMovimentar;
@@ -56,6 +58,19 @@ $(document).ready(function() {
 		}, VELOCIDADE);
 	}
 
+	function resolver(puzzle, caminho, callbackFunction) {
+		if (caminho.length == 0) {
+			callbackFunction();
+			return;
+		}
+		var blocoASeMovimentar = caminho.shift();
+		var direcao = puzzle.move(blocoASeMovimentar);
+		movimentar("c" + blocoASeMovimentar, direcao);
+		setTimeout(function() {
+			resolver(puzzle, caminho, callbackFunction);
+		}, VELOCIDADE);
+	}
+	
 	function desenharBlocos() {
 		for (var i = 0; i < DIMENSAO; i++) {
 			for (var j = 0; j < DIMENSAO; j++) {
@@ -92,6 +107,16 @@ $(document).ready(function() {
 		};
 		$("#embaralhar").on("click", funcaoEmbaralhar);
 		funcaoEmbaralhar();
+		//resolve
+		$("#resolver").on("click", function() {
+			var caminho = puzzle.resolve();
+			$("#embaralhar").attr("disabled", "disabled");
+			$("#resolver").attr("disabled", "disabled");
+			resolver(puzzle, caminho, function() {
+				$("#embaralhar").removeAttr("disabled");
+				$("#resolver").removeAttr("disabled");
+			});
+		});
 		//move
 		$("#container div").on("click", function() {
 			var id = $(this).attr("id");
@@ -101,7 +126,6 @@ $(document).ready(function() {
 				movimentar(id, direcao);
 			}
 		});
-		//resolve
 	}
 	
 });
