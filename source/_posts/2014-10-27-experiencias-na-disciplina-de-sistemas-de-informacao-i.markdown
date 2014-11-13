@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Experiências na disciplina de Sistemas de Informação I"
-date: 2014-10-27 00:00:32 -0300
+date: 2014-10-27 00:35:50 -0300
 comments: true
 categories: [Apps, Java]
 ---
