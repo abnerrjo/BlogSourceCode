@@ -3,6 +3,14 @@
   
   
   <url>
+    <loc>http://PicoleDeLimao.github.io/blog/2014/11/12/gerenciando-sessoes-em-php/</loc>
+    
+    <lastmod>2014-11-12T20:40:47-03:00</lastmod>
+    
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://PicoleDeLimao.github.io/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i/</loc>
     
     <lastmod>2014-10-27T00:35:50-03:00</lastmod>
@@ -85,21 +93,21 @@
   
   <url>
     <loc>http://PicoleDeLimao.github.io/blog/archives/</loc>
-    <lastmod>2014-10-27T00:36:24-03:00</lastmod>
+    <lastmod>2014-11-12T22:19:50-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/</loc>
-    <lastmod>2014-10-27T00:36:24-03:00</lastmod>
+    <lastmod>2014-11-12T22:19:50-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/about/</loc>
-    <lastmod>2014-10-27T00:36:24-03:00</lastmod>
+    <lastmod>2014-11-12T22:19:50-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

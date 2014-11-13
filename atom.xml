@@ -4,7 +4,7 @@
   <title><![CDATA[The bug is on the table]]></title>
   <link href="http://PicoleDeLimao.github.io/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-10-27T00:36:24-03:00</updated>
+  <updated>2014-11-12T22:19:50-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -12,6 +12,168 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Gerenciando Sessões Em PHP]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/11/12/gerenciando-sessoes-em-php/"/>
+    <updated>2014-11-12T20:40:47-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/11/12/gerenciando-sessoes-em-php</id>
+    <content type="html"><![CDATA[<p>HTTP é como uma velha com Alzheimer: Esquece tudo. Esquecer é legal às vezes, mas recordar é viver. Às vezes você simplesmente quer manter certos dados do usuário que está acessando a página naquele momento. Aí a natureza <em>stateless</em> do HTTP não ajuda, você precisa de outros artifícios. Na maioria das linguagens de backend, existem duas maneiras de persistir dados de maneira temporária:</p>
+
+<ul>
+<li>Cookies</li>
+<li>Sessions</li>
+</ul>
+
+
+<p>Existem algumas diferenças substanciais entre as duas técnicas:</p>
+
+<!-- more -->
+
+
+<ul>
+<li>Cookies permanecem no browser do usuário, enquanto que sessions permanecem no próprio servidor;</li>
+<li>Geralmente, cookies persistem por mais tempo do que sessions, que duram até o usuário fechar o navegador;</li>
+<li>Sessions suportam uma maior quantidade de dados.</li>
+</ul>
+
+
+<p>Neste tutorial vamos nos focar em sessions.</p>
+
+<h2>Iniciando uma sessão</h2>
+
+<p>Para iniciar uma sessão, use o método session_start().</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="nb">session_start</span><span class="p">();</span>
+</span><span class='line'><span class="c1">//$_SESSION diz: me use!!!</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sessões são acessíveis através da variável super-global $_SESSION. Esta variável é uma array simples, e por baixo seus valores são persistidos através de um arquivo na máquina do servidor. Para identificar o usuário, sessões utilizam de um pequeno cookie carregando um ID único.</p>
+
+<p>Geralmente sessões se iniciam automaticamente depois da primeira vez iniciada. Este comportamento está definido no parâmetro <em>session.auto_start</em>, no arquivo <em>php.ini</em>. Por isso, é uma boa prática sempre antes de iniciar a sessão verificar se ela já existe:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nb">session_start</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A partir da versão 5.3, o PHP irá mostrar uma mensagem de erro caso tente iniciar uma sessão já iniciada.</p>
+
+<h2>Criando variáveis</h2>
+
+<p>Criar variáveis de sessão é estupidamente simples. Basta definir o valor de uma chave do array. Exemplo:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nb">session_start</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nv">$_SESSION</span><span class="p">[</span><span class="s2">&quot;nome&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Abner&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Acessando variáveis</h2>
+
+<p>Para acessar variáveis, antes você deve iniciar a sessão. Após a sessão ser iniciada, todas as variáveis de sessão estão acessíveis e você pode acessá-las do modo que você faria com uma array normal (o que de fato é! :-)).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">echo</span> <span class="nv">$_SESSION</span><span class="p">[</span><span class="s2">&quot;nome&quot;</span><span class="p">];</span> <span class="c1">//Abner</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Modificando variáveis</h2>
+
+<p>Basta definir o valor. Caso aquela chave já exista, ela será sobreescrita.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="nv">$_SESSION</span><span class="p">[</span><span class="s2">&quot;nome&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Ana&quot;</span><span class="p">;</span> <span class="c1">//sobreescreveu o que havia antes</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Deletando variáveis ou a sessão inteira</h2>
+
+<p>Para deletar uma variável de sessão, basta usar o método unset, como você faria para qualquer outra variável.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="nb">unset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s2">&quot;nome&quot;</span><span class="p">]);</span> <span class="c1">//variável é apagada da sessão</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Mas se você deseja remover todas as variáveis de uma vez, a maneira de se fazer isso é com o método session_unset.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="nb">session_unset</span><span class="p">();</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Note que este método está deprecated. A maneira moderna de se fazer isso é simplesmente setando $_SESSION para uma nova array.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="nv">$_SESSION</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"> </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>E aí o Garbage Collector se encarregará de liberar as variáveis antigas.</p>
+
+<p>E ainda, se você deseja realmente destruir a sessão, você pode usar session_destroy.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="nb">session_destroy</span><span class="p">();</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Enquanto que esse método destrói o arquivo correspondente à sessão do usuário, na mesma página as variáveis de sessão ainda são acessíveis. Por isso é recomendado que você primeiro delete todas as variáveis para depois destruir a sessão.</p>
+
+<h2>Conclusão</h2>
+
+<p>Gerenciamento de sessões em PHP é estupidamente simples. Espero que vocês tenham gostado do tutorial :P</p>
+
+<p>E lembrem-se: Não trate como cookie quem te trata como sessão. vlwflw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Experiências Na Disciplina De Sistemas De Informação I]]></title>
