@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Criando Testes De Unidade Em PHP Com O PHPUnit - The bug is on the table</title>
+  <title>Creating Unit Tests With PHPUnit - Tango with code</title>
   <meta name="author" content="Abner Matheus">
 
   
-  <meta name="description" content="Olá, pessoas e alienígenas (estou na esperança de que este post seja preservado como tesouro histórico da humanidade e esteja sendo lido por outras &hellip;">
+  <meta name="description" content="Hi there, people and aliens (I&rsquo;m hoping that this post was preserved as humanity&rsquo;s historic treasure and it&rsquo;s being read by &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/26/criando-testes-de-unidade-em-php-com-o-phpunit">
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/26/creating-unit-tests-with-phpunit">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="The bug is on the table" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -38,9 +38,9 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">The bug is on the table</a></h1>
+  <h1><a href="/">Tango with code</a></h1>
   
-    <h2>Um blog sobre noites confusas e frustantes</h2>
+    <h2>A blog about frustration and anger</h2>
   
 </hgroup>
 
@@ -58,12 +58,8 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/">Início</a></li>
-  <li><a href="/blog/archives">Entradas</a></li>
-  <li><a href="/blog/categories/games/">Games</a></li>
-  <li><a href="/blog/categories/apps/">Apps</a></li>
-  <li><a href="/blog/categories/tutoriais/">Tutoriais</a></li>
-  <li><a href="/about">Sobre mim</a></li>
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
 </ul>
 
 </nav>
@@ -74,7 +70,7 @@
   
   <header>
     
-      <h1 class="entry-title">Criando Testes De Unidade Em PHP Com O PHPUnit</h1>
+      <h1 class="entry-title">Creating Unit Tests With PHPUnit</h1>
     
     
       <p class="meta">
@@ -90,26 +86,26 @@
   </header>
 
 
-<div class="entry-content"><p>Olá, pessoas e alienígenas (estou na esperança de que este post seja preservado como tesouro histórico da humanidade e esteja sendo lido por outras civilizações extraterrestres neste momento).</p>
+<div class="entry-content"><p>Hi there, people and aliens (I&rsquo;m hoping that this post was preserved as humanity&rsquo;s historic treasure and it&rsquo;s being read by extraterrestrials civilizations right now. Joking, obviously :P).</p>
 
-<p>Neste post aprenderemos a fazer algo que toooodo mundo gosta, é praticamente como comer bolo (existe alguém que não goste de bolo?!) do mundo da programação: TESTES! Uhuu! Me emocionei só de falar.</p>
+<p>In today&rsquo;s post we&rsquo;ll learn about something that everybody likes, it&rsquo;s just like cakes (whoever doesn&rsquo;t like cakes?! I dare you!). I&rsquo;m talking about TESTS, obviously! Wehooo! It chills me just by talking about.</p>
 
-<p>Nosso foco, porém, são os testes em PHP usando a ferramente PHPUnit. É mamão com açúcar, acompanha comigo.</p>
+<p>Our focus, however, will be tests in PHP using a tool called PHPUnit. Don&rsquo;t worry, it&rsquo;s like taking candy from a baby. Follow me!</p>
 
 <!-- more -->
 
 
-<h2>Instalando a ferramenta</h2>
+<h2>Installing the environment</h2>
 
-<p>Instalar a ferramenta é fácil fácil&hellip; Se você usa Linux, é claro. ;) (Mas se não usa também!)</p>
+<p>Install is easy&hellip;</p>
 
-<p>Estou presumindo aqui que você já tenha PHP instalado, juntamente com um servidor e blablabla.</p>
+<p>I&rsquo;m assuming here that you already have PHP installed, along with a HTTP server and all those stuff.</p>
 
-<p>Para instalar o PHPUnit, usaremos o incrível <strong>Composer</strong>, um gerenciador de dependência bastante popular na comunidade PHP.</p>
+<p>In order to install PHPUnit, we&rsquo;ll use the awesome <strong>Composer</strong>, a dependency manager very popular in PHPUnit community.</p>
 
-<p>Baixe o Composer através <a href="https://getcomposer.org/download/">desse site</a> (lá embaixo, em Manual Download), e coloque-o dentro da pasta de seu projeto.</p>
+<p>Download the composer through <a href="https://getcomposer.org/download/">this link</a> (scroll down, on Manual Download section), and place it inside your project&rsquo;s folder.</p>
 
-<p>Agora crie um arquivo dentro da pasta de seu projeto chamado <strong>composer.json</strong>, e coloque dentro dele o seguinte texto:</p>
+<p>Now create a file inside your project&rsquo;s folder called <strong>composer.json</strong>, and write in it the following commands:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -119,40 +115,40 @@
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='Javascript'><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="s2">&quot;require-dev&quot;</span><span class="o">:</span> <span class="p">{</span>
-</span><span class='line'>        <span class="s2">&quot;phpunit/phpunit&quot;</span><span class="o">:</span> <span class="s2">&quot;4.2.*&quot;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s2">&quot;phpunit/php-invoker&quot;</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span>
+</span><span class='line'>      <span class="s2">&quot;phpunit/phpunit&quot;</span><span class="o">:</span> <span class="s2">&quot;4.2.*&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;phpunit/php-invoker&quot;</span><span class="o">:</span> <span class="s2">&quot;*&quot;</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Explico! Para instalar as dependência (no nosso caso, o PHPUnit), o Composer recebe um arquivo no formato JSON, onde você simplesmente só precisa colocar o nome da dependência como <em>node</em> de &ldquo;<em>require-dev</em>&rdquo; e ele irá automagicamente instalá-lo pra você. Fantástico, não é? :D</p>
+<p>In order to install the dependencies (in this case, PHPUnit), the Composer receives a file in JSON format, where you just need to put the name of your dependencies and their version as a node of &ldquo;<em>require-dev</em>&rdquo; and it will magically install it for you. :) Fantastic, isn&rsquo;t it?</p>
 
-<p>Bem, feito isso, abra o terminal, vá até a pasta de seu projeto, e digite a seguinte linha de comando:</p>
+<p>Now open the terminal, go to your project&rsquo;s folder, and type the following command:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>php composer.phar install
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E pronto! O Composer vá se encarregar agora de instalar pra você.</p>
+<p>Done! The composer will now install it for you.</p>
 
-<p>Para rodar a ferramenta, basta digitar no terminal:</p>
+<p>To run the downloaded tool, you just need to type it in the terminal:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit &lt;Arquivo_De_Teste&gt;
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit &lt;Unit_Test_File&gt;
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Mas como ainda não temos nenhum teste, nada de especial irá acontecer.</p>
+<p>But, of course, we don&rsquo;t have any unit test file yet! Let&rsquo;s fix it on next section.</p>
 
-<h2>Criando testes</h2>
+<h2>Creating unit tests</h2>
 
-<p>Agora a parte que nos interessa de fato. Criar testes também é muito fácil com o PHPUnit. Qualquer pessoa que já usou alguma ferramenta como o JUnit vai se sentir muito a vontade. Vamos lá!</p>
+<p>Now here is the interesting part. Creating unit tests is an easy task with PHPHUnit. Whoever used some unit test tool will feel at ease.</p>
 
-<blockquote><p>Mas, ô seu idiota, não temos nada o que testar!</p></blockquote>
+<blockquote><p>Hey! I don&rsquo;t have anything to test!</p></blockquote>
 
-<p>Calma, jovem gafanhoto. Já me encarregarei disto. Por motivos didáticos, vamos testar essa simples classe escrita em PHP que representa um número em notação científica.</p>
+<p>Slow down, young man. I already took it for you. For didatic reasons, we are going to test some simple class that representates a number in scientific notation.</p>
 
 <figure class='code'><figcaption><span> (ScientificNotation.php)</span> <a href='/downloads/code/ScientificNotation.php'>download</a></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -286,30 +282,30 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Como você pode ver, esta é uma classe bem simples. Vamos lembrar um pouquinho de matemática de ensino médio para entender seu comportamento&hellip; (<a href="#tests">Clique aqui</a> caso queira pular essa parte)</p>
+<p>As you can see, this is indeed a very simple class. I assume here it was long ago since you&rsquo;ve been on high-school, so I&rsquo;ll refresh your memory about some simple operations that can be done with scientific notation&hellip; (<a href="#tests">Click here</a> if you wish to cut the explanation off).</p>
 
-<p>Primeiro, todo número em notação científica é composto por duas partes: A mantissa (a parte &ldquo;literal&rdquo; do número) e o exponente. Por exemplo, no número:</p>
+<p>First, every number in scientific notation is composed by two parts: The mantissa (the &ldquo;literal&rdquo; part of the number) and the exponent. For example, in the number:</p>
 
 <p>2,5 x 10<sup>8</sup></p>
 
-<p>A mantissa é 2,5 e o exponente é 8.</p>
+<p>Mantissa is 2,5 and exponent is 8.</p>
 
-<p>Segundo, na multiplicação entre números em notação científica, multiplicamos as mantissas e somamos os expoentes. Por exemplo:</p>
+<p>Second, in order to multiply two numbers in scientific notation, we multiply the mantissas and sum the exponents. For example:</p>
 
 <p>(2,5 x 10<sup>8</sup>) x (2,0 x 10<sup>2</sup>) = (5,0 x 10<sup>10</sup>)</p>
 
-<p>E a divisão segue o mesmo princípio, divindo as mantissas e subtraindo os expoentes.</p>
+<p>And the division follows the same principle, we divide the mantissas and subtract the exponents.</p>
 
-<p>A adição e a subtração é um pouco problemática, porque ela só é permitida entre números que possuem o mesmo expoente. Neste caso, simplesmente somamos ou subtraímos as mantissas e mantemos os expoentes.</p>
+<p>The addition and subtraction is a bit troublesome, because it&rsquo;s just allowed between numbers that have the same exponent. In this case, we simply add or subtract the mantissas and keep the exponents.</p>
 
-<p>A normalização de um número em notação científica é transformar sua mantissa em um número de um digito. Ao fazer isso, incrementamos ou decrementamos seu expoente.</p>
+<p>The normalization of a number into scientific notation format is basically turning the mantissa in a single digit number. Doing this, we increment or decrement its exponent.</p>
 
 <div id="tests"></div>
 
 
-<p><strong>Done</strong>! Agora vamos criar os testes.</p>
+<p><strong>Done</strong>! Now get to work!</p>
 
-<p>Crie um arquivo chamado <strong>ScientificNotationTest.php</strong>. Este arquivo deve ter a seguinte estrutura:</p>
+<p>Create a file called <strong>ScientificNotationTest.php</strong>. This file will have the following template:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -324,9 +320,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Essa é a estrutura padrão de um teste em PHP. Perceba que ele deve herdar da classe <strong>PHPUnit_Framework_TestCase</strong>.</p>
+<p>This is the default template of an unit test in PHPUnit. Notice it must inherit from <strong>PHPUnit_Framework_TestCase</strong> class.</p>
 
-<p>Além disso, é importante importar o arquivo onde está a classe que será testada. Isso geralmente é feita dentro do método <strong>setUp</strong>, um método especial que é chamado antes de cada teste. Nossa classe de teste então deve estar assim:</p>
+<p>Also, it&rsquo;s important to import the class or file that is being tested. Usually it&rsquo;s done inside the <strong>setUp</strong> method, a special method that is called every time a test is about to be runned. Therefore, our classe will now include this method:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -349,9 +345,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>OK! Agora vamos criar os testes propriamente ditos. Os métodos que contém os testes devem <em>sempre</em> ter o prefixo <strong>test</strong>. Exemplo: testXXX, testXYZ, &hellip;</p>
+<p>OK! Now we finally are ready to create the tests. The testing methods must <em>always</em> contain the prefix <strong>test</strong>, i.e., testXXX, testXYZ, &hellip; you got the idea.</p>
 
-<p>O primeiro teste que vamos criar é para a multiplicação. Primeiro, criemos duas instâncias quaisquer da classe e chamemos o método <em>multiply</em>.</p>
+<p>The first test we are going to create is for the multiply operation. For this test, we just need two instances of ScientificNotation and call <em>multiply</em> over them.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -366,7 +362,11 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Agora vamos testar algumas asserções. As asserções que eu mais uso são: <em>testEquals</em> (testa de dois objetos são iguais), <em>assertTrue</em> (testa se uma condição é verdadeira) e <em>assertFalse</em>. Você pode ver uma lista completa <a href="https://phpunit.de/manual/current/en/appendixes.assertions.html">aqui</a>. Logo, nosso método ficou assim:</p>
+<p>Now we need some asserts to ensure our method is doing what it&rsquo;s supposed to do. The asserts I use most are: <em>testEquals</em> (test if two objects are equal), <em>assertTrue</em> (test if a boolean expression evaluates true) and <em>assertFalse</em>. You can see the complest list <a href="https://phpunit.de/manual/current/en/appendixes.assertions.html">here</a>.</p>
+
+<p>If an assert evaluate false, for example, when I use assertEquals for two objects that are not really equal, then the program will print an error on PHPUnit console denoted by the letter &ldquo;F&rdquo;. Else, it will show the character &ldquo;.&rdquo;, indicating that the test is OK!</p>
+
+<p>I will use assertEquals to compare the expected result with the returned result:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -385,13 +385,13 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Fácil, não é? :)</p>
+<p>Quite easy, isn&rsquo;t it? :)</p>
 
-<p>Vamos pular a divisão, que possuí uma lógica análoga ao da multiplicação, e vamos direto ao da adição.</p>
+<p>Let&rsquo;s skip the divide method, since it follows the same logic of the multiply. The next method to be tested is the <strong>add</strong>.</p>
 
-<p>O método da adição deve lançar uma exceção caso o número passado seja de uma base diferente do número atual. Como testar isso?</p>
+<p>The add method must throw an exception case the parameter have a different exponent from the number I&rsquo;m adding. How to test it?</p>
 
-<p>Simples! Encapsule a chamada de método em um try/catch, e faça com que o teste falhe caso o código <em>passe</em> do ponto onde deveria lançar exceção. Exemplo:</p>
+<p>Simple! Surround the call inside a try/catch block, and make the test fail case the code <em>pass</em> through the point where it should throw an exception. Example:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -404,7 +404,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Com isso, nosso método de testar adição está assim:</p>
+<p>If it really throw an exception, then the $this->fail statement will never be called!</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -439,7 +439,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>No final, éis nossa classe de testes completa:</p>
+<p>In the end, here is our complete test unit class:</p>
 
 <figure class='code'><figcaption><span> (ScientificNotationTest.php)</span> <a href='/downloads/code/ScientificNotationTest.php'>download</a></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -581,18 +581,20 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Para rodar o teste, digite no terminal:</p>
+<p>To run the test, type in the terminal:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit ScientificNotationTest.php
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>Criando uma suite de testes</h2>
+<h2>Creating a test suite</h2>
 
-<p>O exemplo acima serve se quisermos rodar apenas um teste, mas e quando queremos rodar vários testes de uma só vez? Bem, você poderia criar uma pasta, colocar os testes lá e mandar o PHPUnit rodar a pasta como arquivo de teste. Entretanto, a maneira mais <em>elegante</em> de se fazer isso é com um arquivo de configuração.</p>
+<p>The example above serves us well if we intent to run a single test, but what if we need to run several tests? Then testing file-by-file would be extremely boring.</p>
 
-<p>É fácil! Na raiz do projeto, crie um arquivo chamado <strong>phpunit.xml</strong>. Este arquivo deve ter a seguinte estrutura:</p>
+<p>Gladly, there&rsquo;s a thing called test suite, that allows us to inform a file containing the names of all the tests we want to run and it will run all them for us automatically. How can it be done?</p>
+
+<p>Easy! On your project&rsquo;s folder, create a file called <strong>phpunit.xml</strong>. This file must contain the following structure:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -611,8 +613,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Para cada suite de testes, basta adicionar um novo nó do tipo &ldquo;<em>testsuite</em>&rdquo; ao nó &ldquo;<em>testsuites</em>&rdquo;. É importante nomear as suites para que seja possível distinguí-las.
-Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldquo;<em>file</em>&rdquo; ao nó &ldquo;<em>testsuite</em>&rdquo;. Exemplo:</p>
+<p>For each test suite, we just need to add a new node of the type &ldquo;<em>testsuite</em>&rdquo; to the parent node &ldquo;<em>testsuites</em>&rdquo;. It&rsquo;s important to name your test suites in order to be able to distinguish them.</p>
+
+<p>To add a new unit test file to a test suite, we just need to add a new node of the type &ldquo;<em>file</em>&rdquo; to the parent node &ldquo;<em>testsuite</em>&rdquo;. Example:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -633,49 +636,53 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Agora para rodar o test suite, basta digitar no terminal:</p>
+<p>Now to run the test suite, type in the terminal:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit --testsuite &lt;Nome&gt;
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit --testsuite &lt;Name_of_the_Test_Suite&gt;
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Onde <em><code>&lt;Nome&gt;</code></em> é o nome do test suite.</p>
+<h2>Analyzing the test coverage</h2>
 
-<h2>Verificando a cobertura dos testes</h2>
+<p>An interesting thing I&rsquo;d like to talk about is test coverage. It is a quite important information, since the greater the coverage, the bigger the confidence you have in your code correctness.</p>
 
-<p>Uma coisa interessante que gostaria de ressaltar também neste tutorial é a cobertura dos testes. Essa é uma informação importante, tanto para você quanto para seu chefe/cliente. Quanto maior a cobertura, maior a confiança que seus testes passam.</p>
-
-<p>Para rodar a ferramenta de cobertura de testes, é necessário instalar o <strong>XDebug</strong>. Se você usa o Windows, você pode instalá-lo facilmente através <a href="http://www.xdebug.org/download.php">desse link</a>. Caso use o Ubuntu, você pode instalá-lo de maneira ainda mais fácil:</p>
+<p>To run the test coverage tool, it&rsquo;s necessary to install <strong>xDebug</strong>. If you use Windows, you can install it through <a href="http://www.xdebug.org/download.php">this link</a>. But if you use Ubuntu, there&rsquo;s an even easier way:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>sudo apt-get install php5-xdebug
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Agora que você já tem o xDebug, para rodar a análise, simplesmente digite no terminal:</p>
+<p>Now that you&rsquo;ve got the xDebug, to run the analysis you just need to type in the terminal:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit --coverage-&lt;TIpo_De_Saida&gt; &lt;Arquivo_de_Saida&gt;
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit --coverage-&lt;Output_Format&gt; &lt;Output_File&gt;
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p></p>
 
-<p>O <em><code>&lt;Tipo_de_Saida&gt;</code></em> pode ser em vários formatos. Por exemplo: HTML, XML, PHP&hellip; É como você irá visualizar os resultados, e <em><code>&lt;Arquivo_de_Saida&gt;</code></em> é o&hellip; arquivo de saída! Exemplo:</p>
+<p>The <em><code>&lt;Output_Format&gt;</code></em> representantes the format of the analysis result. It can be of different types: HTML, XML, PHP&hellip;</p>
+
+<p>The <em><code>&lt;Output_File&gt;</code></em> is&hellip; the output file! Pretty obvious. :)</p>
+
+<p>Example:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit --coverage-html resultado
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>php ./vendor/bin/phpunit --coverage-html result
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p></p>
 
-<p>Irá gerar uma página HTML com os resultados. Quando abro ela análise os testes que fiz acima, visualizo a seguinte análise:</p>
+<p>It will generate a HTML page called result containing the results of the analysis. When I open it, it show me the following informations:</p>
 
 <p><img src="/images/posts/phpunit-coverage.png" alt="" /></p>
 
 <p>:)</p>
+
+<p>That&rsquo;s it guys! I really hopes you&rsquo;ve liked. Unit tests are not so boring, are they? Sometimes it can be pretty fun, I dare to admit. hehe :)</p>
 </div>
 
 
@@ -684,7 +691,7 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
       
   
 
-<span class="byline author vcard">Postado por <span class="fn">Abner Matheus</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
 
       
 
@@ -696,7 +703,7 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/tutoriais/'>tutoriais</a>
+    <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
   
 </span>
 
@@ -736,11 +743,11 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/11/12/gerenciando-sessoes-em-php/">Gerenciando Sessões Em PHP</a>
+        <a href="/blog/2014/11/12/managing-sessions-in-php/">Managing Sessions in PHP</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i/">Experiências Na Disciplina De Sistemas De Informação I</a>
+        <a href="/blog/2014/10/27/my-experience-on-information-systems-i/">My Experience on Information Systems I</a>
       </li>
     
       <li class="post">
@@ -748,11 +755,11 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores/">Pequenas Coisas Que Podem Tornar Seus Programas Em Java Melhores</a>
+        <a href="/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/">Little Things That Can Make Your Java Programs Better</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/09/30/criando-autentificacao-de-usuarios-em-php-usando-codeigniter/">Criando Autentificação De Usuários Em PHP Usando CodeIgniter</a>
+        <a href="/blog/2014/09/30/creating-user-authentification-with-code-igniter/">Creating User Authentification With Code Igniter</a>
       </li>
     
   </ul>
@@ -810,8 +817,8 @@ Para adicionar um arquivo à uma suite, basta adicionar um novo nó do tipo &ldq
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/26/criando-testes-de-unidade-em-php-com-o-phpunit/';
-        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/26/criando-testes-de-unidade-em-php-com-o-phpunit/';
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/26/creating-unit-tests-with-phpunit/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/26/creating-unit-tests-with-phpunit/';
         var disqus_script = 'embed.js';
       
     (function () {

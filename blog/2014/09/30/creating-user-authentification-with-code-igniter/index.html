@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Criando Autentificação De Usuários Em PHP Usando CodeIgniter - The bug is on the table</title>
+  <title>Creating User Authentification With Code Igniter - Tango with code</title>
   <meta name="author" content="Abner Matheus">
 
   
-  <meta name="description" content="Sou um completo novato em PHP. Já tentei desenvolver sites sem o uso de frameworks, e até tive algum sucesso, mas a experiência foi um tanto &hellip;">
+  <meta name="description" content="I&rsquo;m a complete n00b in PHP. My first sites were done without a framework, I even got them to work, but the experience was a bit.. traumatizing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/30/criando-autentificacao-de-usuarios-em-php-usando-codeigniter">
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="The bug is on the table" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -38,9 +38,9 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">The bug is on the table</a></h1>
+  <h1><a href="/">Tango with code</a></h1>
   
-    <h2>Um blog sobre noites confusas e frustantes</h2>
+    <h2>A blog about frustration and anger</h2>
   
 </hgroup>
 
@@ -58,12 +58,8 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/">Início</a></li>
-  <li><a href="/blog/archives">Entradas</a></li>
-  <li><a href="/blog/categories/games/">Games</a></li>
-  <li><a href="/blog/categories/apps/">Apps</a></li>
-  <li><a href="/blog/categories/tutoriais/">Tutoriais</a></li>
-  <li><a href="/about">Sobre mim</a></li>
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
 </ul>
 
 </nav>
@@ -74,7 +70,7 @@
   
   <header>
     
-      <h1 class="entry-title">Criando Autentificação De Usuários Em PHP Usando CodeIgniter</h1>
+      <h1 class="entry-title">Creating User Authentification With Code Igniter</h1>
     
     
       <p class="meta">
@@ -90,29 +86,34 @@
   </header>
 
 
-<div class="entry-content"><p>Sou um completo novato em PHP. Já tentei desenvolver sites sem o uso de frameworks, e até tive algum sucesso, mas a experiência foi um tanto traumatizante, pra dizer o mínimo. Precisava de um framework que me ajudasse nessa tarefa, mas que também não fosse preciso passar mais tempo aprendendo a manipulá-lo do que aprendendo a própria linguagem em si.</p>
+<div class="entry-content"><p>I&rsquo;m a complete n00b in PHP. My first sites were done without a framework, I even got them to work, but the experience was a bit.. traumatizing, to say the least :P</p>
 
-<p>CodeIgniter é esse framework! Ele é totalmente <em>clean</em> e intuitivo, contém apenas as funcionalidades realmente básicas. Hoje aprenderemos a criar autentificação de usuários (cadastrar e logar) usando ele! <em>Let&rsquo;s rock, baby!</em></p>
+<p>I badly needed a framework to help me, but that wasn&rsquo;t necessary to spend more time learning how to use it than to developing the site. Oh boy, Code Igniter <em>is</em> that framework!</p>
 
-<p><strong> Sem paciência pra ler? <a href="/downloads/code/auth.zip">Clique aqui para baixar o exemplo completo</a> </strong></p>
+<p>It&rsquo;s totally clean and intuitive, and it contains the only necessary to put it together.</p>
+
+<p>In today&rsquo;s post I show you how to make a simple code authentification using it. Let&rsquo;s go!</p>
+
+<p style="text-align:center;"> <a href="/downloads/code/auth.zip">Click here to download the complete example</a></p>
 
 <!-- more -->
 
 
-<p>Tentei projetar este tutorial para uma pessoa totalmente leiga neste framework, portanto, se você já sabe um pouco, peço desculpa pela redundância de informações.</p>
+<p>I designed this tutorial to a completly novice person. So if you already know a bit about this framework, I apologize in advance.</p>
 
-<p>E como pré-requisito básico pressuponho que você já tenha um servidor local instalado que suporte PHP. Se não tiver, não se preocupe, é fácilimo de instalar <a href="https://www.apachefriends.org/pt_br/index.html">com algum software LAMP</a>.</p>
+<p>And was a prerequisite I assume that you aready have a HTTP local server that supports PHP. If you don&rsquo;t, don&rsquo;t worry, you can do it with a <a href="https://www.apachefriends.org/pt_br/index.html">LAMP software</a>.</p>
 
-<h2>&ldquo;Instalando&rdquo; o framework</h2>
+<h2>&ldquo;Installing&rdquo; the framework</h2>
 
-<p>Vamos baixar o CodeIgniter agora! :D <br/>
-Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e clique em download.</p>
+<p>Now let&rsquo;s download the CodeIgniter! :D</p>
 
-<p>Para criar um novo projeto com esse framework, basta copiar e colar a pasta do CodeIgniter. Mais simples impossível!</p>
+<p>Go to <a href="https://ellislab.com/codeigniter">CodeIgniter site</a> and click on Download.</p>
 
-<h2>Configurando o banco de dados</h2>
+<p>To create a new project with it, you just need to copy and paste the CodeIgniter folder. Damn, the simplicity makes me want to cry! T_T</p>
 
-<p>E antes de mais nada, vamos montar as tabelas do nosso banco de dados. Nosso simples usuário terá apenas nome, login e senha, por isso nosso banco de dados terá uma única tabela, e ela é bem simples:</p>
+<h2>Creating our database</h2>
+
+<p>Our first task is to create our database. We are going to need a User containing name, login and password, so our database will have only one table, and it&rsquo;s pretty simple:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -133,9 +134,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Para linkar nosso banco de dados ao CodeIgniter, vá à pasta do projeto > application > config > database.php</p>
+<p>To link your database to the CodeIgniter, go to your project&rsquo;s folder > application > config > database.php</p>
 
-<p>Nas linhas 52 à 54, você encontrará o seguinte trecho de código:</p>
+<p>In the lines 52 to 54, you can find the following code:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -146,19 +147,22 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p></p>
+<p>
+You just need to fill it with the informations related to your database.</p>
 
-<p>Basta preencher com as informações referentes ao seu banco de dados.</p>
+<h2>Creating the Views</h2>
 
-<h2>Criando as views</h2>
+<p>CodeIgniter, as most frameworks, use the MVC pattern. It separates the visualization of the data (views: HTML, CSS, &hellip;) from the business logic (models: PHP itself, including database queries) and it has a controller that serves as a bridge between the two.</p>
 
-<p>CodeIgniter segue o padrão MVC: Ele separa a visualização dos dados (views: HTML, CSS&hellip;) da lógica de negócio (models: PHP em si, incluindo pesquisas ao banco de dados) e tem um controlador que faz a comunicação entre os dois (controller).</p>
+<p>Let&rsquo;s start creating the views, and right after the models and for last the controller.</p>
 
-<p>Vamos começar criando as views, depois os models e por último colar tudo usando um controller.</p>
+<p>To create a new view, go to your project&rsquo;s folder > views and create a new HTML or PHP file right there. It&rsquo;s cool to make subfolders, to keep it well organized, you know?</p>
 
-<p>Para criar uma nova view, vá até a pasta do projeto > views e crie um novo arquivo HTML ou PHP lá dentro. Por motivos de organização, é legal organizar suas views em subpastas. Crie as telas de logar e cadastrar numa subpasta chamada &ldquo;<em>auth</em>&rdquo;.</p>
+<p>Because of it, we are going to create the login and register views inside a subfolder called &ldquo;<em>auth</em>&rdquo;.</p>
 
-<p>Dentro dessa subpasta crie quatro arquivos: <em>login.php</em>, <em>register.php</em>, <em>success.php</em> e <em>fail.php</em>. A princípio, alguém seria tentado a criar algo assim em um deles:</p>
+<p>Inside this subfolder, create four files: <em>login.php</em>, <em>register.php</em>, <em>success.php</em> and <em>fail.php</em>.</p>
+
+<p>At first, you could think in each file containing the following structure:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -177,11 +181,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Mas não faz sentido repetir o <em>header</em> em vários arquivos HTML! Não agora que temos um framework para nos auxiliar nessa tarefa! :D</p>
+<p>But here&rsquo;s where the framework comes at the play! You don&rsquo;t need to repeat any HTML structure. You can refactor it into a file apart and reuse it in all files.</p>
 
-<p>Portanto, crie o header em outro arquivo separado chamado <em>header.php</em>. Também crie um arquivo chamado <em>footer.php</em> para lá colocar todo o rodapé da página, incluindo fechamento de tags.</p>
-
-<p>Com isto, meu arquivo header ficou dessa maneira:</p>
+<p>Because of that, we are going to create two other files: <em>header.php</em> and <em>footer.php</em>. The first containing the HTML header and the second containg the tags closure.</p>
 
 <figure class='code'><figcaption><span>header.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -194,13 +196,13 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span><span class='line'><span class="o">&lt;</span><span class="nx">html</span><span class="o">&gt;</span>
 </span><span class='line'>  <span class="o">&lt;</span><span class="nx">head</span><span class="o">&gt;</span>
 </span><span class='line'>      <span class="o">&lt;</span><span class="nx">meta</span> <span class="nx">charset</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="o">&gt;</span>
-</span><span class='line'>      <span class="o">&lt;</span><span class="nx">title</span><span class="o">&gt;</span><span class="nx">Autentificação</span> <span class="nx">no</span> <span class="nx">CodeIgniter</span><span class="o">&lt;/</span><span class="nx">title</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="nx">title</span><span class="o">&gt;</span><span class="nx">CodeIgniter</span> <span class="nx">User</span> <span class="nx">Auth</span><span class="o">&lt;/</span><span class="nx">title</span><span class="o">&gt;</span>
 </span><span class='line'>  <span class="o">&lt;/</span><span class="nx">head</span><span class="o">&gt;</span>
 </span><span class='line'>  <span class="o">&lt;</span><span class="nx">body</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E meu arquivo footer, desta maneira:</p>
+
 
 <figure class='code'><figcaption><span>footer.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -209,9 +211,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E assim nossos arquivos HTML terão apenas o necessário.</p>
-
-<p>O arquivo de login poderia bem ser dessa maneira:</p>
+<p>Now let&rsquo;s come back to the other four files we had created previously, starting with <em>login.php</em>:</p>
 
 <figure class='code'><figcaption><span>login.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -220,17 +220,27 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nx">form_open</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;login&quot; placeholder=&quot;Digite seu login&quot; required /&gt;</span>
-</span><span class='line'><span class="x">  &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Digite sua senha&quot; required /&gt;</span>
-</span><span class='line'><span class="x">  &lt;button type=&quot;submit&quot;&gt;Entrar&lt;/button&gt;</span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;login&quot; placeholder=&quot;Login&quot; required /&gt;</span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required /&gt;</span>
+</span><span class='line'><span class="x">  &lt;button type=&quot;submit&quot;&gt;Log in&lt;/button&gt;</span>
 </span><span class='line'><span class="x">&lt;/form&gt;     </span>
-</span><span class='line'><span class="x">&lt;a href=&quot;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">base_url</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="x">index.php/register&quot;&gt;Não possuí conta? Clique aqui para se cadastrar!&lt;/a&gt; </span>
+</span><span class='line'><span class="x">&lt;a href=&quot;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">base_url</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="x">index.php/register&quot;&gt;Click here to register!&lt;/a&gt;    </span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Considerando que a rota para logar seja <strong>login</strong>. Falaremos mais sobre isso mais a frente. Como você pode ver, é um form dos mais simples, o que há de diferente é o método &ldquo;form_open&rdquo;. Ele é um método utilitário do CodeIgniter que cria um form já com o roteamento correto para nós.</p>
+<p>This file is basically a form contaning two input fields: One for the login and another for the password.</p>
 
-<p>E o arquivo register poderia ser dessa maneira:</p>
+<p>Now there&rsquo;s a strange file in this file. Can you notice it? Actually two!</p>
+
+<p>The first one is the <strong>echo form_open(&lsquo;login)</strong> statement. What does it do?</p>
+
+<p>It basically creates a new form with the tag <code>&lt;form&gt;</code>, but with the difference it already set the action with the correct route. Don&rsquo;t worry, we&rsquo;ll talk about rotes later.</p>
+
+<p>And the second strange thing is the <strong>echo base_url()</strong> statement right below the <code>&lt;/form&gt;</code>. It simply print the base url of our website. For example, in the case of this blog, it would print <em><a href="http://picoledelimao.github.io/">http://picoledelimao.github.io/</a></em>. It&rsquo;s important because sometimes you want to put a link based on the absolute path, but you don&rsquo;t want to say your site domain explicitly.</p>
+
+<p><em>Take a breath now</em></p>
+
+<p>Rested? Now let&rsquo;s go to the <em>register.php</em> file:</p>
 
 <figure class='code'><figcaption><span>register.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -239,20 +249,20 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nx">form_open</span><span class="p">(</span><span class="s1">&#39;new_register&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Digite seu nome&quot; required maxlength=&quot;100&quot; autofocus /&gt; </span>
-</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;login&quot; placeholder=&quot;Digite seu login&quot; required maxlength=&quot;30&quot; /&gt;</span>
-</span><span class='line'><span class="x">  &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Digite sua senha&quot; required maxlength=&quot;30&quot; /&gt;</span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Name&quot; required maxlength=&quot;100&quot; autofocus /&gt; </span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;login&quot; placeholder=&quot;Login&quot; required maxlength=&quot;30&quot; /&gt;</span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required maxlength=&quot;30&quot; /&gt;</span>
 </span><span class='line'><span class="x">  &lt;button type=&quot;submit&quot;&gt;Cadastrar&lt;/button&gt;</span>
 </span><span class='line'><span class="x">&lt;/form&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Considerando que a rota para cadastrar seja <strong>new_register</strong>. Perceba que coloquei alguns atributos adicionais nos campos como &ldquo;maxlength&rdquo;. Isso foi apenas para coincidir com as <em>constraints</em> que defini lá no banco de dados. Não é essencial.</p>
+<p>It follows the same logic of the login.php file. Just noticed the additional attribute &ldquo;<em>maxlength</em>&rdquo; on the input fields. I put it so it can match the constraints I defined on our database. It&rsquo;s not really essential.</p>
 
-<p>E, por fim, o arquivos sucess e fail, que irão mostrar mensagens ao usuário dependendo de seu sucesso em logar. Esses não têm muito mistério:</p>
+<p>And, for last, the <em>success.php</em> and <em>fail.php</em> files, that will show messages to ther user based on his success in logging in. They don&rsquo;t have any trick:</p>
 
 <figure class='code'><figcaption><span>fail.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Falha</span> <span class="nx">ao</span> <span class="nx">logar</span><span class="o">.</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="o">&gt;</span><span class="nx">Tente</span> <span class="nx">novamente</span><span class="o">.&lt;/</span><span class="nx">a</span><span class="o">&gt;</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Fail</span> <span class="nx">to</span> <span class="nb">log</span> <span class="nx">in</span><span class="o">.</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="o">&gt;</span><span class="k">Try</span> <span class="nx">again</span><span class="o">.&lt;/</span><span class="nx">a</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -260,18 +270,20 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <figure class='code'><figcaption><span>success.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Olá</span><span class="p">,</span> <span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nv">$usuario</span><span class="p">;</span> <span class="cp">?&gt;</span><span class="x">. Você logou com sucesso!</span>
-</span><span class='line'><span class="x">&lt;a href=&quot;logout&quot;&gt;Clique aqui para deslogar.&lt;/a&gt;</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Hello</span><span class="p">,</span> <span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nv">$user</span><span class="p">;</span> <span class="cp">?&gt;</span><span class="x">. You are logged in!</span>
+</span><span class='line'><span class="x">&lt;a href=&quot;logout&quot;&gt;Click here to log out.&lt;/a&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p></p>
 
-<p>Ops! Uma pegadinha no arquivo <em>success</em>: De onde vem essa variável &ldquo;$usuario&rdquo;? Ahá! Isso que é legal. Você pode usar alguns dados externos para montar suas views, no meu caso usei a variável &ldquo;$usuario&rdquo;, que eu imagino que deva armazenar o nome do usuário logado, mas quem irá se encarregar de mandar esses dados é o controller. Veremos isso mais a frente.</p>
+<blockquote><p>Hey!! You said it didn&rsquo;t have any trick! So what about this variable $user?</p></blockquote>
 
-<p>Perceba também que usamos a rota <strong>logout</strong> para o usuário se deslogar.</p>
+<p>Yea, I lied&hellip; Sorry about that :P</p>
 
-<p>Com isto terminamos as views. Apenas conferindo os arquivos criados:</p>
+<p>You can send some data to the views through the controllers (remember I said the controller was a bridge between models and views?). In this case, $user variable representates the user name. But don&rsquo;t worry, we&rsquo;ll use how it works with more details later.</p>
+
+<p><strong>Done</strong>! Your views folder must have the following structure:</p>
 
 <ul>
 <li>views
@@ -293,24 +305,18 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </ul>
 
 
-<h2>Criando os models</h2>
+<h2>Creating the models</h2>
 
-<p>Os models, no CodeIgniter, ficam em application > models. PHP em si é <em>stateless</em>, portanto, a noção de models é um pouco diferente do usual.</p>
+<p>The models, in CodeIgniter, stand in the application > models folder. Let&rsquo;s start creating our own. We are just going to need one, and to it we will delegate all the database queries.</p>
 
-<p>Ele não é como Java, onde você tem uma classe com vários atributos, carrega esses atributos do banco de dados e passa a acessá-los da memória.</p>
-
-<p>Em PHP, as classes têm poucos atributos, sendo que a maioria deles são acessados diretamente do banco de dados.</p>
-
-<p>É importante manter isso em mente.</p>
-
-<p>Vamos criar então nosso model! Vamos necessitar apenas de um, que é o usuário em si. Crie um arquivo chamado <strong>usermodel.php</strong>. Todo model no CodeIgniter tem essa estrutura básica:</p>
+<p>Create a file called <strong>usermodel.php</strong>. Every model in CodeIgniter has the following structure:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">NOME</span> <span class="k">extends</span> <span class="nx">CI_Model</span> <span class="p">{</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">NAME</span> <span class="k">extends</span> <span class="nx">CI_Model</span> <span class="p">{</span>
 </span><span class='line'>
 </span><span class='line'><span class="p">}</span><span class="cp">?&gt;</span><span class="x"></span>
 </span></code></pre></td></tr></table></div></figure>
@@ -318,7 +324,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Para o nosso caso, seria assim:</p>
+<p>In our case, it&rsquo;d be something like that:</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -333,7 +339,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Outra coisa importante é que podemos e devemos inicializar nosso banco de dados já no construtor da classe. Isso pode ser feito da seguinte maneira:</p>
+<p>Another important thing is, before we use our database, we need to load it! We can do it in the own class constructor:</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -354,9 +360,8 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p></p>
-
-<p>Nosso singelo model terá apenas dois métodos: login e register.</p>
+<p>
+Our simple model will have only two methods: <em>login</em> and <em>register</em>.</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -393,13 +398,11 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>O que eles fazem é, por incŕivel que pareça, logar e registrar! hehe</p>
+<p>Let&rsquo;s start with the <em>login</em> method. What it does is basically pretty simple: It looks the User table searching for a user containg the same login and password passed through the parameters. In case it finds it, it returns true.</p>
 
-<p>Vamos começar pelo método de logar. O que ele faz é simples: Vasculha o banco de dados por um usuário que possuam o login e a senha informados. Caso seja encontrado, retorna true.</p>
+<p>Of course, we aren&rsquo;t fool to the point to put the original password on our database. We need some kind of encryption to store the password. I will use a famous one called <a href="http://pt.wikipedia.org/wiki/MD5">MD5</a>.</p>
 
-<p>E aqui, devo ressaltar a importância de não colocar a senha no banco de dados da forma original que ela é, né. Use pelo menos uma forma de encriptação. Irei user o <a href="http://pt.wikipedia.org/wiki/MD5">MD5</a>.</p>
-
-<p>Agora nos concentremos no banco de dados. Isto é trivial usando o <a href="https://ellislab.com/codeigniter/user-guide/database/active_record.html">Active Record</a>.</p>
+<p>Now to search the table for a user containg the same login and password, we are going to need a SELECT clausure. Gladly, CodeIgniter gives us a simpler way to do that, using <a href="https://ellislab.com/codeigniter/user-guide/database/active_record.html">Active Record</a>.</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -418,9 +421,11 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>O que o código acima está fazendo? Simplesmente está fazendo um SELECT no banco de dados na tabela indicada pelo método &ldquo;from&rdquo; e com duas cláusulas WHERE. Em outras palavras, selecionando um usuário que possua o mesmo login e a mesma senha (encriptografada) passada.</p>
+<p>Active Record is called that way because some queries are kept in the memory, avoiding double work in case you use the same query again later.</p>
 
-<p>Vamos agora executar a query usando o método &ldquo;get&rdquo; e verificando se alguma linha foi retornada usando o método &ldquo;num_rows&rdquo;.</p>
+<p>The above block statement is selecting all columns where its login is equals to the passed login and its password is equals to the passed <strong>encrypted</strong> password.</p>
+
+<p>Now to get the resulting rows, we just need to apply the method &ldquo;<em>get</em>&rdquo;. We don&rsquo;t need to get any other information other than if there is any resulting row or not (if there&rsquo;s, it means the passed user is valid and so it can login). To check the number of resulting rows, we can use the method &ldquo;<em>num_rows</em>&rdquo;:</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -441,9 +446,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E assim o método login está pronto! Fácil, não é?</p>
+<p>And so the method login is ready! It wasn&rsquo;t complicated, was it?</p>
 
-<p>Vamos para o método register agora. Ele funciona de maneira semelhante, só que agora não estamos preocupados em selecionar usuários, mas sim em inserí-los. Felizmente, também existe um método mágico para esta tarefa:</p>
+<p>Now let&rsquo;s go to the register method now. It works in a similiar way, but now we aren&rsquo;t interesting in selecting rows, but inserting them. Gladly, there&rsquo;s also a magical method for this task:</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -453,23 +458,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">private</span> <span class="k">function</span> <span class="nf">exists</span><span class="p">(</span><span class="nv">$login</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
-</span><span class='line'>  <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span>
-</span><span class='line'>  <span class="k">return</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">num_rows</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exists</span><span class="p">(</span><span class="nv">$login</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
 </span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
 </span><span class='line'>      <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">,</span>
@@ -480,11 +469,34 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E aí foi criado um método auxiliar chamado &ldquo;exists&rdquo; para verificar se um dado login já está sendo usado. Ele é quase igualzinho ao login, só que desta vez não leva em consideração a senha.</p>
+<p>The magical method I&rsquo;m talking about is the &ldquo;<em>$this->db->insert</em>&rdquo;. It receives two arguments: A string containing the table name, and an associative array containing the columns name and their values.</p>
 
-<p>O método register é ridiculamente fácil: Se não existir, ele insere no banco de dados. No método &ldquo;db->insert&rdquo; é passando o nome da tabela e uma array associativa, onde as chaves são os nomes das colunas e os valores serão os valores dessas colunas.</p>
+<p>In the above example, I&rsquo;m inserting a new row to the <strong>User</strong> table with the name, login and password passed through the parameters.</p>
 
-<p>Nossa classe por completo está assim:</p>
+<p>There&rsquo;s another thing in our code: The method &ldquo;<em>exists</em>&rdquo;. What it does is to search the table for an user containing the given login and returns true if it finds it. Remember! The login is unique. So we need to check it before to insert it.</p>
+
+<p>However, it is not a built-in method. Therefore, here is its code:</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">private</span> <span class="k">function</span> <span class="nf">exists</span><span class="p">(</span><span class="nv">$login</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">num_rows</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I think you can figure it out from the <em>login</em> method, since they are both very similar.</p>
+
+<p>And it&rsquo;s <strong>done</strong>! Our complete model is here:</p>
 
 <figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -557,13 +569,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E com isso terminamos nosso model.</p>
+<h2>Creating the controller</h2>
 
-<h2>Criando o controller</h2>
-
-<p>E agora vamos juntar tudo através de um controller. Controller é uma classe como qualquer outra, que tem seus métodos. Vamos começar criando um novo arquivo em application > controllers chamado <strong>usuario.php</strong>.</p>
-
-<p>Esse arquivo tem a seguinte estrutura:</p>
+<p>Finally! Let&rsquo;s work on the controller. Let&rsquo;s start creating a file called <strong>user.php</strong> on application > controllers folder. This file has the following structure:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -586,9 +594,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Que, aliás, é a estrutura básica de todo controller. Todos eles devem herdar de CI_Controller.</p>
+<p>That is, as you assumed, the default structure of a controller in CodeIginiter. All them inherit from CI_Controller.</p>
 
-<p>Também podemos e devemos especificar que models iremos usar. Isto deve ser feito no construtor da classe do controller da seguinte maneira:</p>
+<p>We can also define which models we are going to use. It must be done inside your controller constructor in the following way:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -601,9 +609,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Se precisar de mais models, basta criar mais linhas como essa, substituindo user_model pelo nome da classe do model em minúscula.</p>
+<p>If you need more models, just copy/paste the &ldquo;<em>$this->load->model</em>&rdquo; statement and pass to it the name of the file where the model is.</p>
 
-<p>Também precisamos carregar alguns utilitários:</p>
+<p>We also need to load some utils:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -618,7 +626,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Agora vamos criar o método &ldquo;view&rdquo;, que irá receber uma página da views e renderizará ela na tela. O CodeIgniter nos proporciona um método interessante para esta tarefa, chamado &ldquo;load->view&rdquo;.</p>
+<p>Now let&rsquo;s create the <strong>view</strong> method, that will receive a file inside the views folder and will join it with the header and the footer to make the complete page. CodeIgniter gives us an interesting method to do that, called &ldquo;<em>$this->load->view</em>&rdquo;.</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -635,9 +643,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>E aí nos aproveitamos para não só mostrar a página indicada, mas encapsulá-la entre o &ldquo;header&rdquo; e o &ldquo;footer&rdquo; criados anteriormente. É dessa maneira que reutilizamos código HTML no CodeIgniter. :)</p>
+<p>Now we already have a method to visualize our pages, let&rsquo;s start creating methods to show those pages.</p>
 
-<p>Agora que temos um método para visualização, vamos criar mais um método, o index, que irá mostrar a página inicial da nossa aplicação.</p>
+<p>The first one is the &ldquo;<em>index</em>&rdquo; method, that will show the initial page.</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -648,7 +656,10 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Também precisamos de métodos para mostrar as páginas de registrar, sucesso e falha:</p>
+<p>Hmmmm&hellip; Quite easy. :)
+It just call the method &ldquo;view&rdquo; passing as argument the page &ldquo;auth/login&rdquo; we had create on the beginning of this tutorial.</p>
+
+<p>Now let&rsquo;s do the same thing to the pages &ldquo;<em>register</em>&rdquo;, &ldquo;<em>fail</em>&rdquo; and &ldquo;<em>success</em>&rdquo;:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -675,32 +686,32 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Esses métodos estão bacanas, mas como iremos acessá-los? Chegou a hora de falar sobre rotamento. Roteamento, neste contexto, é o processo de associar uma URL à um método do controller.</p>
+<p>Those are cool methods, but how do we access them through a URL? It&rsquo;s time to talk about routing. Routing is just like that: The process of associate a method to an URL!</p>
 
-<p>Por padrão, cada método público do controller é acessível através da seguinte url:</p>
+<p>By default, each public method inside the controller is accessible through the following link:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="nt">&lt;url_base&gt;</span>/index.php/<span class="nt">&lt;nome_do_controller&gt;</span>/<span class="nt">&lt;nome_do_metodo&gt;</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="nt">&lt;url_base&gt;</span>/index.php/<span class="nt">&lt;controller_name&gt;</span>/<span class="nt">&lt;method_name&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Para o nosso controller User, queremos reduzir essa URL para:</p>
+<p>But what do we really want is to reduce the URL to the following:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="nt">&lt;url_base&gt;</span>/index.php/<span class="nt">&lt;nome_do_metodo&gt;</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="nt">&lt;url_base&gt;</span>/index.php/<span class="nt">&lt;method_name&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Para quando o usuário digitar: <url_base>/, ele seja redirecionado automaticamente para o método &ldquo;index&rdquo; de User. Para isto, vá até o arquivo application > config > routes.php</p>
+<p>Because it&rsquo;s simpler! :)</p>
 
-<p>Na linha 41, mude &ldquo;default_controller&rdquo; para user.</p>
+<p>In order to do that, go to application > config > routes.php. On line 41, change &ldquo;default_controller&rdquo; to &ldquo;user&rdquo;:</p>
 
 <figure class='code'><figcaption><span>routes.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;default_controller&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span><span class="p">;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E agora vamos criar as rotas pros métodos já existentes no Controller:</p>
+<p>And now let&rsquo;s define the routes to the methods we created in the controller:</p>
 
 <figure class='code'><figcaption><span>routes.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -713,14 +724,15 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>A síntaxe descrita ali encima é a seguinte:</p>
+<p>It&rsquo;s simple to understand: The key of the <em>$route</em> array is actually the link after the base url. For example:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;&lt;rota&gt;&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&lt;nome_do_controller&gt;/&lt;nome_do_metodo&gt;&quot;</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
+<p><code>$route["success"] will turn into base_url/success</code></p>
 
+<p>And its value is the method of the controller that it&rsquo;s associated. In the case of success, for example, it&rsquo;s associated with the method &ldquo;success&rdquo; of the controller &ldquo;user&rdquo;.</p>
 
-<p>Precisamos também definir as rotas que falamos anteriormente, que são: <strong>login</strong> (método que irá permitir logar), <strong>logout</strong> (método que irá permitir deslogar) e <strong>new_register</strong> (método que irá permitir registrar um novo usuário).</p>
+<p>Gotcha? Good! :)</p>
+
+<p>We also need to define some other routes necessary for our site. They are: <strong>login</strong> (route that will allow us to login), <strong>logout</strong> (routes that will allow us to log out) and <strong>new_register</strong> (route that will allow us to register a new user).</p>
 
 <figure class='code'><figcaption><span>routes.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -731,9 +743,11 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Claro, ainda não temos os métodos &ldquo;login&rdquo;, &ldquo;logout&rdquo; e &ldquo;new_register&rdquo;. Vamos então criá-los!</p>
+<p>Those routes are a bit different from the others we created previously. They are not intended to show any page, but to proccess some information passed through the forms (a POST requisition). If you scroll up, remember we used the statement &ldquo;<em>form_open(&rdquo;&hellip;&ldquo;)</em>&rdquo; to create a new form? The passed argument to this method now representates a route here.</p>
 
-<p>Primeiro o de login. Sabemos que o form irá mandar uma requisição POST para este método. Precisamos pegar as informações desta requisições. Isso pode ser feito da seguinte maneira:</p>
+<p>Of course, they, like any other route, are associate with a controller method, methods we didn&rsquo;t create yet, so let&rsquo;s do it!</p>
+
+<p>Let&rsquo;s start with the login method. We know the form will send a <strong>POST</strong> requisition to this method. Let&rsquo;s get the fields data through the method &ldquo;<em>$this->input->post</em>&rdquo;, where the passed argument is the field name.</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -746,7 +760,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Com isto estamos pegando os valores dos campos de nome &ldquo;login&rdquo; e &ldquo;password&rdquo; e atribuindo às suas respectivas variáveis. Com esses valores em mãos, vamos chamar o método do model &ldquo;usermodel&rdquo; que irá permitir logar:</p>
+<p>The above code is getting the values of the login and password fields.</p>
+
+<p>Now we have them, we can use the <strong>UserModel</strong> model to validate those informations and check if the user is valid:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -769,13 +785,13 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Interessante aqui é que não criamos uma instância do model (pelo menos não de forma explicita). Quando importamos o model no construtor, todos os seus métodos são acessíveis através de $this->(nome do model).</p>
+<p>As showed, to use a model method, you use the following syntax; &ldquo;<em>$this->modelname->methodName(&hellip;)</em>&rdquo;.</p>
 
-<p>Sabendo disso, chamamos o método login, e lembrando que ele retorna true caso o login seja efetuado com sucesso, colocamos a chamada de método dentro de um condicional.</p>
+<p>Even more interesting: We didn&rsquo;t instanciate any model! So how can we use its methods? It&rsquo;s simple: When we load a model, CodeIgniter implicity create a class attribute named with the same name of the model but in lowercase and set it to a new instance of this model. That&rsquo;s why we can use &ldquo;<em>$this->modelname</em>&rdquo; without problems.</p>
 
-<p>Precisamos agora criar uma nova <strong>seção</strong>, um local onde iremos colocar pequenas informações que indiquem que usuário está logado naquele momento, um pouco parecido com cookies.</p>
+<p>Now let&rsquo;s go back to our method. We know if the code enter on if block, the user is valid so it can login. But which actions should we do to indicate to the user that he is logged in? More importantly, how to notify the system that the <em>which</em> user is logged in?</p>
 
-<p>Para poder utilizá-la, primeiro importe a seguinte biblioteca no construtor do controller:</p>
+<p>We are going to need the information that which user is logged in in a PHP session. CodeIgniter provides us utility methods to ease the managment of sessions. In order to use them, we need to load the library on the controller constructor:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -790,9 +806,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Vá até o arquivo application > config > config.php, e na linha 227 defina o valor da variável <strong>$config[&lsquo;encription_key&rsquo;]</strong> para qualquer número aleatório realmente grande.</p>
+<p>To raise the security level, CodeIgniter forces us to use a encription key to our sessions. To define it, go to application > config > config.php, on line 227, and set the value of the variable <strong>$config[&lsquo;encription_key&rsquo;]</strong> to any really long number.</p>
 
-<p>Agora volte para nosso controller, e adicione a seguinte linha de código ao método &ldquo;login&rdquo;:</p>
+<p>Now back to our controller, add the following lines to our &ldquo;<em>login</em>&rdquo; method:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -817,7 +833,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Feito isto, agora podemos acessar a informação do usuário que está logado naquele momento através do método:</p>
+<p>Basically, it&rsquo;s setting a new variable to our session named &ldquo;user&rdquo; and its value containing the login of the logged user. We can access the stored value through the following statement:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
@@ -826,9 +842,11 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Você pode definir mais informações caso queira, basta nomeá-las com uma chave diferente de &ldquo;user&rdquo;.</p>
+<p>This way we can now know which user is logged in, or null if there&rsquo;s any user logged in at the moment.</p>
 
-<p>Agora que criamos essa seção, vamos redirecionar o usuário para a tela de sucesso.</p>
+<p>If you also need to store more informations about the user, we can follow the same logic, just by replacing &ldquo;user&rdquo; by another variable you want to use.</p>
+
+<p>Now we already store the user, let&rsquo;s redirect the user to the success page.</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -853,11 +871,8 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p></p>
-
-<p>O primeiro argumento do método &ldquo;redirect&rdquo; é a URL. O roteamento irá redirecionar pro método do controller equivalente. :)</p>
-
-<p>E caso o usuário não tenha conseguido logar, vamos redirecioná-lo para tela de falha.</p>
+<p>
+And you need to redirect the user to the fail page in case the login is incorrect:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -882,9 +897,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Agora você se lembra que no arquivo &ldquo;success.php&rdquo; havia uma pegadinha, onde usávamos uma variável chamada $usuario e que eu disse que quem iria definir quem ela é seria o controller? Pois bem, chegou a hora.</p>
+<p>Now, if you remember, there was a little trick on &ldquo;sucess.php&rdquo; view page. The variable &ldquo;<em>$user</em>&rdquo;! From where did it come from? We&rsquo;ll work on it now.</p>
 
-<p>Modifique o método &ldquo;view&rdquo;, aquele responsável por renderizar a página, para receber um parâmetro opcional: $data, e faça com que as chamas de &ldquo;load->view&rdquo; passem esse parâmetro também.</p>
+<p>Before that, modify the method &ldquo;view&rdquo; on the controller to now receive an array called $data. This parameter will be optional, so set it as false as default value. On &ldquo;$this->load->view&rdquo; statement inside this method, pass the array too, so the pages can access it.</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -901,23 +916,35 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Agora no método &ldquo;success&rdquo;, adicione a seguinte linha antes de chamar o método &ldquo;view&rdquo;:</p>
+<p>Now, on &ldquo;success&rdquo; method, add the following method before calling the &ldquo;view&rdquo; method:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">success</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="o">...</span>
+</span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E passe essa variável quando for chamar o &ldquo;view&rdquo;:</p>
+<p>And now modify the method call right below to pass this array too:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">success</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/success.php&quot;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Com isto, a array $data é passada para as views, só que lá dentro os valores dessa array são acessíveis através de variáveis independentes. Exemplo: $data[&ldquo;usuario&rdquo;] torna-se $usuario. :)</p>
+<p>This way the array $data containing the key &ldquo;user&rdquo; is passed to the page &ldquo;<em>success.php</em>&rdquo;, but there each array key is accessible through independent variables. For example, $data[&ldquo;user&rdquo;] becomes $user there. :)</p>
 
-<p>Agora vamos fazer com que, se logado, o usuário seja redirecionado para a tela de sucesso automaticamente. Para isto, basta criar a seguinte condição no método &ldquo;index&rdquo;:</p>
+<p>Now we just need to add a little defailt on &ldquo;index&rdquo; method. If the user is already logged in, instead of showing the initial page where he can log in, it redirects him to the success page. It can be done easily through the &ldquo;redirect&rdquo; method:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -938,9 +965,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Com isso terminamos a ação de logar! Falta-nos o de deslogar e o de registrar. Vamos pelo de registrar.</p>
+<p>As said previously, &ldquo;<em>$this->session->userdata</em>&rdquo; stores the user that is currently logged or null if there isn&rsquo;t any. Therefore, if there&rsquo;s a user logged in, this expression will evaluates true.</p>
 
-<p>Registrar é muito parecido com o de logar, veja:</p>
+<p>The &ldquo;<em>new_register</em>&rdquo; method is very similar to login method:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -961,9 +988,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p>Acho que não há nada de novo aqui em relação ao método &ldquo;login&rdquo;.</p>
-
-<p>E, por último, o método de deslogar:</p>
+<p>And now, for last, the logout method:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -978,9 +1003,9 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Basicamente, ele está destruindo a seção e redirecionando para tela inicial.</p>
+<p>It basically destroys the session and redirects to the initial page.</p>
 
-<p>Com isso, nossa classe, por completo, está assim:</p>
+<p>And it&rsquo;s <strong>done</strong>! Our complete controller is this way:</p>
 
 <figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1080,7 +1105,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">success</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>      <span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;usuario&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
 </span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/success&quot;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  
@@ -1115,13 +1140,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <p></p>
 
-<p><strong>Uhuuu!!</strong> E concluímos nossa aplicação! Se você rodar agora, verá que está tudo rodando perfeitamente (assim espero hehe).</p>
-
-<p style="text-align:center;"> <img src="/images/posts/igniter-auth-1.png" alt="" /></p>
-
-<p style="text-align:center;"> <img src="/images/posts/igniter-auth-2.png" alt="" /></p>
-
-<p style="text-align:center;"> <a href="/downloads/code/auth.zip">Clique aqui para baixar o exemplo completo</a></p>
+<p><strong>Wehoo!!</strong></p>
 </div>
 
 
@@ -1130,7 +1149,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
       
   
 
-<span class="byline author vcard">Postado por <span class="fn">Abner Matheus</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
 
       
 
@@ -1142,7 +1161,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/tutoriais/'>tutoriais</a>
+    <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
   
 </span>
 
@@ -1161,7 +1180,7 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
         <a class="basic-alignment left" href="/blog/2014/09/28/java-hashboom/" title="Previous Post: (Java) Hashboom">&laquo; (Java) Hashboom</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores/" title="Next Post: Pequenas coisas que podem tornar seus programas em Java melhores">Pequenas coisas que podem tornar seus programas em Java melhores &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/" title="Next Post: Little things that can make your Java programs better">Little things that can make your Java programs better &raquo;</a>
       
     </p>
   </footer>
@@ -1182,11 +1201,11 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/11/12/gerenciando-sessoes-em-php/">Gerenciando Sessões Em PHP</a>
+        <a href="/blog/2014/11/12/managing-sessions-in-php/">Managing Sessions in PHP</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i/">Experiências Na Disciplina De Sistemas De Informação I</a>
+        <a href="/blog/2014/10/27/my-experience-on-information-systems-i/">My Experience on Information Systems I</a>
       </li>
     
       <li class="post">
@@ -1194,11 +1213,11 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores/">Pequenas Coisas Que Podem Tornar Seus Programas Em Java Melhores</a>
+        <a href="/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/">Little Things That Can Make Your Java Programs Better</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/09/30/criando-autentificacao-de-usuarios-em-php-usando-codeigniter/">Criando Autentificação De Usuários Em PHP Usando CodeIgniter</a>
+        <a href="/blog/2014/09/30/creating-user-authentification-with-code-igniter/">Creating User Authentification With Code Igniter</a>
       </li>
     
   </ul>
@@ -1256,8 +1275,8 @@ Acesse o <a href="https://ellislab.com/codeigniter">site do CodeIgniter</a> e cl
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/30/criando-autentificacao-de-usuarios-em-php-usando-codeigniter/';
-        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/30/criando-autentificacao-de-usuarios-em-php-usando-codeigniter/';
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter/';
         var disqus_script = 'embed.js';
       
     (function () {

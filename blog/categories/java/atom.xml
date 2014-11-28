@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Java | The bug is on the table]]></title>
+  <title><![CDATA[Category: Java | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-11-12T22:19:50-03:00</updated>
+  <updated>2014-11-28T18:44:34-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -14,17 +14,17 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Experiências Na Disciplina De Sistemas De Informação I]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i/"/>
+    <title type="html"><![CDATA[My Experience on Information Systems I]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/10/27/my-experience-on-information-systems-i/"/>
     <updated>2014-10-27T00:35:50-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i</id>
-    <content type="html"><![CDATA[<p>Na disciplina de Sistemas de Informação I aprendemos um pouco sobre sistemas web.</p>
+    <id>http://PicoleDeLimao.github.io/blog/2014/10/27/my-experience-on-information-systems-i</id>
+    <content type="html"><![CDATA[<p>On Information Systems I we learn about project design and web systems.</p>
 
-<p>Lá, nós utilizamos um framework chamado Play!, que é feito para Java e Scala.</p>
+<p>There, we utilize a framework called Play!, that is done for Java and Scala.</p>
 
-<p>O Play! Framework não deixou nada a desejar. A parte de integração com o Scala realmente é uma mão na roda, tornando as coisas realmente mais simples do que se fossem feitas puramente em Java.</p>
+<p>Play! Framework is excellent, and the integration part with Scala really helps, turning things smoother.</p>
 
-<p>Aqui vai alguns exemplos de sites que desenvolvi durante essa disciplina:</p>
+<p>Here are some web systems I developed during this discipline:</p>
 
 <h2>#Partiu</h2>
 
@@ -36,90 +36,72 @@
 <p></p>
 
 <center>Link: <a href="http://si1-partiu.herokuapp.com">http://si1-partiu.herokuapp.com</a>/<br/><br/>
-Repositório no Github: <a href="https://github.com/felipemdrs/Partiu_Projeto_SI1">https://github.com/felipemdrs/Partiu_Projeto_SI1</a></center>
+Github repository: <a href="https://github.com/felipemdrs/Partiu_Projeto_SI1">https://github.com/felipemdrs/Partiu_Projeto_SI1</a></center>
 
 
 <p><br/></p>
 
-<p>Esse foi o projeto final da disciplina e foi feito em conjunto com outro colega, <a href="https://github.com/felipemdrs">Felipe Miranda</a>. Basicamente, é uma &ldquo;rede social&rdquo; de viagens, onde você cria um grupo para sua viagem e chama pessoas para compartilhar informações sobre essa viagem, parecido com os grupos de Facebook. Você pode definir uma viagem como público ou privada.</p>
+<p>That was the discipline&rsquo;s final project and it was made together with a classmate, <a href="https://github.com/felipemdrs">Felipe Miranda</a>.
+Basically, it is a &ldquo;social network&rdquo; of travels, where you create a group for you travel and call people to share information about it, very much like Facebook groups. You can set you travels as public or private.</p>
 
 <h2>CCFest</h2>
 
 <p style="text-align:center;"><img src="/images/posts/play-ccfest.png" alt="" />
 Link: <a href="http://cchackfest.herokuapp.com/">http://cchackfest.herokuapp.com/</a><br/>
-Repositório no Github: <a href="https://github.com/PicoleDeLimao/hackfest2">https://github.com/PicoleDeLimao/hackfest2</a></p>
+Github repository: <a href="https://github.com/PicoleDeLimao/hackfest2">https://github.com/PicoleDeLimao/hackfest2</a></p>
 
-<p>Originalmente feito também por <a href="https://github.com/felipemdrs">Felipe Miranda</a>, o desafio era pegar um sistema pronto de outro colega e evoluí-lo.</p>
+<p>Originally made by <a href="https://github.com/felipemdrs">Felipe Miranda</a>, the challenge was deal with a complete system and evolve it (of course, I couldn&rsquo;t be able to create such beautiful GUI :p).</p>
 
-<p>Claro, eu nunca seria capaz de criar uma interface tão bonitinha :P</p>
+<p>I was responsible for user validation (previously there wasn&rsquo;t a signup option), possibility to add an event place and check it as priority for experienced programmer. Another thing I learned during this project was how to work with AJAX technology.</p>
 
-<p>Fui responsável pela parte de validação de usuário (anteriormente não havia opção de se cadastrar), possibilidade de adicionar um local ao evento e marcar como prioritário para hackers experientes (e a experiência aqui é ditada pela quantidade de eventos que você já participou), e outros pequenos detalhes.</p>
+<h2>Final thoughts</h2>
 
-<p>Além disso, outra coisa que aprendi com esse projeto foi a usar AJAX.</p>
+<p>My experience while on this discipline was very positive. My knowledge with web systems was from zero to now the possibility to create pretty complex sites. :P</p>
 
-<h2>Conclusão</h2>
+<p>I learnt many technologies (Play!, MVC, Heroku, Hibernate, AJAX, Javascript, just to quote few :P) and there&rsquo;s still many to learn! Well&hellip; That&rsquo;s a programmer life. But it&rsquo;s better that way.</p>
 
-<p>A experiência com essa disciplina foi muito positiva. Parti de experiência quase zero com websites até a possibilidade de criar sites com aparência &ldquo;profissional&rdquo;, se me permite dizer.</p>
-
-<p>Foram muitas as tecnologias aprendidas (Play!, MVC, Heroku, Hibernate, AJAX, Javascript, só para citar algumas :P) e muitas ainda a aprender. Mas vida de programador é assim mesmo. ;)</p>
-
-<p>É isso aí, até a próxima!</p>
+<p>That&rsquo;s it. See ya!</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Pequenas Coisas Que Podem Tornar Seus Programas Em Java Melhores]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores/"/>
+    <title type="html"><![CDATA[Little Things That Can Make Your Java Programs Better]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/"/>
     <updated>2014-10-18T11:17:45-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores</id>
-    <content type="html"><![CDATA[<p>Há alguns meses venho lendo o livro <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Refactoring: Improving the design of existing code</a>, de Martin Fowler.
-O livro é clássico, e de certa forma mudou minha maneira de pensar em design de software, principalmente nas linguagens orientadas a objetos.</p>
+    <id>http://PicoleDeLimao.github.io/blog/2014/10/18/little-things-that-can-make-your-java-programs-better</id>
+    <content type="html"><![CDATA[<p>On the past months I&rsquo;ve been reading this incredible book called <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Refactoring: Improving the design of existing code</a>, by Martin Fowler.</p>
 
-<p>No livro existem dezenas ou até centenas de exemplos e dicas. Eu aqui reuni <strong>cinco</strong> dicas que considero mais fáceis e simples de serem aplicadas mas que ainda assim possuam algum impacto sobre a qualidade do software. Essas dicas, embora tenham a influência do livro, também contam com minha própria experiência.</p>
+<p>This one is classic on Software Engineering, and somewhat changed the way I think about software design in general.</p>
 
-<p>Usarei Java porque tanto é a linguagem usada como modelo no livro quanto é a que eu mais tenho familiaridade.</p>
+<p>In the book there are dozens or hundreds of examples and tips. I gathered <strong>five</strong> that I consider easier and simpler to be applied but still have some impact on final product. Those tips, though inspired in the book, are also product of my own experience.</p>
+
+<p>I picked Java cause that&rsquo;s my more familiar language and it&rsquo;s also the book language choice.</p>
 
 <!-- more -->
 
 
-<h2>1. Não crie um método &ldquo;set&rdquo; para um atributo se você não vai alterá-lo</h2>
+<h2>1. Do not create a &ldquo;set&rdquo; method for an attribute that can&rsquo;t change</h2>
 
-<p>Essa dica parece ser besta, e é mesmo, mas muuuuitas pessoas acabam criando métodos &ldquo;get&rdquo; e &ldquo;set&rdquo; desnecessariamente.
-Embora isso não vá causar uma catástrofe à curto prazo, isso acaba violando um dos princípios do paradigma orientado a objetos, que é o controle da informação.</p>
+<p>This tip seems a bit foolish, and it really is, but you won&rsquo;t believe the amount of times this mistake is done over and over again.</p>
 
-<p>Quando você permite que seus dados sejam abertos à modificação sem necessidade, e que a alteração até cause algum mau-funcionamento, então você está deixando uma brecha para um possível bug no futuro.</p>
+<p>But, wait! Does an attribute that can&rsquo;t change really make sense? It does! It&rsquo;s too common nowadays to use some form of ORM (Object Relation Mapping), where some attribute will become the primary key. Allowing the programmer to change the attribute that representates the primary key may lead to some form of inconsistency in some extreme cases.</p>
 
-<h2>2. Não permita classes modificarem coleções de outras</h2>
+<p>If you aren&rsquo;t still convinced, just remember: Why wasting time doing something unnecessary? Less lines = better!</p>
 
-<p>Essa dica parece ser contraditória e até errônea a princípio. Na verdade, classes podem e devem modificar coleções e dados de outra classe (dentro de um limite), o que não é <em>legal</em> é que essa modificação seja feita de maneira <strong>direta</strong>. Nada melhor do que um exemplo para ilustrar o que quero dizer.</p>
+<h2>2. Do not allow classes modify other classes collections</h2>
 
-<pre><code class="Java Sistema.java">public class Sistema {
+<p>This tip seems bit &ldquo;fishy&rdquo; at first. Actually, classes can indeed modify other classes collections, the problem here is the way it&rsquo;s done. Let me show you by example:</p>
 
-    private Set&lt;Usuario&gt; usuarios;
+<pre><code class="Java System.java">public class System {
 
-    public void setUsers(Set&lt;Usuario&gt; usuarios) {
-        this.usuarios = usuarios;
+    private Set&lt;User&gt; users;
+
+    public void setUsers(Set&lt;User&gt; users) {
+        this.users = users;
     }
 
-    public Set&lt;Usuario&gt; getUsuarios() {
-        return this.usuarios;
-    }
-
-    ...
-
-}
-</code></pre>
-
-<pre><code class="Java InvasorDePrivacidade.java">public class InvasorDePrivacidade {
-
-    private Sistema sistema;
-
-    public boolean adicionaUsuario(String login, String senha) {
-        return sistema.getUsuarios().add(new Usuario(login, senha));
-    }
-
-    public boolean removeUsuario(Usuario usuario) {
-        return sistema.getUsuarios().remove(usuario);
+    public Set&lt;Usuario&gt; getUsers() {
+        return this.users;
     }
 
     ...
@@ -127,32 +109,16 @@ Embora isso não vá causar uma catástrofe à curto prazo, isso acaba violando 
 }
 </code></pre>
 
-<p>Esse foi um exemplo bem simples. Qual o problema desse design?</p>
+<pre><code class="Java PrivacyInvader.java">public class PrivacyInvader {
 
-<p>O problema é que a classe &ldquo;InvasorDePrivacidade&rdquo; está adicionando e removendo elementos da coleção &ldquo;usuarios&rdquo; de Sistema de maneira direta. O que isso pode acarretar? Um grande decréscimo de <strong>segurança</strong>. Agora qualquer classe do programa pode remover ou adicionar usuários no sistema! Não existe mais controle ou &ldquo;sentinela&rdquo; do que é permitido ser adicionado ou removido.</p>
+    private System system;
 
-<p>Outro problema presente ali, desta vez um pouco mais sutil, é a criação do objeto do tipo &ldquo;Usuario&rdquo; dentro de um local inapropriado. Se formos espalhar a construção de objetos em vários pontos do nosso programa, o que acontecerá se quisermos alterar o construtor, adicionando ou removendo parâmetros? Usaríamos overload para usar o &ldquo;novo&rdquo; construtor nas novas chamadas? Procuraríamos e atualizariamos as chamadas antigas ao construtor um por um? E se o construtor lançar exceções? Também teríamos que tratar essas exceções em todos os pontos onde o construtor é chamado?</p>
-
-<p>Tudo isso poderia ser resolvido se passarsemos a responsabilidade de adicionar ou remover usuários exclusivamente à classe &ldquo;Sistema&rdquo;, proibindo outras classes de fazer isso.</p>
-
-<pre><code class="Java Sistema.java">public class Sistema {
-
-    private Set&lt;Usuario&gt; usuarios;
-
-    public void setUsers(Set&lt;Usuario&gt; usuarios) {
-        this.usuarios = usuarios;
+    public boolean addUser(String login, String password) {
+        return system.getUsers().add(new User(login, password));
     }
 
-    public Set&lt;Usuario&gt; getUsuarios() {
-        return this.usuarios;
-    }
-
-    public boolean adicionaUsuario(String login, String senha) {
-        return this.usuarios.add(new Usuario(login, senha));
-    }
-
-    public boolean removeUsuario(Usuario usuario) {
-        return this.usuarios.remove(usuario);
+    public boolean removeUser(User user) {
+        return system.getUsers().remove(user);
     }
 
     ...
@@ -160,16 +126,32 @@ Embora isso não vá causar uma catástrofe à curto prazo, isso acaba violando 
 }
 </code></pre>
 
-<pre><code class="Java InvasorDePrivacidade.java">public class InvasorDePrivacidade {
+<p>What&rsquo;s the problem of this design?</p>
 
-    private Sistema sistema;
+<p>The problem is that the &ldquo;PrivacyInvader&rdquo; class is adding and removing elements of &ldquo;users&rdquo; collection from System in a direct way. Let&rsquo;s suppose you are using this collection to persist into your database from times to times. Now imagine that any class can insert any user, not respecting any constraint you put in this process, as, for example, a repeated user login. What will happen? Yea, you guessed right&hellip;</p>
 
-    public boolean adicionaUsuario(String login, String senha) {
-        return sistema.adicionaUsuario(login, senha);
+<p>Another problem, this way a bit more subtile, is that &ldquo;User&rdquo; is being created in an inappropriated place. If we allow such things to happen, the User construtor will be called all over the code. What if now you want to change its signature? That&rsquo;s a classic problem of coupling. PrivacyInvader is knowing too much about User, where the only one who should know that much is that one that will really use it, in this case, &ldquo;System&rdquo;.</p>
+
+<p>Now how do we fix all that? Let&rsquo;s start fixing the second problem listed.</p>
+
+<pre><code class="Java System.java">public class System {
+
+    private Set&lt;User&gt; users;
+
+    public void setUsers(Set&lt;Usuario&gt; users) {
+        this.users = users;
     }
 
-    public boolean removeUsuario(Usuario usuario) {
-        return sistema.remove(usuario);
+    public Set&lt;Usuario&gt; getUsers() {
+        return this.users;
+    }
+
+    public boolean addUser(String login, String password) {
+        return this.users.add(new User(login, password));
+    }
+
+    public boolean removeUser(User user) {
+        return this.users.remove(user);
     }
 
     ...
@@ -177,48 +159,57 @@ Embora isso não vá causar uma catástrofe à curto prazo, isso acaba violando 
 }
 </code></pre>
 
-<p>O problema de segurança foi resolvido na classe &ldquo;InvasorDePrivacidade&rdquo;, mas a brecha ainda existe para outras classes através dos métodos &ldquo;set&rdquo; e &ldquo;get&rdquo; da classe &ldquo;Sistema&rdquo;.</p>
+<pre><code class="Java PrivacyInvader.java">public class PrivacyInvader {
 
-<p>O problema do &ldquo;set&rdquo; recai à dica #1 deste tutorial. Ele é realmente necessário? A resposta é <strong>não</strong>. Métodos &ldquo;set&rdquo; para coleções quase nunca são necessários.</p>
+    private System system;
 
-<p>O &ldquo;get&rdquo; realmente parece ser inevitável. Em uma hora ou outra teremos que acessar a lista de usuários. Porém, podemos minimizar o problema ao fazer com que a lista retornada pelo método &ldquo;get&rdquo; seja:</p>
+    public boolean addUser(String login, String password) {
+        return system.addUser(login, password);
+    }
 
-<ol>
-<li>Uma cópia da original. Portanto, modificações feitas através do método get não irão afetar em nada.</li>
-<li>Uma <em>unmodifiable collection</em>.</li>
-</ol>
+    public boolean removeUser(User user) {
+        return system.remove(user);
+    }
 
+    ...
 
-<p>A segunda opção parece ser a mais elegante. Java permite o uso de uma <em>unmodifiable collection</em>, que basicamente é uma cópia da coleção original, com a diferença de que ele não apenas não permite que se altere a lista como lança exceção ao fazê-lo. Isso já é um grande auxílio na hora de debugar o programa.</p>
+}
+</code></pre>
 
-<p>Se você acessar a classe &ldquo;Collections&rdquo;, verá vários métodos utilitários que tornam coleções do tipo &ldquo;unmodifiable&rdquo;. Os métodos mais comuns são:</p>
+<p>Much better now! Now User class coupling was reduced to System class. So what do we do now to avoid direct access to our collection? One way would be to remove the &ldquo;get&rdquo; method, but this is a sub-optimal solution, since sometimes we do really need to access the collection.</p>
+
+<p>Happily, Java provides us an elegant solution to solve this problem: Collections.unmodifiable!</p>
+
+<p>Collections.unmodifiable is a set of methods which receive a collection and return this collection modified in such way that it doesn&rsquo;t allow any insert or delete method, only search methods as &ldquo;get&rdquo;! Awesome, isn&rsquo;t it? :P</p>
+
+<p>Here is some supported methods:</p>
 
 <ul>
-<li>Collections.unmodifiableList(listaOriginal);</li>
-<li>Collections.unmodifiableSet(setOriginal);</li>
-<li>Collections.unmodifiableMap(mapaOriginal);</li>
-<li>Collections.unmodifiableCollection(collectionOriginal);</li>
+<li>Collections.unmodifiableList(originalList);</li>
+<li>Collections.unmodifiableSet(originalSet);</li>
+<li>Collections.unmodifiableMap(originalMap);</li>
+<li>Collections.unmodifiableCollection(originalCollection);</li>
 </ul>
 
 
-<p>Com isto nossa classe ficará assim:</p>
+<p>And that&rsquo;s our solution using this little trick:</p>
 
 <pre><code class="Java Sistema.java">import java.util.Collections;
 
-public class Sistema {
+public class System {
 
-  private Set&lt;Usuario&gt; usuarios;
+  private Set&lt;User&gt; users;
 
-  public Set&lt;Usuario&gt; getUsuarios() {
-      return Collections.unmodifiableSet(this.usuarios);
+  public Set&lt;User&gt; getUsers() {
+      return Collections.unmodifiableSet(this.users);
   }
 
-  public boolean adicionaUsuario(String login, String senha) {
-      return this.usuarios.add(new Usuario(login, senha));
+  public boolean addUser(String login, String password) {
+      return this.users.add(new User(login, password));
   }
 
-  public boolean removeUsuario(Usuario usuario) {
-      return this.usuarios.remove(usuario);
+  public boolean removeUser(User user) {
+      return this.users.remove(user);
   }
 
   ...
@@ -226,56 +217,54 @@ public class Sistema {
 }
 </code></pre>
 
-<h2>3. Marque um método como público apenas se for estritamente necessário</h2>
+<p>Also notice we removed the &ldquo;set&rdquo; method for the collection. The reason was explained in topic #1 :P</p>
 
-<p>O valor de uma classe poderia ser definido como o valor de sua interface. Interface não representando uma estrutura de dados abstrata, mas o conjunto de métodos e atributos que compõe uma classe. Quanto mais significativa e simples essa interface, maiores são as chances dela ser reutilizada, o que é muito bom por si só.</p>
+<h2>3. Let a method be public only if really necessary</h2>
 
-<p>Uma maneira de simplificar a interface das classes é esconder tudo que não é essencial para outras classes.</p>
+<p>Some OOPs gurus say that the worth of a class is its interface. And I can&rsquo;t agree more. Simpler interfaces are easier to use, you don&rsquo;t need to search the method that does &ldquo;this&rdquo; or &ldquo;that&rdquo; because they are fewer.</p>
 
-<p>Claro, métodos auxiliares são importantes, até para simplificar a lógica de outros métodos, mas eles só possuem razão de ser dentro daquela classe. Não há porque mostrar ao mundo que eles existem.</p>
+<p>Of course, I&rsquo;m not saying: Create as less methods as possible. What I&rsquo;m saying is: Create as much methods as possible (indeed, it&rsquo;s even encouraged, since more methods lead to smaller methods and smaller methods are easier to understand), but let all the auxiliar methods <strong>private</strong>.</p>
 
-<p>Para esses casos, use &ldquo;private&rdquo; ou quando não for possível, &ldquo;protected&rdquo;.</p>
+<h2>4. Know when to use Enum and when to use Inheritance</h2>
 
-<h2>4. Saiba quando usar Enum e quando usar herança</h2>
+<p>That&rsquo;s a trick one, isn&rsquo;t it? Enum is a big ally. It saves times. But enums are almost always followed by switch statements. And switch statements are evil. Why? Because they are not flexible enough to change. If you want to add a new enum value, for example, you must have to change ALL the switch statements that use that enum. And it&rsquo;s <strong>bad</strong>! Changes like that almost always lead to bugs. Here is an example:</p>
 
-<p>Enum é um grande aliado. Ele permite criar uma quantidade definida de constantes. Entretanto, é comum usar enum dentro de condicionais (geralmente um <em>switch case</em>) para variar um comportamento de um método. Aqui vai um exemplo:</p>
+<pre><code class="Java Role.java">public enum Role {
 
-<pre><code class="Java Cargo.java">public enum Cargo {
-
-    ESTAGIARIO, JUNIOR, EXPERT, PLENO
+    TRAINEE, JUNIOR, EXPERT, SENIOR
 
 }
 </code></pre>
 
-<pre><code class="Java Desenvolvedor.java ">public class Desenvolvedor {
+<pre><code class="Java Developer.java ">public class Developer {
 
-    private Cargo cargo;
+    private Role role; 
 
-    public double getSalario() {
-        switch(this.cargo) {
-            case ESTAGIARIO:
+    public double getSalary() {
+        switch(this.role) {
+            case TRAINEE:
                 return 500;
             case JUNIOR:
                 return 1000;
             case EXPERT:
                 return 2000;
-            case PLENO:
+            case SENIOR:
                 return 4000;
             default:
-                throw new CargoException("Cargo inválido.");
+                throw new RoleException("Invalid role.");
         }
     }
 
-    public boolean promove() {
-        switch(this.cargo) {
-            case ESTAGIARIO:
-                this.cargo = Cargo.JUNIOR;
+    public boolean promote() {
+        switch(this.role) {
+            case TRAINEE:
+                this.role = Role.JUNIOR;
                 break;
             case JUNIOR:
-                this.cargo = Cargo.EXPERT;
+                this.role = Role.EXPERT;
                 break;
             case EXPERT:
-                this.cargo = Cargo.PLENO;
+                this.role = Role.SENIOR;
                 break;
             default:
                 return false;
@@ -288,150 +277,123 @@ public class Sistema {
 } 
 </code></pre>
 
-<p>Esse problema poderia ser resolvido de maneira diferente usando herança e polimorfismo:</p>
+<p>This could be done is a similar way using Inheritance and polymorphism:</p>
 
-<pre><code class="Java Cargo.java">public interface Cargo {
+<pre><code class="Java Role.java">public interface Role {
 
-    public double getSalario();
-    public boolean promove(Desenvolvedor contexto);
+    public double getSalary();
+    public boolean promote(Developer context);
 
 }
 </code></pre>
 
-<pre><code class="Java Estagiario.java">public class Estagiario implements Cargo {
+<pre><code class="Java Trainee.java">public class Trainee implements Role {
 
     @Override
-    public double getSalario() {
+    public double getSalary() {
         return 500;
     }
 
     @Override
-    public boolean promove(Desenvolvedor contexto) {
-        contexto.setCargo(Cargo.JUNIOR);
+    public boolean promote(Developer context) {
+        context.setRole(new Junior());
         return true;
     }
 
 }
 </code></pre>
 
-<pre><code class="Java Junior.java">public class Junior implements Cargo {
+<pre><code class="Java Junior.java">public class Junior implements Role {
 
     @Override
-    public double getSalario() {
+    public double getSalary() {
         return 1000;
     }
 
     @Override
-    public boolean promove(Desenvolvedor contexto) {
-        contexto.setCargo(Cargo.EXPERT);
+    public boolean promote(Developer context) {
+        context.setRole(new Expert());
         return true;
     }
 
 }
 </code></pre>
 
-<pre><code class="Java Expert.java">public class Expert implements Cargo {
+<pre><code class="Java Expert.java">public class Expert implements Role {
 
     @Override
-    public double getSalario() {
+    public double getSalary() {
         return 2000;
     }
 
     @Override
-    public boolean promove(Desenvolvedor contexto) {
-        contexto.setCargo(Cargo.PLENO);
+    public boolean promote(Developer context) {
+        context.setRole(new Senior());
         return true;
     }
 
 }
 </code></pre>
 
-<pre><code class="Java Pleno.java">public class Pleno implements Cargo {
+<pre><code class="Java Senior.java">public class Senior implements Role {
 
     @Override
-    public double getSalario() {
+    public double getSalary() {
         return 4000;
     }
 
     @Override
-    public boolean promove(Desenvolvedor contexto) {
+    public boolean promote(Developer context) {
         return false;
     }
 
 }
 </code></pre>
 
-<pre><code class="Java Desenvolvedor.java">public class Desenvolvedor {
+<pre><code class="Java Developer.java">public class Developer {
 
-    private Cargo cargo;
+    private Role role;
 
-    protected void setCargo(Cargo cargo) {
-        this.cargo = cargo;
+    protected void setRole(Role role) {
+        this.role = role;
     }
 
-    public double getSalario() {
-        return this.cargo.getSalario();
+    public double getSalary() {
+        return this.role.getSalary();
     }
 
-    public boolean promove() {
-        return this.cargo.promove(this);
+    public boolean promote() {
+        return this.role.promote(this);
     }
 
 }
 </code></pre>
 
-<p>Como você pode ver, este exemplo usa o <em>design pattern</em> <strong>State</strong> do Gang of Four.
-A maioria dos enums que implementam uma hierarquia podem ser convertidos para esse padrão, que em suma é composição + polimorfismo.</p>
+<p>This is very similar to <em>State</em> pattern from the Gange Of Four.</p>
 
-<p>A questão é: Qual das duas soluções é a melhor?</p>
+<p>But anyway, what&rsquo;s the advantages of one over another?</p>
 
-<p>A resposta é: <strong>depende</strong>. É verdade que a segunda solução deixou a classe &ldquo;Desenvolvedor&rdquo; mais simples, mas por outro lado aumentou o número de classes do sistema. O enum, embora mais enxulto, é menos flexível: Se você quiser adicionar mais uma constante, terá que alterar todas as condicionais que envolvam aquele enum. E isso é <strong>muito</strong> ruim.</p>
+<p>The advantage of the second solution in comparison to the first is that, if we want to add a new role in the hierarchy, we don&rsquo;t need to modify any line of code other than the new class itself.</p>
 
-<p>Portanto, um bom <em>rule of thumb</em> é o seguinte: Use enum quando você tiver <strong>certeza</strong> que as constantes daquele tipo não irão mudar. Caso contrário, polimorfismo é a melhor solução, pois para adicionar um novo valor, basta criar uma nova classe que implementa aquela interface, não afetando nenhum outro lugar.</p>
+<p>But, hey! I&rsquo;m not saying to throw the Enum in the gargabe and never use it again. Far from it. What I&rsquo;m trying to say is that there are situations where the enum is not really appropriate. A role of thumb is: Never use enum to representate a hierarchy that can change. Use inheritance instead!</p>
 
-<h2>5. Use afirmações ao invés de negações em condicionais</h2>
+<h2>5. Use affirmatives instead of negatives sentences in conditionals</h2>
 
-<p>Essa dica é realmente muito simples. Ela não vai alterar diretamente a qualidade de seu código, mas vai torná-lo mais legível, o que é importante também!</p>
+<p>This tip is really simple. It won&rsquo;t affect your code quality directly, but it may make your code more readable, and that&rsquo;s so important that I can&rsquo;t emphasize it enough!</p>
 
-<p>A questão aqui é que orações afirmativas são mais fáceis de se entender do que várias negativas coglomeradas. Exemplo:</p>
+<p>But why are affirmatives sentences more readable than negatives? Well, just try to read the following sentences:</p>
 
-<pre><code>Não é o caso que eu não queira ir ao shopping.
-</code></pre>
+<blockquote><p>I do not want to not to go to Shopping</p></blockquote>
 
-<p>Poderia ser reescrito da seguinte forma:</p>
+<p>And then compare to this:</p>
 
-<pre><code>Eu quero ir ao shopping.
-</code></pre>
+<blockquote><p>I want to go to Shopping</p></blockquote>
 
-<p>Claro, ao custo de um pouco da perda de semântica, um efeito coleteral que não existe em linguagens de programação. Exemplo:</p>
+<p>Because in the core they mean the same things, with the difference the second contains redundant informations. Most of negatives sentences contain some kind of redundant information.</p>
 
-<pre><code class="Java">public String getMensagemDeErro() {
-    if (!(this.getPessoa() instanceof Programador)) {
-        return "Estamos em manutenção. Volte em breve.";
-    } else  {
-        return "Erro 303. Linha 202. NullPointerException.";
-    }
-}
-</code></pre>
+<h2>Final thoughts</h2>
 
-<p>Poderia ser reescrito da seguinte forma:</p>
-
-<pre><code class="Java">public String getMensagemDeErro() {
-    if (this.getPessoa() instanceof Programador) {
-        return "Erro 303. Linha 202. NullPointerException.";
-    } else  {
-        return "Estamos em manutenção. Volte em breve.";
-    }
-}
-</code></pre>
-
-<p>Obviamente o efeito é quase imperceptível, mas isso por minha falta de criatividade em pensar em exemplos mais elaborados. :)</p>
-
-<h2>Conclusão</h2>
-
-<p>Algumas dicas foram bem óbvias e intuitivas, outras nem tanto. Eu também evitei extrair os exemplos diretamente do livro, queria misturar um pouco da minha experiência. O livro do Martin Fowler é fantástico, e recomendo fortamente que todos leiam.</p>
-
-<p>Até a próxima, e lembrem-se: Refatoramento hoje, refatoramento amanhã, refatoramento sempre!</p>
+<p>Some tips were quite obvious and intuitives, and some weren&rsquo;t. Well, but so is life&hellip; I don&rsquo;t expect you to agree with all I said here, neither you should! It&rsquo;s through discussion we can grow up, so, if you have a different opinion from mine, don&rsquo;t hesitate to comment! See ya!</p>
 ]]></content>
   </entry>
   
@@ -440,18 +402,11 @@ A maioria dos enums que implementam uma hierarquia podem ser convertidos para es
     <link href="http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom/"/>
     <updated>2014-09-28T15:19:25-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom</id>
-    <content type="html"><![CDATA[<p>E lá vai mais um joguinho que havia criado há um bom tempo já.</p>
+    <content type="html"><![CDATA[<p>Here&rsquo;s some fool game I made some time ago in an attempt to learn about Swing. Have fun!</p>
 
 <p style="text-align:center;"><img src="/images/posts/hashboom.png" alt="" /></p>
 
 <p style="text-align:center;"><a href="/downloads/code/Hashboom.jar">Click here to download</a></p>
-
-<!-- More -->
-
-
-<p>Esse jogo foi desenvolvido usando a biblioteca Swing e um framework básico que já não lembro o nome. :P</p>
-
-<p>Divirta-se!</p>
 ]]></content>
   </entry>
   

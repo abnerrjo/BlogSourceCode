@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Criando Seu Blog No Github - The bug is on the table</title>
+  <title>Creating Your Own Blog on Github - Tango with code</title>
   <meta name="author" content="Abner Matheus">
 
   
-  <meta name="description" content="Olá, mundo! Sejam bem-vindos ao meu novíssimo blog (infelizmente, o antigo foi pro espaço&hellip;). Aqui vocês poderão encontrar tutoriais e dicas &hellip;">
+  <meta name="description" content="Hello world! Be welcomed to my newest blog (unhappily, my previous went to space&hellip;). Here you can find tutorials and tips about programming in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,10 +18,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/16/criando-seu-blog-no-github">
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="The bug is on the table" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -38,9 +38,9 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">The bug is on the table</a></h1>
+  <h1><a href="/">Tango with code</a></h1>
   
-    <h2>Um blog sobre noites confusas e frustantes</h2>
+    <h2>A blog about frustration and anger</h2>
   
 </hgroup>
 
@@ -58,12 +58,8 @@
 </form>
   
 <ul class="main-navigation">
-  <li><a href="/">Início</a></li>
-  <li><a href="/blog/archives">Entradas</a></li>
-  <li><a href="/blog/categories/games/">Games</a></li>
-  <li><a href="/blog/categories/apps/">Apps</a></li>
-  <li><a href="/blog/categories/tutoriais/">Tutoriais</a></li>
-  <li><a href="/about">Sobre mim</a></li>
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
 </ul>
 
 </nav>
@@ -74,7 +70,7 @@
   
   <header>
     
-      <h1 class="entry-title">Criando Seu Blog No Github</h1>
+      <h1 class="entry-title">Creating Your Own Blog on Github</h1>
     
     
       <p class="meta">
@@ -90,34 +86,38 @@
   </header>
 
 
-<div class="entry-content"><p>Olá, mundo! Sejam bem-vindos ao meu novíssimo blog (infelizmente, o antigo foi pro espaço&hellip;). Aqui vocês poderão encontrar tutoriais e dicas sobre programação em geral. E como não poderia deixar de ser, meu primeiro post tratará justamente de como criar seu blog no Github!</p>
+<div class="entry-content"><p>Hello world! Be welcomed to my newest blog (unhappily, my previous went to space&hellip;). Here you can find tutorials and tips about programming in general, and as it should be, my first post will be just about how to create your own blog on Github!</p>
 
-<h3>Por que criar um blog no Github?</h3>
+<h3>Why create a Github blog?</h3>
 
-<p>O Github é fantástico. Ele permite que você hospede páginas estáticas de graça. E utilizando poucas ferramentas, podemos criar um blog muito mais profissional e poderoso que o Blogger, ideal para compartilhar código. Claro, não chega a ser tão bom quanto o Wordpress, mas acho que para os propósitos de um programador cai bem.</p>
+<p>Github is awesome. It allows you to host your static pages for free, and using few tools, we can create a more professional and powerful blog than on the Blogger platform, for example, with a plus it&rsquo;s just ideal to share code.</p>
 
-<h3>Estou interessado! Por onde começo?</h3>
+<h3>I&rsquo;m interested! Where do I start?</h3>
 
-<p>Bem, eu penei bastante até conseguir dar deploy neste blog, mas depois algumas noites acabei descobrindo passos bem simples, que são esses que irei descrever agora.</p>
+<p>Well, deploying this blog was a bit troublesome for me at first, but I&rsquo;ve just discovered some simpler ways that I&rsquo;ll tell you right now.</p>
 
 <!-- more -->
 
 
-<p><strong>Requisitos necessários:</strong>
-- Linux (Sim. Infelizmente, ainda não há uma maneira simples de fazer isso no Windows&hellip;);
-- Git instalado (Meio óbvio).</p>
+<p><strong>Prerequisites</strong></p>
 
-<p>A primeira coisa a se fazer é criar um repositório no Github. Mas não basta ser qualquer repositório, deve ser um repositório que tenha a seguinte nomenclatura:</p>
+<ul>
+<li>Linux (Yea. Unhappily, there isn&rsquo;t a simple way to do that on Windows&hellip;);</li>
+<li>Git installed (Kinda obvious).</li>
+</ul>
+
+
+<p>The very first thing you need to do is create a Github repository. However, it must have the following name:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Seu_Nick_No_Github&gt;.github.io</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Your_Github_Nickname&gt;.github.io</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Explico! Através do mecanismo <strong>Github pages</strong>, o Github permite a hospedagem de sites estáticos de graça, como bem falado anteriormente. O problema é que ele só permite uma página por usuário, e por padrão essa página deve estar em um repositório de mesmo nome do usuário, com adição do &ldquo;<em>github.io</em>&rdquo; que juntos representam o endereço do site.</p>
+<p>Through the <strong>Github pages</strong> mechanism, Github allows you to host your static pages for free, as said previously. The thing is that it only allows one domain for each user, and this domain must have the same nickname of the user, with addition of &ldquo;<em>github.io</em>&rdquo; prefix.</p>
 
-<p>Criado o repositório, precisamos de uma ferramenta que crie a estrutura básica de um blog e que nos permita criar postagens com facilidade. Essa ferramenta se chama <strong>Jekyll</strong>.</p>
+<p>Created the repository, we now need a tool that helps us to create our blog. Basically, a CMS (Content Management System). We&rsquo;re going to use <strong>Jekyll</strong> for this task.</p>
 
-<p>Podemos instalar o Jekyll e todas as suas dependências através de uma simples linha de comando:</p>
+<p>You can install Jekyll and all its dependencies through a single line of code:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>gem install github-pages
@@ -126,13 +126,13 @@
 
 <p></p>
 
-<p>Além do Jekyll, o comando acima tentará também instalar o Ruby, já que ele é construído sob essa linguagem.</p>
+<p>Beyong Jekyll, the command will also try to install Ruby, since it&rsquo;s the language that Jekyll is built.</p>
 
-<p>Mesmo assim, o Jekyll ainda é muito simples, e pode ser tedioso construir todo o template de seu blog manualmente. Por isso, usaremos mais uma ferramenta, chamada <strong>Octopress</strong>.</p>
+<p>Even so, Jekyll is still too &ldquo;low-level&rdquo;, and it can be tedious to build all your blog template manually. Because of it, we are going to use another tool called <strong>Octopress</strong>.</p>
 
-<p>O Octopress existe para facilitar diversas operações. Através de seu Rake podemos criar posts, trocar temas, tudo com uma linha de comando.</p>
+<p>Octopress exists to ease some functionalities. Through its rakes we can create posts, change themes, everything by command line.</p>
 
-<p>Configurar o Octopress é bastante simples. Primeiro você deve clonar seu repositório.</p>
+<p>Configuring Octopress is pretty easy. First you need to clone its repository:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -141,56 +141,56 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Em seguida, instale suas dependências.</p>
+<p>Now you need to install its dependencies:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>bundle install
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E por fim configure-o para que ele possa dar deploy para o Github de maneira automática.</p>
+<p>And finally configure it in a way it can deploy automatically to your Github repository:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake setup_github_pages
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Pronto! Com isto já podemos começar a blogar! :D</p>
+<p>Done! Now you can start blogging! :D</p>
 
-<p>Para criar seu primeiro post, digite o seguinte comando no terminal:</p>
+<p>To create your first post, type the following command on terminal:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;Titulo&quot;</span><span class="o">]</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;Title&quot;</span><span class="o">]</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Com isto ele irá gerar um arquivo no formato markdown dentro da pasta source/_posts. Markdown é uma linguagem de marcação que serve como uma versão mais limpa e simples do HTML. Você pode obter mais informações sobre ele <a href="http://en.wikipedia.org/wiki/Markdown">aqui</a>. É simples, não demora muito pegar o jeito da coisa!</p>
+<p>And so it will generate a file on markdown format inside source/_posts folder. Markdown is a markup language that intends to be a cleaner and easier version of HTML. You can get more info about it <a href="http://en.wikipedia.org/wiki/Markdown">here</a>. It&rsquo;s simple, you can fully learn it in few minutes!</p>
 
-<p><strong>Dica 1:</strong>
-Você pode configurar um <i>preview</i> do post (o famoso <i>&ldquo;read more&rdquo;</i>). Basta adicionar a linha</p>
+<p><strong>Type #1:</strong>
+You can define a <em>preview</em> of yor post (the infamous &ldquo;<em>read more</em>&rdquo;). Just add the line:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="c">&lt;!-- more --&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>onde você quiser que acabe o preview.</p>
+<p>wherever you want the post preview ends.</p>
 
-<p><strong>Dica 2:</strong>
-Claro, não poderia defender que o Octopress é uma ótima plataforma para programadores se não desse surporte à highlight de código. Atualmente ele suporte mais de 100 linguagens de programação. Adicionar um bloco de código é bem simples. Basta usar a seguinte síntaxe:</p>
+<p><strong>Type #2:</strong>
+Octopress provides a code highlighting API (otherwise it wouldn&rsquo;t any good for a programmer :P). Currently it can support more than 100 programming languages. To use it, just follow the syntax:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='HTML'><span class='line'>` ` ` [Linguagem]
-</span><span class='line'>    codigo2
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'>` ` ` [Language]
+</span><span class='line'>    code here
 </span><span class='line'>` ` `
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><strong>PS:</strong> Remova os espaços em branco entre os apóstrofos.</p>
+<p><strong>PS:</strong> Remove white spaces between the apostrophes.</p>
 
-<p>Exemplo:</p>
+<p>Example:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -209,7 +209,7 @@ Claro, não poderia defender que o Octopress é uma ótima plataforma para progr
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Irá gerar o seguinte texto:</p>
+<p>It will generate the following text:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -224,24 +224,26 @@ Claro, não poderia defender que o Octopress é uma ótima plataforma para progr
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Que bonitinho. :-)</p>
+<p>So pretty :-)</p>
 
-<p>Existem outras maneiras legais, você pode até copiar o código-fonte de um arquivo. Para aprender mais, convido vocês a acessarem <a href="http://octopress.org/docs/blogging/code/">esse link</a>, é realmente interessante!</p>
+<p>There are other cool features, like getting your code from a file. To learn more about it, I invite you to access <a href="http://octopress.org/docs/blogging/code/">this link</a>, it&rsquo;s really interesting!</p>
 
-<h3>Visualizando nosso blog</h3>
+<h3>Viewing our blog</h3>
 
-<p>Visualizar nosso blog durante a produção é importante. O Jekyll nos fornece uma maneira de testar nosso blog através do <i>localhost</i>. Para isso, dentro da pasta do blog, digite o seguinte comando:</p>
+<p>You can view your blog without deploying it. Just type the following command:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake preview
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>E a partir daí basta acessar o endereço <a href="http://localhost:4000">http://localhost:4000</a> e ver o blog rodando! :D</p>
+<p>And so it will be available on address <a href="http://localhost:4000">http://localhost:4000</a>.</p>
 
-<h3>Dando deploy no blog</h3>
+<p>You don&rsquo;t need to type it again if you modify anything. It will regenerate automatically.</p>
 
-<p>Agora precisamos colocá-lo no ar! Para isso, basta dar o seguinte comando:</p>
+<h3>Deploying our blog</h3>
+
+<p>Now the more important thing is to deploy the thing! For this task, just type the following commands:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -250,21 +252,20 @@ Claro, não poderia defender que o Octopress é uma ótima plataforma para progr
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Na primeira vez ele irá perguntar coisas como o link do seu repositório e sua conta, mas a partir daí ele irá commitar tudo de maneira automática.</p>
+<p>At first it will ask things like your Github repository link, your account name, etc., &hellip; But after that it will just commit everything automatically.</p>
 
-<h3>Aplicando temas</h3>
+<h3>Applying themes</h3>
 
-<p>Por fim, acho importante destacar esta parte. Apesar de que o Octopress já venha com um belo tema, é possível instalar temas de terceiros, e é bem simples!</p>
+<p>For last, although Octopress comes with a beautiful theme, it&rsquo;s possible to install third-parties themes, and it&rsquo;s quite easy!</p>
 
-<p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">Esse site</a> contém uma lista de vários temas para o Octopress. Instalá-los seguem uma metodologia semelhante:
-Clone-os para dentro da pasta .theme, que existe dentro da pasta de seu blog. Exemplo:</p>
+<p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">This site</a> contains a lot of themes for Octopress. To install them, first you need to clone the theme repository into the .theme folder inside your blog. Example:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>git clone XXX .theme/XXX
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Após ter feito isto, basta digitar:</p>
+<p>After that, just type:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -273,10 +274,12 @@ Clone-os para dentro da pasta .theme, que existe dentro da pasta de seu blog. Ex
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Ele irá perguntar se você realmente deseja substituir os arquivos, o qual você dirá que sim (y). E a partir daí é só desfrutar do novo tema! :D</p>
+<p>Where &ldquo;XXX&rdquo; is the theme name inside your .theme folder.</p>
 
-<p>É muito simples, não é não?!
-Espero que tenham gostado desse tutorial. Aqui vai alguns links interessantes para aprofundar as coisas que falamos aqui.</p>
+<p>After that it will ask if you really wish to override the files, and for that you answer yes (y). And now you can see your new theme! :D</p>
+
+<p>It was pretty simple, wasn&rsquo;t it?!
+I really hope you&rsquo;ve liked this tutorial. Here are some interesting links to get depth on this topic:</p>
 
 <ul>
 <li><a href="http://jekyllrb.com/docs/home/">http://jekyllrb.com/docs/home/</a></li>
@@ -285,7 +288,7 @@ Espero que tenham gostado desse tutorial. Aqui vai alguns links interessantes pa
 </ul>
 
 
-<p>Boa sorte com seu novo blog! Qualquer dúvida, caso algum passo tenha ficado obscura ou não tenha funcionado, os comentários estão sempre abertos!</p>
+<p>Good luck with your new blog! Any question, don&rsquo;t hesitate to use the comments section right below.</p>
 </div>
 
 
@@ -294,7 +297,7 @@ Espero que tenham gostado desse tutorial. Aqui vai alguns links interessantes pa
       
   
 
-<span class="byline author vcard">Postado por <span class="fn">Abner Matheus</span></span>
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
 
       
 
@@ -306,7 +309,7 @@ Espero que tenham gostado desse tutorial. Aqui vai alguns links interessantes pa
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/tutoriais/'>tutoriais</a>
+    <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
   
 </span>
 
@@ -344,11 +347,11 @@ Espero que tenham gostado desse tutorial. Aqui vai alguns links interessantes pa
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/11/12/gerenciando-sessoes-em-php/">Gerenciando Sessões Em PHP</a>
+        <a href="/blog/2014/11/12/managing-sessions-in-php/">Managing Sessions in PHP</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i/">Experiências Na Disciplina De Sistemas De Informação I</a>
+        <a href="/blog/2014/10/27/my-experience-on-information-systems-i/">My Experience on Information Systems I</a>
       </li>
     
       <li class="post">
@@ -356,11 +359,11 @@ Espero que tenham gostado desse tutorial. Aqui vai alguns links interessantes pa
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/18/pequenas-coisas-que-podem-tornar-seus-programas-em-java-melhores/">Pequenas Coisas Que Podem Tornar Seus Programas Em Java Melhores</a>
+        <a href="/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/">Little Things That Can Make Your Java Programs Better</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/09/30/criando-autentificacao-de-usuarios-em-php-usando-codeigniter/">Criando Autentificação De Usuários Em PHP Usando CodeIgniter</a>
+        <a href="/blog/2014/09/30/creating-user-authentification-with-code-igniter/">Creating User Authentification With Code Igniter</a>
       </li>
     
   </ul>
@@ -418,8 +421,8 @@ Espero que tenham gostado desse tutorial. Aqui vai alguns links interessantes pa
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/16/criando-seu-blog-no-github/';
-        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/16/criando-seu-blog-no-github/';
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github/';
         var disqus_script = 'embed.js';
       
     (function () {

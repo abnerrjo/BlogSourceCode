@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Php | Tango with code]]></title>
-  <link href="http://PicoleDeLimao.github.io/blog/categories/php/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Tutorials | Tango with code]]></title>
+  <link href="http://PicoleDeLimao.github.io/blog/categories/tutorials/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
   <updated>2014-11-28T18:44:34-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
@@ -131,6 +131,339 @@ session_destroy();
 <p>Well, that&rsquo;s it folks! :)</p>
 
 <p>I hope you appreciated today&rsquo;s tutorial.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Little Things That Can Make Your Java Programs Better]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/"/>
+    <updated>2014-10-18T11:17:45-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/10/18/little-things-that-can-make-your-java-programs-better</id>
+    <content type="html"><![CDATA[<p>On the past months I&rsquo;ve been reading this incredible book called <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Refactoring: Improving the design of existing code</a>, by Martin Fowler.</p>
+
+<p>This one is classic on Software Engineering, and somewhat changed the way I think about software design in general.</p>
+
+<p>In the book there are dozens or hundreds of examples and tips. I gathered <strong>five</strong> that I consider easier and simpler to be applied but still have some impact on final product. Those tips, though inspired in the book, are also product of my own experience.</p>
+
+<p>I picked Java cause that&rsquo;s my more familiar language and it&rsquo;s also the book language choice.</p>
+
+<!-- more -->
+
+
+<h2>1. Do not create a &ldquo;set&rdquo; method for an attribute that can&rsquo;t change</h2>
+
+<p>This tip seems a bit foolish, and it really is, but you won&rsquo;t believe the amount of times this mistake is done over and over again.</p>
+
+<p>But, wait! Does an attribute that can&rsquo;t change really make sense? It does! It&rsquo;s too common nowadays to use some form of ORM (Object Relation Mapping), where some attribute will become the primary key. Allowing the programmer to change the attribute that representates the primary key may lead to some form of inconsistency in some extreme cases.</p>
+
+<p>If you aren&rsquo;t still convinced, just remember: Why wasting time doing something unnecessary? Less lines = better!</p>
+
+<h2>2. Do not allow classes modify other classes collections</h2>
+
+<p>This tip seems bit &ldquo;fishy&rdquo; at first. Actually, classes can indeed modify other classes collections, the problem here is the way it&rsquo;s done. Let me show you by example:</p>
+
+<pre><code class="Java System.java">public class System {
+
+    private Set&lt;User&gt; users;
+
+    public void setUsers(Set&lt;User&gt; users) {
+        this.users = users;
+    }
+
+    public Set&lt;Usuario&gt; getUsers() {
+        return this.users;
+    }
+
+    ...
+
+}
+</code></pre>
+
+<pre><code class="Java PrivacyInvader.java">public class PrivacyInvader {
+
+    private System system;
+
+    public boolean addUser(String login, String password) {
+        return system.getUsers().add(new User(login, password));
+    }
+
+    public boolean removeUser(User user) {
+        return system.getUsers().remove(user);
+    }
+
+    ...
+
+}
+</code></pre>
+
+<p>What&rsquo;s the problem of this design?</p>
+
+<p>The problem is that the &ldquo;PrivacyInvader&rdquo; class is adding and removing elements of &ldquo;users&rdquo; collection from System in a direct way. Let&rsquo;s suppose you are using this collection to persist into your database from times to times. Now imagine that any class can insert any user, not respecting any constraint you put in this process, as, for example, a repeated user login. What will happen? Yea, you guessed right&hellip;</p>
+
+<p>Another problem, this way a bit more subtile, is that &ldquo;User&rdquo; is being created in an inappropriated place. If we allow such things to happen, the User construtor will be called all over the code. What if now you want to change its signature? That&rsquo;s a classic problem of coupling. PrivacyInvader is knowing too much about User, where the only one who should know that much is that one that will really use it, in this case, &ldquo;System&rdquo;.</p>
+
+<p>Now how do we fix all that? Let&rsquo;s start fixing the second problem listed.</p>
+
+<pre><code class="Java System.java">public class System {
+
+    private Set&lt;User&gt; users;
+
+    public void setUsers(Set&lt;Usuario&gt; users) {
+        this.users = users;
+    }
+
+    public Set&lt;Usuario&gt; getUsers() {
+        return this.users;
+    }
+
+    public boolean addUser(String login, String password) {
+        return this.users.add(new User(login, password));
+    }
+
+    public boolean removeUser(User user) {
+        return this.users.remove(user);
+    }
+
+    ...
+
+}
+</code></pre>
+
+<pre><code class="Java PrivacyInvader.java">public class PrivacyInvader {
+
+    private System system;
+
+    public boolean addUser(String login, String password) {
+        return system.addUser(login, password);
+    }
+
+    public boolean removeUser(User user) {
+        return system.remove(user);
+    }
+
+    ...
+
+}
+</code></pre>
+
+<p>Much better now! Now User class coupling was reduced to System class. So what do we do now to avoid direct access to our collection? One way would be to remove the &ldquo;get&rdquo; method, but this is a sub-optimal solution, since sometimes we do really need to access the collection.</p>
+
+<p>Happily, Java provides us an elegant solution to solve this problem: Collections.unmodifiable!</p>
+
+<p>Collections.unmodifiable is a set of methods which receive a collection and return this collection modified in such way that it doesn&rsquo;t allow any insert or delete method, only search methods as &ldquo;get&rdquo;! Awesome, isn&rsquo;t it? :P</p>
+
+<p>Here is some supported methods:</p>
+
+<ul>
+<li>Collections.unmodifiableList(originalList);</li>
+<li>Collections.unmodifiableSet(originalSet);</li>
+<li>Collections.unmodifiableMap(originalMap);</li>
+<li>Collections.unmodifiableCollection(originalCollection);</li>
+</ul>
+
+
+<p>And that&rsquo;s our solution using this little trick:</p>
+
+<pre><code class="Java Sistema.java">import java.util.Collections;
+
+public class System {
+
+  private Set&lt;User&gt; users;
+
+  public Set&lt;User&gt; getUsers() {
+      return Collections.unmodifiableSet(this.users);
+  }
+
+  public boolean addUser(String login, String password) {
+      return this.users.add(new User(login, password));
+  }
+
+  public boolean removeUser(User user) {
+      return this.users.remove(user);
+  }
+
+  ...
+
+}
+</code></pre>
+
+<p>Also notice we removed the &ldquo;set&rdquo; method for the collection. The reason was explained in topic #1 :P</p>
+
+<h2>3. Let a method be public only if really necessary</h2>
+
+<p>Some OOPs gurus say that the worth of a class is its interface. And I can&rsquo;t agree more. Simpler interfaces are easier to use, you don&rsquo;t need to search the method that does &ldquo;this&rdquo; or &ldquo;that&rdquo; because they are fewer.</p>
+
+<p>Of course, I&rsquo;m not saying: Create as less methods as possible. What I&rsquo;m saying is: Create as much methods as possible (indeed, it&rsquo;s even encouraged, since more methods lead to smaller methods and smaller methods are easier to understand), but let all the auxiliar methods <strong>private</strong>.</p>
+
+<h2>4. Know when to use Enum and when to use Inheritance</h2>
+
+<p>That&rsquo;s a trick one, isn&rsquo;t it? Enum is a big ally. It saves times. But enums are almost always followed by switch statements. And switch statements are evil. Why? Because they are not flexible enough to change. If you want to add a new enum value, for example, you must have to change ALL the switch statements that use that enum. And it&rsquo;s <strong>bad</strong>! Changes like that almost always lead to bugs. Here is an example:</p>
+
+<pre><code class="Java Role.java">public enum Role {
+
+    TRAINEE, JUNIOR, EXPERT, SENIOR
+
+}
+</code></pre>
+
+<pre><code class="Java Developer.java ">public class Developer {
+
+    private Role role; 
+
+    public double getSalary() {
+        switch(this.role) {
+            case TRAINEE:
+                return 500;
+            case JUNIOR:
+                return 1000;
+            case EXPERT:
+                return 2000;
+            case SENIOR:
+                return 4000;
+            default:
+                throw new RoleException("Invalid role.");
+        }
+    }
+
+    public boolean promote() {
+        switch(this.role) {
+            case TRAINEE:
+                this.role = Role.JUNIOR;
+                break;
+            case JUNIOR:
+                this.role = Role.EXPERT;
+                break;
+            case EXPERT:
+                this.role = Role.SENIOR;
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    ... 
+
+} 
+</code></pre>
+
+<p>This could be done is a similar way using Inheritance and polymorphism:</p>
+
+<pre><code class="Java Role.java">public interface Role {
+
+    public double getSalary();
+    public boolean promote(Developer context);
+
+}
+</code></pre>
+
+<pre><code class="Java Trainee.java">public class Trainee implements Role {
+
+    @Override
+    public double getSalary() {
+        return 500;
+    }
+
+    @Override
+    public boolean promote(Developer context) {
+        context.setRole(new Junior());
+        return true;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Junior.java">public class Junior implements Role {
+
+    @Override
+    public double getSalary() {
+        return 1000;
+    }
+
+    @Override
+    public boolean promote(Developer context) {
+        context.setRole(new Expert());
+        return true;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Expert.java">public class Expert implements Role {
+
+    @Override
+    public double getSalary() {
+        return 2000;
+    }
+
+    @Override
+    public boolean promote(Developer context) {
+        context.setRole(new Senior());
+        return true;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Senior.java">public class Senior implements Role {
+
+    @Override
+    public double getSalary() {
+        return 4000;
+    }
+
+    @Override
+    public boolean promote(Developer context) {
+        return false;
+    }
+
+}
+</code></pre>
+
+<pre><code class="Java Developer.java">public class Developer {
+
+    private Role role;
+
+    protected void setRole(Role role) {
+        this.role = role;
+    }
+
+    public double getSalary() {
+        return this.role.getSalary();
+    }
+
+    public boolean promote() {
+        return this.role.promote(this);
+    }
+
+}
+</code></pre>
+
+<p>This is very similar to <em>State</em> pattern from the Gange Of Four.</p>
+
+<p>But anyway, what&rsquo;s the advantages of one over another?</p>
+
+<p>The advantage of the second solution in comparison to the first is that, if we want to add a new role in the hierarchy, we don&rsquo;t need to modify any line of code other than the new class itself.</p>
+
+<p>But, hey! I&rsquo;m not saying to throw the Enum in the gargabe and never use it again. Far from it. What I&rsquo;m trying to say is that there are situations where the enum is not really appropriate. A role of thumb is: Never use enum to representate a hierarchy that can change. Use inheritance instead!</p>
+
+<h2>5. Use affirmatives instead of negatives sentences in conditionals</h2>
+
+<p>This tip is really simple. It won&rsquo;t affect your code quality directly, but it may make your code more readable, and that&rsquo;s so important that I can&rsquo;t emphasize it enough!</p>
+
+<p>But why are affirmatives sentences more readable than negatives? Well, just try to read the following sentences:</p>
+
+<blockquote><p>I do not want to not to go to Shopping</p></blockquote>
+
+<p>And then compare to this:</p>
+
+<blockquote><p>I want to go to Shopping</p></blockquote>
+
+<p>Because in the core they mean the same things, with the difference the second contains redundant informations. Most of negatives sentences contain some kind of redundant information.</p>
+
+<h2>Final thoughts</h2>
+
+<p>Some tips were quite obvious and intuitives, and some weren&rsquo;t. Well, but so is life&hellip; I don&rsquo;t expect you to agree with all I said here, neither you should! It&rsquo;s through discussion we can grow up, so, if you have a different opinion from mine, don&rsquo;t hesitate to comment! See ya!</p>
 ]]></content>
   </entry>
   
@@ -1302,6 +1635,177 @@ class ScientificNotationTest extends PHPUnit_Framework_TestCase {
 <p>:)</p>
 
 <p>That&rsquo;s it guys! I really hopes you&rsquo;ve liked. Unit tests are not so boring, are they? Sometimes it can be pretty fun, I dare to admit. hehe :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Your Own Blog on Github]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github/"/>
+    <updated>2014-09-16T23:32:43-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github</id>
+    <content type="html"><![CDATA[<p>Hello world! Be welcomed to my newest blog (unhappily, my previous went to space&hellip;). Here you can find tutorials and tips about programming in general, and as it should be, my first post will be just about how to create your own blog on Github!</p>
+
+<h3>Why create a Github blog?</h3>
+
+<p>Github is awesome. It allows you to host your static pages for free, and using few tools, we can create a more professional and powerful blog than on the Blogger platform, for example, with a plus it&rsquo;s just ideal to share code.</p>
+
+<h3>I&rsquo;m interested! Where do I start?</h3>
+
+<p>Well, deploying this blog was a bit troublesome for me at first, but I&rsquo;ve just discovered some simpler ways that I&rsquo;ll tell you right now.</p>
+
+<!-- more -->
+
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+<li>Linux (Yea. Unhappily, there isn&rsquo;t a simple way to do that on Windows&hellip;);</li>
+<li>Git installed (Kinda obvious).</li>
+</ul>
+
+
+<p>The very first thing you need to do is create a Github repository. However, it must have the following name:</p>
+
+<pre><code>&lt;Your_Github_Nickname&gt;.github.io
+</code></pre>
+
+<p>Through the <strong>Github pages</strong> mechanism, Github allows you to host your static pages for free, as said previously. The thing is that it only allows one domain for each user, and this domain must have the same nickname of the user, with addition of &ldquo;<em>github.io</em>&rdquo; prefix.</p>
+
+<p>Created the repository, we now need a tool that helps us to create our blog. Basically, a CMS (Content Management System). We&rsquo;re going to use <strong>Jekyll</strong> for this task.</p>
+
+<p>You can install Jekyll and all its dependencies through a single line of code:</p>
+
+<pre><code class="Bash">gem install github-pages
+</code></pre>
+
+<p>Beyong Jekyll, the command will also try to install Ruby, since it&rsquo;s the language that Jekyll is built.</p>
+
+<p>Even so, Jekyll is still too &ldquo;low-level&rdquo;, and it can be tedious to build all your blog template manually. Because of it, we are going to use another tool called <strong>Octopress</strong>.</p>
+
+<p>Octopress exists to ease some functionalities. Through its rakes we can create posts, change themes, everything by command line.</p>
+
+<p>Configuring Octopress is pretty easy. First you need to clone its repository:</p>
+
+<pre><code class="Bash">git clone git://github.com/imathis/octopress.git octopress
+cd octopress
+</code></pre>
+
+<p>Now you need to install its dependencies:</p>
+
+<pre><code class="Bash">bundle install
+</code></pre>
+
+<p>And finally configure it in a way it can deploy automatically to your Github repository:</p>
+
+<pre><code class="Bash">rake setup_github_pages
+</code></pre>
+
+<p>Done! Now you can start blogging! :D</p>
+
+<p>To create your first post, type the following command on terminal:</p>
+
+<pre><code class="Bash">rake new_post["Title"] 
+</code></pre>
+
+<p>And so it will generate a file on markdown format inside source/_posts folder. Markdown is a markup language that intends to be a cleaner and easier version of HTML. You can get more info about it <a href="http://en.wikipedia.org/wiki/Markdown">here</a>. It&rsquo;s simple, you can fully learn it in few minutes!</p>
+
+<p><strong>Type #1:</strong>
+You can define a <em>preview</em> of yor post (the infamous &ldquo;<em>read more</em>&rdquo;). Just add the line:</p>
+
+<p>&#8220;` HTML</p>
+
+<!-- more -->
+
+
+<pre><code>
+wherever you want the post preview ends.
+
+**Type #2:**
+Octopress provides a code highlighting API (otherwise it wouldn't any good for a programmer :P). Currently it can support more than 100 programming languages. To use it, just follow the syntax:
+</code></pre>
+
+<p><code></code> <code>[Language]
+    code here
+</code> <code></code>
+&#8220;`</p>
+
+<p><strong>PS:</strong> Remove white spaces between the apostrophes.</p>
+
+<p>Example:</p>
+
+<pre><code>` ` ` Java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+` ` `
+</code></pre>
+
+<p>It will generate the following text:</p>
+
+<pre><code class="Java">public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+</code></pre>
+
+<p>So pretty :-)</p>
+
+<p>There are other cool features, like getting your code from a file. To learn more about it, I invite you to access <a href="http://octopress.org/docs/blogging/code/">this link</a>, it&rsquo;s really interesting!</p>
+
+<h3>Viewing our blog</h3>
+
+<p>You can view your blog without deploying it. Just type the following command:</p>
+
+<pre><code class="Bash">rake preview
+</code></pre>
+
+<p>And so it will be available on address <a href="http://localhost:4000">http://localhost:4000</a>.</p>
+
+<p>You don&rsquo;t need to type it again if you modify anything. It will regenerate automatically.</p>
+
+<h3>Deploying our blog</h3>
+
+<p>Now the more important thing is to deploy the thing! For this task, just type the following commands:</p>
+
+<pre><code class="Bash">rake generate
+rake deploy
+</code></pre>
+
+<p>At first it will ask things like your Github repository link, your account name, etc., &hellip; But after that it will just commit everything automatically.</p>
+
+<h3>Applying themes</h3>
+
+<p>For last, although Octopress comes with a beautiful theme, it&rsquo;s possible to install third-parties themes, and it&rsquo;s quite easy!</p>
+
+<p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">This site</a> contains a lot of themes for Octopress. To install them, first you need to clone the theme repository into the .theme folder inside your blog. Example:</p>
+
+<pre><code>git clone XXX .theme/XXX
+</code></pre>
+
+<p>After that, just type:</p>
+
+<pre><code class="Bash">rake install['XXX']
+rake generate
+</code></pre>
+
+<p>Where &ldquo;XXX&rdquo; is the theme name inside your .theme folder.</p>
+
+<p>After that it will ask if you really wish to override the files, and for that you answer yes (y). And now you can see your new theme! :D</p>
+
+<p>It was pretty simple, wasn&rsquo;t it?!
+I really hope you&rsquo;ve liked this tutorial. Here are some interesting links to get depth on this topic:</p>
+
+<ul>
+<li><a href="http://jekyllrb.com/docs/home/">http://jekyllrb.com/docs/home/</a></li>
+<li><a href="http://octopress.org/docs/">http://octopress.org/docs/</a></li>
+<li><a href="https://pages.github.com/">https://pages.github.com/</a></li>
+</ul>
+
+
+<p>Good luck with your new blog! Any question, don&rsquo;t hesitate to use the comments section right below.</p>
 ]]></content>
   </entry>
   

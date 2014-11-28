@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Apps | The bug is on the table]]></title>
+  <title><![CDATA[Category: Apps | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/apps/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-11-12T22:19:50-03:00</updated>
+  <updated>2014-11-28T18:44:34-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -14,17 +14,17 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Experiências Na Disciplina De Sistemas De Informação I]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i/"/>
+    <title type="html"><![CDATA[My Experience on Information Systems I]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/10/27/my-experience-on-information-systems-i/"/>
     <updated>2014-10-27T00:35:50-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/10/27/experiencias-na-disciplina-de-sistemas-de-informacao-i</id>
-    <content type="html"><![CDATA[<p>Na disciplina de Sistemas de Informação I aprendemos um pouco sobre sistemas web.</p>
+    <id>http://PicoleDeLimao.github.io/blog/2014/10/27/my-experience-on-information-systems-i</id>
+    <content type="html"><![CDATA[<p>On Information Systems I we learn about project design and web systems.</p>
 
-<p>Lá, nós utilizamos um framework chamado Play!, que é feito para Java e Scala.</p>
+<p>There, we utilize a framework called Play!, that is done for Java and Scala.</p>
 
-<p>O Play! Framework não deixou nada a desejar. A parte de integração com o Scala realmente é uma mão na roda, tornando as coisas realmente mais simples do que se fossem feitas puramente em Java.</p>
+<p>Play! Framework is excellent, and the integration part with Scala really helps, turning things smoother.</p>
 
-<p>Aqui vai alguns exemplos de sites que desenvolvi durante essa disciplina:</p>
+<p>Here are some web systems I developed during this discipline:</p>
 
 <h2>#Partiu</h2>
 
@@ -36,34 +36,31 @@
 <p></p>
 
 <center>Link: <a href="http://si1-partiu.herokuapp.com">http://si1-partiu.herokuapp.com</a>/<br/><br/>
-Repositório no Github: <a href="https://github.com/felipemdrs/Partiu_Projeto_SI1">https://github.com/felipemdrs/Partiu_Projeto_SI1</a></center>
+Github repository: <a href="https://github.com/felipemdrs/Partiu_Projeto_SI1">https://github.com/felipemdrs/Partiu_Projeto_SI1</a></center>
 
 
 <p><br/></p>
 
-<p>Esse foi o projeto final da disciplina e foi feito em conjunto com outro colega, <a href="https://github.com/felipemdrs">Felipe Miranda</a>. Basicamente, é uma &ldquo;rede social&rdquo; de viagens, onde você cria um grupo para sua viagem e chama pessoas para compartilhar informações sobre essa viagem, parecido com os grupos de Facebook. Você pode definir uma viagem como público ou privada.</p>
+<p>That was the discipline&rsquo;s final project and it was made together with a classmate, <a href="https://github.com/felipemdrs">Felipe Miranda</a>.
+Basically, it is a &ldquo;social network&rdquo; of travels, where you create a group for you travel and call people to share information about it, very much like Facebook groups. You can set you travels as public or private.</p>
 
 <h2>CCFest</h2>
 
 <p style="text-align:center;"><img src="/images/posts/play-ccfest.png" alt="" />
 Link: <a href="http://cchackfest.herokuapp.com/">http://cchackfest.herokuapp.com/</a><br/>
-Repositório no Github: <a href="https://github.com/PicoleDeLimao/hackfest2">https://github.com/PicoleDeLimao/hackfest2</a></p>
+Github repository: <a href="https://github.com/PicoleDeLimao/hackfest2">https://github.com/PicoleDeLimao/hackfest2</a></p>
 
-<p>Originalmente feito também por <a href="https://github.com/felipemdrs">Felipe Miranda</a>, o desafio era pegar um sistema pronto de outro colega e evoluí-lo.</p>
+<p>Originally made by <a href="https://github.com/felipemdrs">Felipe Miranda</a>, the challenge was deal with a complete system and evolve it (of course, I couldn&rsquo;t be able to create such beautiful GUI :p).</p>
 
-<p>Claro, eu nunca seria capaz de criar uma interface tão bonitinha :P</p>
+<p>I was responsible for user validation (previously there wasn&rsquo;t a signup option), possibility to add an event place and check it as priority for experienced programmer. Another thing I learned during this project was how to work with AJAX technology.</p>
 
-<p>Fui responsável pela parte de validação de usuário (anteriormente não havia opção de se cadastrar), possibilidade de adicionar um local ao evento e marcar como prioritário para hackers experientes (e a experiência aqui é ditada pela quantidade de eventos que você já participou), e outros pequenos detalhes.</p>
+<h2>Final thoughts</h2>
 
-<p>Além disso, outra coisa que aprendi com esse projeto foi a usar AJAX.</p>
+<p>My experience while on this discipline was very positive. My knowledge with web systems was from zero to now the possibility to create pretty complex sites. :P</p>
 
-<h2>Conclusão</h2>
+<p>I learnt many technologies (Play!, MVC, Heroku, Hibernate, AJAX, Javascript, just to quote few :P) and there&rsquo;s still many to learn! Well&hellip; That&rsquo;s a programmer life. But it&rsquo;s better that way.</p>
 
-<p>A experiência com essa disciplina foi muito positiva. Parti de experiência quase zero com websites até a possibilidade de criar sites com aparência &ldquo;profissional&rdquo;, se me permite dizer.</p>
-
-<p>Foram muitas as tecnologias aprendidas (Play!, MVC, Heroku, Hibernate, AJAX, Javascript, só para citar algumas :P) e muitas ainda a aprender. Mas vida de programador é assim mesmo. ;)</p>
-
-<p>É isso aí, até a próxima!</p>
+<p>That&rsquo;s it. See ya!</p>
 ]]></content>
   </entry>
   
@@ -72,13 +69,11 @@ Repositório no Github: <a href="https://github.com/PicoleDeLimao/hackfest2">htt
     <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/python-2-dot-7-mesquita/"/>
     <updated>2014-10-18T18:30:35-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/10/18/python-2-dot-7-mesquita</id>
-    <content type="html"><![CDATA[<p>Ahhh, a boa e velha (ou não tão velha assim) estatística.</p>
+    <content type="html"><![CDATA[<p>Ahhh, and good and old (or not so old) statistics.</p>
 
-<p>Criei esse programa com o intuito de me ajudar com os cálculos de alguns exercícios em sala-de-aula. No final, acabou me ajudando bastante a decorar algumas propriedades de alguns modelos estatísticos. :)</p>
+<p>I create this software to help with my homework. In the end, just by doing it I was able to learn much more about statistical models. :)</p>
 
-<p>Além disso, esse programa foi minha primeira tentativa de mexer na interface gráfica padrão do Python, o Tkinter. Gostei!</p>
-
-<p>Bem, então fica aqui na esperança de que seja útil para mais alguém.</p>
+<p>Also, this software was my first attempt in create something with Python GUI, Tkinter. Wow, compared to Swing this one is like heaven!</p>
 
 <p style="text-align:center;"><img src="/images/posts/mesquita.png" alt="" /></p>
 
@@ -90,9 +85,9 @@ Repositório no Github: <a href="https://github.com/PicoleDeLimao/hackfest2">htt
 <!-- more -->
 
 
-<p>Vocês podem conferir o código-fonte abaixo. Divirtam-se!</p>
+<p>You can see the source code below. Have fun!</p>
 
-<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 
 
 <div id="code">

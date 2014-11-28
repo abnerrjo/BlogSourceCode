@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Games | The bug is on the table]]></title>
+  <title><![CDATA[Category: Games | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/games/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-11-12T22:19:50-03:00</updated>
+  <updated>2014-11-28T18:44:34-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -18,18 +18,11 @@
     <link href="http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom/"/>
     <updated>2014-09-28T15:19:25-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom</id>
-    <content type="html"><![CDATA[<p>E lá vai mais um joguinho que havia criado há um bom tempo já.</p>
+    <content type="html"><![CDATA[<p>Here&rsquo;s some fool game I made some time ago in an attempt to learn about Swing. Have fun!</p>
 
 <p style="text-align:center;"><img src="/images/posts/hashboom.png" alt="" /></p>
 
 <p style="text-align:center;"><a href="/downloads/code/Hashboom.jar">Click here to download</a></p>
-
-<!-- More -->
-
-
-<p>Esse jogo foi desenvolvido usando a biblioteca Swing e um framework básico que já não lembro o nome. :P</p>
-
-<p>Divirta-se!</p>
 ]]></content>
   </entry>
   
@@ -38,7 +31,7 @@
     <link href="http://PicoleDeLimao.github.io/blog/2014/09/27/python-2-dot-7-pyinvaders/"/>
     <updated>2014-09-27T12:16:32-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/09/27/python-2-dot-7-pyinvaders</id>
-    <content type="html"><![CDATA[<p>E mais um joguinho feito, desta vez uma cópia do Space Invaders.</p>
+    <content type="html"><![CDATA[<p>The last game of terminal games series, this time a copy of Space Invaders.</p>
 
 <p style="text-align:center;"><img src="/images/posts/pyinvaders.png" alt="" /></p>
 
@@ -50,13 +43,9 @@
 <!-- more -->
 
 
-<p>Não há nada de novo em relação aos outros joguinhos dessa série.
-Ah! Uma coisa interessante adicionada à série é a multiplataforma. Agora os joguinhos rodam tanto em Linux quanto no Windows! :D
-Estava usando as bibliotecas tty e termios para gerenciar os eventos do teclado, mas, infelizmente, essas bibliotecas não existem para Windows. Por isto, criei um módulo adicional que faz a mesma coisa usando o Tkinter.</p>
+<p>Have fun!</p>
 
-<p>Vocês podem conferir o código-fonte abaixo. Divirtam-se!</p>
-
-<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 
 
 <div id="code">
@@ -412,7 +401,7 @@ if __name__ == &#39;__main__&#39;:
     <link href="http://PicoleDeLimao.github.io/blog/2014/09/19/python-2-dot-7-pypac/"/>
     <updated>2014-09-19T10:04:09-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/09/19/python-2-dot-7-pypac</id>
-    <content type="html"><![CDATA[<p>E lá vai mais um jogo criado no Python 2.7, desta vez um clone do eterno clássico Pacman!</p>
+    <content type="html"><![CDATA[<p>Here is another game of my series, this time about the classic Pacman.</p>
 
 <p style="text-align:center;"><img src="/images/posts/pypac.png" alt="" /></p>
 
@@ -424,11 +413,9 @@ if __name__ == &#39;__main__&#39;:
 <!-- more -->
 
 
-<p>As novidades da implementação deste jogo em relação ao PySnake foi a introdução à tiles, onde é possível classificá-los como &ldquo;atravessáveis&rdquo; e &ldquo;não-atravessáveis&rdquo; e um pouco de Geometria para compor a IA dos fantasmas (o movimento deles é determinado pelo arcotangente dos vetores das posição dos fantasmas e do Pacman).</p>
+<p>Have fun!</p>
 
-<p>Divirtam-se! O código-fonte encontra-se abaixo:</p>
-
-<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 
 
 <div id="code">
@@ -912,7 +899,7 @@ if __name__ == &#39;__main__&#39;:
     <link href="http://PicoleDeLimao.github.io/blog/2014/09/17/python-2-dot-7-pysnake/"/>
     <updated>2014-09-17T22:26:50-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/09/17/python-2-dot-7-pysnake</id>
-    <content type="html"><![CDATA[<p>Boa noite, leitores. Estou de férias! Uhuul! E para comemorar, voltei a fazer o que mais gosto de fazer, que é criar joguinhos, principalmente os de GUI mais tosca possível, como esse abaixo:</p>
+    <content type="html"><![CDATA[<p>Good night, readers. I&rsquo;m on vacation! Wehoo! To comemorate, I came back to do what I like most, that is to create little games on terminal, like this one below:</p>
 
 <p style="text-align:center;"><img src="/images/posts/pysnake.png" alt="" /></p>
 
@@ -924,15 +911,9 @@ if __name__ == &#39;__main__&#39;:
 <!-- more -->
 
 
-<p>O jogo foi desenvolvido usando Python 2.7 e me tomou cerca de 6 horas.
-O que mais me ajudou foi o uso do design pattern State para arquitetar as telas do jogo.
-Além disso, filas foram usadas para compor o movimento característico da cobra. Threads também foram usadas para permitir o uso do teclado enquanto que os elementos são visualizados na tela.</p>
+<p>You can get the source code below. Have fun!</p>
 
-<p>Nenhum framework específico foi usado.</p>
-
-<p>Vocês podem conferir o código-fonte abaixo. Divirtam-se!</p>
-
-<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 
 
 <div id="code">
