@@ -5,7 +5,7 @@ date: 2014-09-27 12:16:32 -0300
 comments: true
 categories: [Python, Games]
 ---
-E mais um joguinho feito, desta vez uma cópia do Space Invaders.
+The last game of terminal games series, this time a copy of Space Invaders.
 
 ->![]({{ root_url }}/images/posts/pyinvaders.png)<-
 
@@ -13,13 +13,9 @@ E mais um joguinho feito, desta vez uma cópia do Space Invaders.
 
 <!-- more -->
 
-Não há nada de novo em relação aos outros joguinhos dessa série.
-Ah! Uma coisa interessante adicionada à série é a multiplataforma. Agora os joguinhos rodam tanto em Linux quanto no Windows! :D
-Estava usando as bibliotecas tty e termios para gerenciar os eventos do teclado, mas, infelizmente, essas bibliotecas não existem para Windows. Por isto, criei um módulo adicional que faz a mesma coisa usando o Tkinter. 
+Have fun!
 
-Vocês podem conferir o código-fonte abaixo. Divirtam-se! 
-
-<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 <div id="code">
 {% gist 05364c4b67d5ed265871 PyInvaders.py %}
 </div>

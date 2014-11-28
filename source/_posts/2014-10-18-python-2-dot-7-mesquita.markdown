@@ -5,13 +5,11 @@ date: 2014-10-18 18:30:35 -0300
 comments: true
 categories: [Python, Apps]
 ---
-Ahhh, a boa e velha (ou não tão velha assim) estatística. 
+Ahhh, and good and old (or not so old) statistics.
 
-Criei esse programa com o intuito de me ajudar com os cálculos de alguns exercícios em sala-de-aula. No final, acabou me ajudando bastante a decorar algumas propriedades de alguns modelos estatísticos. :)
+I create this software to help with my homework. In the end, just by doing it I was able to learn much more about statistical models. :)
 
-Além disso, esse programa foi minha primeira tentativa de mexer na interface gráfica padrão do Python, o Tkinter. Gostei! 
-
-Bem, então fica aqui na esperança de que seja útil para mais alguém. 
+Also, this software was my first attempt in create something with Python GUI, Tkinter. Wow, compared to Swing this one is like heaven!
 
 ->![]({{ root_url }}/images/posts/mesquita.png)<-
 
@@ -19,9 +17,9 @@ Bem, então fica aqui na esperança de que seja útil para mais alguém.
 
 <!-- more -->
 
-Vocês podem conferir o código-fonte abaixo. Divirtam-se! 
+You can see the source code below. Have fun!
 
-<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 <div id="code">
 {% gist e51ffc7453acf0af3426 Mesquita.py %}
 </div>

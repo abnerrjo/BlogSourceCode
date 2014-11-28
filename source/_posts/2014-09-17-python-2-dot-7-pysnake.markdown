@@ -5,7 +5,7 @@ date: 2014-09-17 22:26:50 -0300
 comments: true
 categories: [Python, Games]
 ---
-Boa noite, leitores. Estou de férias! Uhuul! E para comemorar, voltei a fazer o que mais gosto de fazer, que é criar joguinhos, principalmente os de GUI mais tosca possível, como esse abaixo:
+Good night, readers. I'm on vacation! Wehoo! To comemorate, I came back to do what I like most, that is to create little games on terminal, like this one below:
 
 ->![]({{ root_url }}/images/posts/pysnake.png)<-
 
@@ -13,15 +13,9 @@ Boa noite, leitores. Estou de férias! Uhuul! E para comemorar, voltei a fazer o
 
 <!-- more -->
 
-O jogo foi desenvolvido usando Python 2.7 e me tomou cerca de 6 horas. 
-O que mais me ajudou foi o uso do design pattern State para arquitetar as telas do jogo. 
-Além disso, filas foram usadas para compor o movimento característico da cobra. Threads também foram usadas para permitir o uso do teclado enquanto que os elementos são visualizados na tela.
+You can get the source code below. Have fun!
 
-Nenhum framework específico foi usado.
-
-Vocês podem conferir o código-fonte abaixo. Divirtam-se! 
-
-<center><input id="spoiler" type="button" value="Ver código-fonte" onclick="toggle_visibility('code');"></center>
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 <div id="code">
 {% gist 300f93a9820c52e6a243 PySnake.py %}
 </div>

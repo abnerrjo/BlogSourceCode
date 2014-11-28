@@ -5,7 +5,7 @@ date: 2014-11-12 20:40:47 -0300
 comments: true
 categories: [Tutorials, PHP]
 ---
-HTTP is a stateless protocol. However, sometimes we *do* want to keep some state of the application, as, for example, some information of the current user who is browsing your site. In PHP and most backend languages in general, there are two ways to do that:
+HTTP is a stateless protocol. However, sometimes we *do* want to keep some state of the application, like, for example, some information about the current user who is browsing your site. In PHP and most backend languages in general, there are two ways to do that:
 
 - Cookies
 - Sessions
