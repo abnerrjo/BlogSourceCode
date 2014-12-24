@@ -3,6 +3,14 @@
   
   
   <url>
+    <loc>http://PicoleDeLimao.github.io/blog/2014/12/24/taking-photos-from-webcam-using-html5/</loc>
+    
+    <lastmod>2014-12-24T11:57:06-03:00</lastmod>
+    
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://PicoleDeLimao.github.io/blog/2014/12/19/death-button/</loc>
     
     <lastmod>2014-12-19T08:57:25-03:00</lastmod>
@@ -101,21 +109,21 @@
   
   <url>
     <loc>http://PicoleDeLimao.github.io/blog/archives/</loc>
-    <lastmod>2014-12-19T09:12:58-03:00</lastmod>
+    <lastmod>2014-12-24T13:23:41-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/</loc>
-    <lastmod>2014-12-19T09:12:58-03:00</lastmod>
+    <lastmod>2014-12-24T13:23:41-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/about/</loc>
-    <lastmod>2014-12-19T09:12:58-03:00</lastmod>
+    <lastmod>2014-12-24T13:23:41-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
