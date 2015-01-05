@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Html5 | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/html5/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2014-12-24T13:23:41-03:00</updated>
+  <updated>2015-01-05T15:44:41-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -18,7 +18,7 @@
     <link href="http://PicoleDeLimao.github.io/blog/2014/12/24/taking-photos-from-webcam-using-html5/"/>
     <updated>2014-12-24T11:57:06-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2014/12/24/taking-photos-from-webcam-using-html5</id>
-    <content type="html"><![CDATA[<p>In today&rsquo;s tutorial I&rsquo;ll teach how to take snapshots from webcam using only HTML5.</p>
+    <content type="html"><![CDATA[<p>On today&rsquo;s tutorial I&rsquo;ll teach how to take snapshots from webcam using only HTML5.</p>
 
 <p>On the past, accessing user webcam was something onerous, sometimes falling back on Flash. Gladly, HTML5 brought an innovation to this area, thanks to the <code>&lt;video&gt;</code> tag.</p>
 

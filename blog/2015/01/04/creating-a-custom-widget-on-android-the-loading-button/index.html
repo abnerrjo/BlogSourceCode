@@ -1,0 +1,1011 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Creating a Custom Widget on Android: The Loading Button - Tango with code</title>
+  <meta name="author" content="Abner Matheus">
+
+  
+  <meta name="description" content="Here I&rsquo;ll ilustrate the creation of a custom widget
+through a pratical example: A Loading Button. A loading button is a
+button with a spinning &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/javascripts/spoiler.js"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Tango with code</a></h1>
+  
+    <h2>A blog about frustration and anger</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PicoleDeLimao.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Creating a Custom Widget on Android: The Loading Button</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-04T18:57:51-03:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:57 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Here I&rsquo;ll ilustrate the creation of a custom widget
+through a pratical example: A Loading Button. A loading button is a
+button with a spinning indicator. It&rsquo;s useful for buttons that
+trigger servers requests.</p>
+
+<p style="text-align:center;"><img src="/images/posts/spinning_button.png" alt="" /></p>
+
+<p style="text-align:center;"><a href="/downloads/code/TutorialButton.zip">Click here to download the example</a></p>
+
+<!-- more -->
+
+
+<p>As our first step, let&rsquo;s create a Java class called &ldquo;LoadingButton&rdquo;
+that extends of RelativeLayout view. You may be asking why we are
+extending of RelativeLayout instead of Button class. The quick answer
+is Button doesn&rsquo;t allow views inside of it, Layouts does, and we&rsquo;re
+going to need that functionality. :) (But don&rsquo;t worry, that won&rsquo;t make
+our button less than a button!).</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'><span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.util.AttributeSet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.RelativeLayout</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoadingButton</span> <span class="kd">extends</span> <span class="n">RelativeLayout</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">defStyleAttr</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">,</span> <span class="n">defStyleAttr</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Notice we need the three constructors to make our custom widgets
+work. They all are necessary.</p>
+
+<p>Now let&rsquo;s &ldquo;draw&rdquo; our widget. Create a method called &ldquo;init&rdquo; and
+call it inside the all constructors.</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoadingButton</span> <span class="kd">extends</span> <span class="n">RelativeLayout</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">defStyleAttr</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">,</span> <span class="n">defStyleAttr</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, inside this method, let&rsquo;s begin defining our layout as
+&ldquo;clickable&rdquo; (it&rsquo;s false as default) and setting its background as the
+same as a button background.</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">setClickable</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setBackgroundResource</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">btn_default</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>For our button, we need two children: A TextView and a ProgressBar.
+The TextView will display the button text, while the progressbar will
+display the spinning indicator.</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">private</span> <span class="n">TextView</span> <span class="n">mTextView</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">ProgressBar</span> <span class="n">mProgressBar</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">setClickable</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setBackgroundResource</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">btn_default</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TextView</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mProgressBar</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ProgressBar</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mTextView</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mProgressBar</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Simple like that! By using the &ldquo;addView&rdquo; method we are adding a new view to
+our layout. But we still need to define things like: width,
+height and style. For width and height, we&rsquo;re going to use something called
+LayoutParams, that acts the same as android:layout_* attributes on XML
+Layout files.</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">setClickable</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setBackgroundResource</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">btn_default</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">textViewParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">textViewParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">progressBarParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">progressBarParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TextView</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">textViewParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ProgressBar</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">progressBarParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mTextView</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mProgressBar</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s pretty straight-forward. We&rsquo;re here setting width and height to
+&ldquo;wrap_content&rdquo; and centering both widgets. Of course, we&rsquo;re not going
+to show both at the same time, that&rsquo;s why I hid the progressbar using
+the &ldquo;setVisibility&rdquo; method.</p>
+
+<p>Now we just need two others methods, that either will display the spinning
+indicator either will display the text.</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">startLoading</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">VISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">stopLoading</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">VISIBLE</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And here&rsquo;s the complete class:</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'><span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.util.AttributeSet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.view.View</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.ProgressBar</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.RelativeLayout</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.TextView</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoadingButton</span> <span class="kd">extends</span> <span class="n">RelativeLayout</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">TextView</span> <span class="n">mTextView</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">ProgressBar</span> <span class="n">mProgressBar</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">setClickable</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setBackgroundResource</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">btn_default</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">textViewParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">textViewParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">progressBarParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">progressBarParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TextView</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">textViewParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ProgressBar</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">progressBarParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mTextView</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mProgressBar</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">startLoading</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">VISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">stopLoading</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">VISIBLE</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">defStyleAttr</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">,</span> <span class="n">defStyleAttr</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Wait! Something is missing! We are using a RelativeLayout to simulate
+a button, but layouts don&rsquo;t have the attribute &ldquo;android:text&rdquo;. So how
+do you set the text?</p></blockquote>
+
+<p>For that we&rsquo;re going to need a styleable.</p>
+
+<p>Styleable is, in short, a set of custom attributes. For example, when
+you declare in your layouts xml files on your top-parent view the
+following attribute:
+<code>xmlns:android="http://schemas.android.com/apk/res/android"</code>, you are
+actually saying where are Android default styleables and naming it &ldquo;android&rdquo;,
+so you can access the attributes through the prefix &ldquo;android:&rdquo;.</p>
+
+<p>To create a new styleable, go to res > values > attrs.xml. If this
+file is not created yet, create it with the following structure:</p>
+
+<figure class='code'><figcaption><span>attrs.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;resources&gt;</span>
+</span><span class='line'><span class="nt">&lt;/resources&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Now, inside of the newly created file, type the following structure:</p>
+
+<figure class='code'><figcaption><span>attrs.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;resources&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;declare-styleable</span> <span class="na">name=</span><span class="s">&quot;LoadingButton&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/declare-styleable&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/resources&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Through the tag <code>&lt;declare-styleable&gt;</code> we are setting a new styleable
+and its name attribute defines its&hellip; name (it has no impact, it&rsquo;s
+just a matter of identification).</p>
+
+<p>Now let&rsquo;s define a custom attribute called &ldquo;text&rdquo; to serve as a way to
+set our button text.</p>
+
+<figure class='code'><figcaption><span>attrs.xml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+</span><span class='line'><span class="nt">&lt;resources&gt;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nt">&lt;declare-styleable</span> <span class="na">name=</span><span class="s">&quot;LoadingButton&quot;</span> <span class="nt">&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;attr</span> <span class="na">name=</span><span class="s">&quot;text&quot;</span> <span class="na">format=</span><span class="s">&quot;string&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/declare-styleable&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;/resources&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To create a new attribute just create a new tag of type <code>&lt;attr&gt;</code>
+inside the <code>&lt;declare-styleable&gt;</code> tag. A tag has a name (the attribute
+name) and a format, namely the input type it accepts. The format can
+be of the several types, among them: string, integer, boolean, &hellip;</p>
+
+<p>And we are done with styleables! If we need to pass more informations
+for our button beyond its text, like, for example, text color, just
+create a new attribute!</p>
+
+<p>Now let&rsquo;s go back to our Java class. Now we need to link our newly
+created styleble to our class. For that create a method called
+&ldquo;setAttributes&rdquo; that receives as parameter a variable of kind &ldquo;Context&rdquo;
+and another of kind &ldquo;AttributeSet&rdquo; and returns void and calls this
+method inside all constructors except the one that just receives one
+parameter.</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">setAttributes</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">setAttributes</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">defStyleAttr</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">,</span> <span class="n">defStyleAttr</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">setAttributes</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Now, inside this method, we are going to link to our styleable
+throught the following code:</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">mText</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">setAttributes</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">TypedArray</span> <span class="n">ta</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">obtainStyledAttributes</span><span class="o">(</span><span class="n">attrs</span><span class="o">,</span> <span class="n">R</span><span class="o">.</span><span class="na">styleable</span><span class="o">.</span><span class="na">LoadingButton</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">mText</span> <span class="o">=</span> <span class="n">ta</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">styleable</span><span class="o">.</span><span class="na">LoadingButton_text</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ta</span><span class="o">.</span><span class="na">recycle</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>I created a new class member called &ldquo;mText&rdquo; to store the string we are
+going to get through the attribute &ldquo;text&rdquo;. To link to our styleable se
+use the method &ldquo;obtainStyledAttributes&rdquo;, that receives as parameter
+the set of attributes (attrs) and the styleable name. Finally, we
+extract an attribute value calling the called &ldquo;get*&rdquo;, where * is the
+type of attribute we want to extract. This type is related to the
+&ldquo;format&rdquo; we defined on our XML file.</p>
+
+<p>Now we just need to adjust the method &ldquo;init&rdquo; to now set the text of
+EditText to our variable &ldquo;mText&rdquo;.</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">setClickable</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setBackgroundResource</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">btn_default</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">textViewParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">textViewParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">progressBarParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">progressBarParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TextView</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">textViewParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">mText</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ProgressBar</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">progressBarParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mTextView</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mProgressBar</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now here is our fully completed class:</p>
+
+<figure class='code'><figcaption><span>LoadingButton.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'><span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.content.res.TypedArray</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.util.AttributeSet</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.view.View</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.ProgressBar</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.RelativeLayout</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.widget.TextView</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoadingButton</span> <span class="kd">extends</span> <span class="n">RelativeLayout</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">TextView</span> <span class="n">mTextView</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">ProgressBar</span> <span class="n">mProgressBar</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">String</span> <span class="n">mText</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">setClickable</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setBackgroundResource</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">btn_default</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">textViewParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">textViewParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">LayoutParams</span> <span class="n">progressBarParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LayoutParams</span><span class="o">(</span><span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">,</span> <span class="n">LayoutParams</span><span class="o">.</span><span class="na">WRAP_CONTENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">progressBarParams</span><span class="o">.</span><span class="na">addRule</span><span class="o">(</span><span class="n">RelativeLayout</span><span class="o">.</span><span class="na">CENTER_IN_PARENT</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">TextView</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">textViewParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">mText</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">ProgressBar</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setLayoutParams</span><span class="o">(</span><span class="n">progressBarParams</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mTextView</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">addView</span><span class="o">(</span><span class="n">mProgressBar</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">startLoading</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">VISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">stopLoading</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mProgressBar</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">INVISIBLE</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">mTextView</span><span class="o">.</span><span class="na">setVisibility</span><span class="o">(</span><span class="n">View</span><span class="o">.</span><span class="na">VISIBLE</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">setAttributes</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">TypedArray</span> <span class="n">ta</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">obtainStyledAttributes</span><span class="o">(</span><span class="n">attrs</span><span class="o">,</span> <span class="n">R</span><span class="o">.</span><span class="na">styleable</span><span class="o">.</span><span class="na">LoadingButton</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">mText</span> <span class="o">=</span> <span class="n">ta</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">styleable</span><span class="o">.</span><span class="na">LoadingButton_text</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">ta</span><span class="o">.</span><span class="na">recycle</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setAttributes</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">LoadingButton</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">defStyleAttr</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">,</span> <span class="n">defStyleAttr</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setAttributes</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">attrs</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">init</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>And now it&rsquo;s ready to be used!</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'>    <span class="nt">&lt;PACKAGE_NAME.LoadingButton</span>
+</span><span class='line'>        <span class="na">xmlns:app=</span><span class="s">&quot;http://schemas.android.com/apk/res-auto&quot;</span>
+</span><span class='line'>        <span class="na">android:id=</span><span class="s">&quot;@+id/loading_button&quot;</span>
+</span><span class='line'>        <span class="na">android:layout_width=</span><span class="s">&quot;150dp&quot;</span>
+</span><span class='line'>        <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
+</span><span class='line'>        <span class="na">app:text=</span><span class="s">&quot;Hello world!&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You must replace &ldquo;PACKAGE_NAME&rdquo; for the package where the
+LoadingButton class is within. Also, notice I must define to where my
+styleable is before using its attribute. You could pass the real path
+(<a href="http://schemas.android.com/apk/res/values/attrs.xml">http://schemas.android.com/apk/res/values/attrs.xml</a>), but the res-auto
+automatically redirects to &ldquo;attrs.xml&rdquo;. After naming it &ldquo;app&rdquo;, I could
+have access to the &ldquo;text&rdquo; attribute through the prefix &ldquo;app:&rdquo;.</p>
+
+<p>And here&rsquo;s a snippet to demonstrate it working:</p>
+
+<figure class='code'><figcaption><span>MyActivity.java</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'>    <span class="kd">private</span> <span class="n">LoadingButton</span> <span class="n">button</span><span class="o">;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">loading</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_my</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">button</span> <span class="o">=</span> <span class="o">(</span><span class="n">LoadingButton</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">loading_button</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">button</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>            <span class="nd">@Override</span>
+</span><span class='line'>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">loading</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">button</span><span class="o">.</span><span class="na">stopLoading</span><span class="o">();</span>
+</span><span class='line'>                    <span class="n">loading</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">button</span><span class="o">.</span><span class="na">startLoading</span><span class="o">();</span>
+</span><span class='line'>                    <span class="n">loading</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">});</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p style="text-align:center;"><img src="/images/posts/spinning_button.png" alt="" /></p>
+
+<p style="text-align:center;"><a href="/downloads/code/TutorialButton.zip">Click here to download the example</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-04T18:57:51-03:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>6:57 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">	
+      
+        <a class="basic-alignment left" href="/blog/2014/12/24/taking-photos-from-webcam-using-html5/" title="Previous Post: Taking photos from webcam using HTML5">&laquo; Taking photos from webcam using HTML5</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/">Creating a Custom Widget on Android: The Loading Button</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/24/taking-photos-from-webcam-using-html5/">Taking Photos From Webcam Using HTML5</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/19/death-button/">Death Button</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/12/managing-sessions-in-php/">Managing Sessions in PHP</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/27/my-experience-on-information-systems-i/">My Experience on Information Systems I</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/PicoleDeLimao">@PicoleDeLimao</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PicoleDeLimao',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Abner Matheus -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'deforadouniverso';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
