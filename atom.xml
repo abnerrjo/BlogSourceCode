@@ -4,7 +4,7 @@
   <title><![CDATA[Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-01-05T15:44:41-03:00</updated>
+  <updated>2015-03-15T13:14:06-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -12,6 +12,496 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Red-Black Tree in Alloy]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2015/03/15/red-black-tree-in-alloy/"/>
+    <updated>2015-03-15T08:30:39-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2015/03/15/red-black-tree-in-alloy</id>
+    <content type="html"><![CDATA[<p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/alloy.png" alt="" /></p>
+
+<p>Everyone who once worked as an analyst knows that one of the most ambiguous, error-prone part of building a software is the requisite engineering. It&rsquo;s a hell of a task to know what the client <em>wants</em> and <em>how</em> to build a system that meets his expectations.</p>
+
+<p>Bugs in the software specification are hundred, thousand times more expensive than bugs on internal logic, because in order to fix it you frequently need to change the behavior of your software, demanding a complete rethinking on your software architecture.</p>
+
+<p><strong>Alloy Analyzer</strong> is a tool for building models. Its very purpose is to find a specific instance of your model that contradicts your expectations about it. Because a model can have thousand or even infinite instances, it&rsquo;s restricted to a certain scope. A model can be thought as a high-high-level abstraction of your software. It may not find a bug of implementation, but it can spots illegal states that your software can assume, hence helping to find bugs in specification level.</p>
+
+<p>On today tutorial, we are going to learn how to specify a red-black tree in Alloy.</p>
+
+<!-- more -->
+
+
+<p>The very first thing you need to know about Alloy is <strong>Signature</strong>. Signature is an abstraction of a real-world entity. Signature also can be thought as a set of relations. Making a parallel, signatures are equivalent to classes in object-oriented programming.</p>
+
+<p>Signatures are declared as the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">sig</span> <span class="err">[</span><span class="n">Name</span><span class="err">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span> <span class="n">Relations</span> <span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For our red-black tree, we are just going to need one signature: Node. A node of the tree.</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="n">signature</span> <span class="n">Node</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the same way that our classes in OOP need attributes, so need our signatures. With the difference that here attributes are called <strong>relations</strong>. Relations have a name, cardinality and set of other signatures we want to relate to. They are declared as the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">sig</span> <span class="err">[</span><span class="n">Name</span><span class="err">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span> <span class="n">RelationName</span><span class="o">]</span> <span class="p">:</span> <span class="o">[</span> <span class="n">Cardinality</span><span class="o">]</span> <span class="o">[</span> <span class="n">SignaturesNames</span> <span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+Example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">sig</span> <span class="n">aSignature</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">aRelation</span> <span class="p">:</span> <span class="k">one</span> <span class="n">aSignature</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A relation name must be unique inside a signature. The most common types of cardinality is <code>one</code> (one instance of signature A is related to one and only one instance of signature B), <code>lone</code> (one instance of signature A is related to zero or one instance of signature B), <code>set</code> (one instance of signature A is related to zero or more instances of signature B) and <code>some</code> (one instance of signature A is related to one or more instances of signature B), where A is the signature that contains that relation and B are the signatures refferenced by the relation.</p>
+
+<p>For our red-black tree, the signature node must contain as least four relations:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">sig</span> <span class="n">Node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">parent</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">left</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">right</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">children</span><span class="p">:</span> <span class="k">set</span> <span class="n">Node</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><strong>parent</strong>: The parent node. It&rsquo;s lone because the root node doesn&rsquo;t have any parent.</li>
+<li><strong>left</strong>: The left child node. It&rsquo;s lone because a node may not have a left child.</li>
+<li><strong>right</strong>: The right child node. It&rsquo;s lone because a node may not have a right child.</li>
+<li><strong>children</strong>: The set of children node. It may seem redundant, but it will help us to constrain our model later on.</li>
+</ul>
+
+
+<p>Now let&rsquo;s start validating our model! There are two ways to check models in Alloy: Automatic and manual checks. Although automatic checks are more useful for our purposes, manual checks are good enough in the building phase of our model because we can see &ldquo;what&rsquo;s going on&rdquo;.</p>
+
+<p>For manual checks, first add one predicate to our model (more about predicates later on):</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">pred</span> <span class="n">show</span><span class="o">[]</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">run</span> <span class="n">show</span> <span class="k">for</span> <span class="mi">5</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The statement &ldquo;run&rdquo; run a predicate for a certain scope (we need a scope because there may be infinite instances of our model). Now you just need to execute it:</p>
+
+<p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/alloy2.png" alt="" /></p>
+
+<p>A message will appear in the right-side of the screen indicating if any instance was found (on manual check, unlike automatic check, it&rsquo;s bad when none instance is found, because it means that there wasn&rsquo;t any instance for that scope that attended to your models contraints, meaning there is some logical contradiction).</p>
+
+<p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/alloy3.png" alt="" /></p>
+
+<p>Now you just need to click on &ldquo;Instance&rdquo; to start visualizing the existing instances for your current model.</p>
+
+<p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/alloy4.png" alt="" /></p>
+
+<p>Here, a instance is representated like a directed graph, what&rsquo;s very useful for us, because the graph representation is the tree itself. :))</p>
+
+<p>And <strong>oops</strong>&hellip; We already found a bug (many, actually). First: A node is being parent of itself (what&rsquo;s not allowed in trees, because trees don&rsquo;t allow cycles), and a node is being at the same time parent and left child of another node (what&rsquo;s not allowed, again, because the non-cycle constraint).</p>
+
+<p>As you can see, the sole reason of those bugs is because we are allowing our tree to make cycles. We need to add some constraint to forbid it. But how? With <em>facts</em>!</p>
+
+<p>Facts are constraints that must be valid <em>all the time</em>. They are declared as the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="err">[</span><span class="n">Name</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span> <span class="n">FactBody</span> <span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The very first fact we are going to add is that the set of children is the union of right and left child. We need that before going on with the next facts.</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">makeChildren</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Wow, slow down, slow down!</p>
+
+<p>First, &ldquo;all&rdquo; has the same semantic of the universal quantifier. It means that something must be valid for all elements of a set. In this case, we are using as set &ldquo;Node&rdquo;, meaning all instances of the signature Node, and we are naming each particular instance being iterated as &ldquo;n&rdquo;, so we can access it on the &ldquo;all&rdquo; body.</p>
+
+<p>In the &ldquo;all&rdquo; body, we are setting the &ldquo;children&rdquo; set as the union (in Alloy, unions are representated as the &ldquo;+&rdquo; operator) between left and right children (that also are sets, but unitary ones). Yea, that&rsquo;s the dirty fact about Alloy: As it&rsquo;s a formal specification tool, everything is grounded on the Set Theory.</p>
+
+<p>Now let&rsquo;s specify a fact about the parent of the nodes: If a Node A is parent of another Node B, then Node B is inside Node A&rsquo;s children. Makes sense, right? :))</p>
+
+<p>But before that, we need to specify that the tree must there be have one and only one root. Root is a node that has no parent, so it&rsquo;s pretty straight-forward:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">theresOnlyOneRoot</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">one</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="k">no</span> <span class="n">n</span><span class="o">.</span><span class="n">parent</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&ldquo;no&rdquo; is a operator that returns true if the set is empty.
+&ldquo;one&rdquo; indicates that there must be one and only one element inside the set that attends to its condition.</p>
+
+<p>Now we have everything necessary to constrain a node parent:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">makeParent</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">c</span> <span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">n</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">n2</span><span class="o">.</span><span class="n">parent</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">n1</span><span class="o">.</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>First, for every element inside a node&rsquo;s children, then the child parent is the node itself. Nothing more fair!</p>
+
+<p>Second, if a Node A is parent of another Node B, then Node B must be inside Node A&rsquo;s children. The &ldquo;=>&rdquo; operator means &ldquo;implies&rdquo;. If the left side of implies is true, then, by definition, the right side must also be true (however, if the left side is false, nothing can be said about the right side).</p>
+
+<p>If you run a manual check now, you will notice that many inconsistences were fixed, but many remain. Let&rsquo;s fix some of them:</p>
+
+<p>First, in none moment we define that left and right child must be different. Hence, something like that can happen in our current model:</p>
+
+<p style="text-align:center;"><img src="http://PicoleDeLimao.github.io/images/posts/alloy5.png" alt="" /></p>
+
+<p>That&rsquo;s the tricky part about understanding modeling in Alloy: If we don&rsquo;t define anything, everything may be possible!</p>
+
+<p>Let&rsquo;s fix partially this problem:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">leftAndRightAreDisjoint</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">no</span> <span class="n">left</span> <span class="o">&amp;</span> <span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Actually, this is a more strong constraint than if we defined something like that:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">leftAndRightAreDisjoint</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span> <span class="o">!=</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Because, in the latter, only the left and right child of the <em>immediate</em> node must be different, but nothing is said about their possible children. So, something like that could happen: Node A has Node B as left child and Node C as right child, and Node B has Node C as right child. So, the disjunction must be tree level, not node level. That&rsquo;s why I came with the first solution.</p>
+
+<p>Yea, you <em>can</em> use the relation name independent of the signature. It will return a set of tuples &lt;Node, Node> representating the relation. The &ldquo;&amp;&rdquo; operator is equals to &ldquo;disjoint&rdquo;. It returns true if, for each element in the first set, it&rsquo;s not inside the second set.</p>
+
+<p>Just that solved a lot of trouble for us, but we still have the &ldquo;cycle&rdquo; problem, our, oh! so hated bug. Let&rsquo;s solve it once for all!</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">noCycles</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>          <span class="o">(</span><span class="n">n1</span> <span class="ow">in</span> <span class="n">n2</span><span class="o">.</span><span class="n">children</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="o">!</span><span class="ow">in</span> <span class="n">n1</span><span class="o">.*</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hmmm&hellip;. What&rsquo;s going on? We get any two nodes: n1 and n2. If n1 is a child of n2, then n2 can&rsquo;t be a child of n1, otherwise, there would be a cycle!</p>
+
+<p>Of course, the same rule is valid for all the children of n1 downto the leaves nodes: n2 can&rsquo;t be a child of any node on a level below n1. But how do we get all children below n1 level? Using the &ldquo;*&rdquo; operator! It applies the relation (children, in our case) recursively until it can&rsquo;t be applied anymore (when the node is leaf).</p>
+
+<p>Now let&rsquo;s get everything together:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">sig</span> <span class="n">Node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">parent</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">left</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">right</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">children</span><span class="p">:</span> <span class="k">set</span> <span class="n">Node</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">makeChildren</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">theresOnlyOneRoot</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">one</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="k">no</span> <span class="n">n</span><span class="o">.</span><span class="n">parent</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">makeParent</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">c</span> <span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">n</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">n2</span><span class="o">.</span><span class="n">parent</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">n1</span><span class="o">.</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">leftAndRightAreDisjoint</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">no</span> <span class="n">left</span> <span class="o">&amp;</span> <span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">noCycles</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>          <span class="o">(</span><span class="n">n1</span> <span class="ow">in</span> <span class="n">n2</span><span class="o">.</span><span class="n">children</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="o">!</span><span class="ow">in</span> <span class="n">n1</span><span class="o">.*</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">pred</span> <span class="n">show</span><span class="o">[]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">some</span> <span class="n">n</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">run</span> <span class="n">show</span> <span class="k">for</span> <span class="mi">5</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Wow!! All this work just to specify a <em>consistent</em> tree, not even a BST, imagine a red-black tree! Fortunately, a good part of Alloy syntax was covered in this simple tutorial. We will learn how to build a BST on the second part of this tutorial and a red-black tree on the last part. Until there!</p>
+
+<p>And if you can&rsquo;t hold the curiosity, here&rsquo;s the complete code for the red-black tree:</p>
+
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
+
+
+<div id="code">
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kn">module</span> <span class="n">RedBlackTree</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">enum</span> <span class="n">Color</span> <span class="o">{</span> <span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span> <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">sig</span> <span class="n">Node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">parent</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">left</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">right</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">children</span><span class="p">:</span> <span class="k">set</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">data</span><span class="p">:</span> <span class="k">one</span> <span class="kt">Int</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">color</span><span class="p">:</span> <span class="k">one</span> <span class="n">Color</span>    
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">pred</span> <span class="n">isRoot</span><span class="o">[</span><span class="n">n</span><span class="p">:</span> <span class="n">Node</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">no</span> <span class="n">n</span><span class="o">.</span><span class="n">parent</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// facts about nodes </span>
+</span><span class='line'><span class="k">fact</span> <span class="n">makeChildren</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">makeParent</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">c</span> <span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">n</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">n2</span><span class="o">.</span><span class="n">parent</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">n1</span><span class="o">.</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">noCycles</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>          <span class="o">(</span><span class="n">n1</span> <span class="ow">in</span> <span class="n">n2</span><span class="o">.</span><span class="n">children</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="o">!</span><span class="ow">in</span> <span class="n">n1</span><span class="o">.*</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">leftAndRightAreDisjoint</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">no</span> <span class="n">left</span> <span class="o">&amp;</span> <span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">theresOnlyOneRoot</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">one</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">isRoot</span><span class="o">[</span><span class="n">n</span><span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// facts about data</span>
+</span><span class='line'><span class="k">fact</span> <span class="n">dataIsUnique</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n1</span> <span class="o">!=</span> <span class="n">n2</span> <span class="o">=&gt;</span> <span class="n">n1</span><span class="o">.</span><span class="n">data</span> <span class="o">!=</span> <span class="n">n2</span><span class="o">.</span><span class="n">data</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">organizeLeftAndRightUsingData</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">l</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span><span class="o">.*</span><span class="n">children</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">data</span><span class="o">)</span> <span class="ow">and</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">r</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span><span class="o">.*</span><span class="n">children</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">.</span><span class="n">data</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// facts about node colors</span>
+</span><span class='line'><span class="k">fact</span> <span class="n">rootIsBlack</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="k">no</span> <span class="n">children</span><span class="o">.</span><span class="n">n</span> <span class="o">=&gt;</span> <span class="n">n</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">redNodeChildrenAreBlack</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="n">n</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">RED</span> <span class="o">=&gt;</span>
+</span><span class='line'>          <span class="k">all</span> <span class="n">c</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">blackHeightIsSameToAllPaths</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">#(</span><span class="n">n</span><span class="o">.</span><span class="n">left</span><span class="o">.*</span><span class="n">children</span> <span class="o">-</span> <span class="n">color</span><span class="o">.</span><span class="n">RED</span><span class="o">)</span>  <span class="o">=</span> <span class="o">#(</span><span class="n">n</span><span class="o">.</span><span class="n">right</span><span class="o">.*</span><span class="n">children</span> <span class="o">-</span> <span class="n">color</span><span class="o">.</span><span class="n">RED</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">pred</span> <span class="n">show</span><span class="o">[]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">#</span><span class="n">left</span> <span class="o">&gt;</span> <span class="mi">2</span>
+</span><span class='line'>  <span class="o">#</span><span class="n">right</span> <span class="o">&gt;</span> <span class="mi">2</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">d</span><span class="p">:</span> <span class="n">Node</span><span class="o">.</span><span class="n">data</span> <span class="o">|</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">run</span> <span class="n">show</span> <span class="k">for</span> <span class="mi">10</span>
+</span></code></pre></td></tr></table></div></figure> 
+</div>
+
+
+<p></input></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating a Custom Widget on Android: The Loading Button]]></title>
