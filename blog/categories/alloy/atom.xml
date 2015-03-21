@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Alloy | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/alloy/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-03-15T13:14:06-03:00</updated>
+  <updated>2015-03-21T10:16:59-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -12,6 +12,140 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Red-Black Tree in Alloy II]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii/"/>
+    <updated>2015-03-21T09:23:26-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii</id>
+    <content type="html"><![CDATA[<p>On the previous tutorial, we learnt how to build a consistent tree in Alloy.</p>
+
+<p>On this tutorial, we are finally going to build a Red-Black Tree, respecting all its properties.</p>
+
+<!-- more -->
+
+
+<p>If you remember, a Red-Black Tree is also a BST (Binary Search Tree). So we need to make a BST <em>before</em> we can do a RBT.</p>
+
+<p>BST properties are pretty simple:</p>
+
+<p>For each node X:<br/>
+- Left child data is always smaller than X&rsquo;s.<br/>
+- Right child data is always greater than X&rsquo;s.<br/></p>
+
+<p>And that&rsquo;s it!</p>
+
+<p>The first thing we need to increment on our previous model is the &ldquo;data&rdquo; concept. Data will be representated as an integer number:</p>
+
+<pre><code class="Alloy RedBlackTree.als">sig Node {
+    ...
+    data : one Int
+}
+</code></pre>
+
+<p>With only that, we already can see a difference in our model:</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy6.png" alt="" /></p>
+
+<p>As you can see, each node is associated with an integer number. In order to ease the visualization, let&rsquo;s modify our theme to put the &ldquo;data&rdquo; relation inside each node.</p>
+
+<p>Click on &ldquo;theme&rdquo;:</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy7.png" alt="" /></p>
+
+<p>On &ldquo;relations&rdquo;, select &ldquo;data&rdquo; (1), turn &ldquo;Show as arcs&rdquo; off and &ldquo;Show as attribute&rdquo; on (2). After that, click on &ldquo;Apply&rdquo; (3).</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy8.png" alt="" /></p>
+
+<p>Much better, right? :))</p>
+
+<p>Now we need only one fact in order to transform our current model in a BST:</p>
+
+<pre><code class="Alloy RedBlackTree.als">fact organizeLeftAndRightUsingData {
+    all n: Node |
+        (all l: n.left.*children | n.data &gt; l.data) and
+        (all r: n.right.*children | n.data &lt; r.data)
+}
+</code></pre>
+
+<p>It&rsquo;s pretty easy to understand what it is doing: For each node (all), its data is greater than <em>all</em> its left children (recursively), and is smaller than <em>all</em> its right children (recursively).</p>
+
+<p>That&rsquo;s it!</p>
+
+<p>Now let&rsquo;s do our next step toward a Red-Black Tree. As you know, in a red-black tree, each node has one of those two colors: red or black. We play with those colors in order to make the tree balanced, that is, make left and right children with more or less with the same height. In order to ensure that, there are two properties we must respect:</p>
+
+<p>1) All children of a red node is black.</p>
+
+<p>2) The black height, that is, the number of black nodes from the root node of the three until a leaf, is the same for all the leaves.</p>
+
+<p>By convenction, we always make the root node as black.</p>
+
+<p>Similar to the BST, the first thing we need to add is the &ldquo;color&rdquo; concept. Color will be representated as an <em>enum</em>. In Alloy, enumerations have the following syntax:</p>
+
+<pre><code class="Alloy">enum [Name] {
+    [ Values ]
+}
+</code></pre>
+
+<p>For our case:</p>
+
+<pre><code class="Alloy RedBlackTree.als">enum Color {
+    RED, BLACK
+}
+</code></pre>
+
+<p>And now we just need to add a relation to our signature &ldquo;Node&rdquo;:</p>
+
+<pre><code class="Alloy RedBlackTree.als">sig Node {
+    ...
+    color: one Color
+}
+</code></pre>
+
+<p>If you try to execute the model, we may get something like this (alike data, I also transformed &ldquo;color&rdquo; in an attribute):</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy9.png" alt="" /></p>
+
+<p>As expected, it&rsquo;s not respecting the red-black tree properties. Let&rsquo;s fix it, starting by the most trivial fact:</p>
+
+<pre><code class="Alloy RedBlackTree.als">fact rootIsBlack {
+    all n: Node |
+        no children.n =&gt; n.color = BLACK
+}
+</code></pre>
+
+<p>&ldquo;If a node has no parent, then its color is black!&rdquo;.</p>
+
+<p>As we defined previously that there was only a node that has no parent, then, by definition, it&rsquo;s the root.</p>
+
+<p>The second fact we are going to add is going to make all children of a red node black:</p>
+
+<pre><code class="Alloy RedBlackTree.als">fact redNodeChildrenAreBlack {
+    all n: Node |
+        n.color = RED =&gt; 
+            all c: n.children | c.color = BLACK
+}
+</code></pre>
+
+<p>Also easy to understand!</p>
+
+<p>And finally, let&rsquo;s fix the black height:</p>
+
+<pre><code class="Alloy RedBlackTree.als">fact blackHeightIsSameToAllPaths {
+    all n: Node |
+        #(n.left.*children - color.RED)  = #(n.right.*children - color.RED)
+}
+</code></pre>
+
+<p>&ldquo;#&rdquo; is an operator in Alloy that returns the number of elements in a set. So, in our fact above, we are saying that, for all nodes, the number of red nodes in the left child is equals to the number of red nodes in the right child. It&rsquo;s the same thing as to say that the number of black nodes is equal to them both, hence, respecting the black-height property.</p>
+
+<p>If you try to execute the model right now, you will see a very different scenario:</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy10.png" alt="" /></p>
+
+<p>Our red-black tree is alive!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Red-Black Tree in Alloy]]></title>
@@ -264,7 +398,7 @@ run show for 5
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">run</span> <span class="n">show</span> <span class="k">for</span> <span class="mi">5</span>
 </span></code></pre></td></tr></table></div></figure></p>
 
-<p>Wow!! All this work just to specify a <em>consistent</em> tree, not even a BST, imagine a red-black tree! Fortunately, a good part of Alloy syntax was covered in this simple tutorial. We will learn how to build a BST on the second part of this tutorial and a red-black tree on the last part. Until there!</p>
+<p>Wow!! All this work just to specify a <em>consistent</em> tree, not even a BST, imagine a red-black tree! Fortunately, a good part of Alloy syntax was covered in this simple tutorial. On the next part of this tutorial, we will learn how to make our tree a red-black tree. Until there!</p>
 
 <p>And if you can&rsquo;t hold the curiosity, here&rsquo;s the complete code for the red-black tree:</p>
 

@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Red-Black Tree in Alloy II - Tango with code</title>
+  <meta name="author" content="Abner Matheus">
+
+  
+  <meta name="description" content="On the previous tutorial, we learnt how to build a consistent tree in Alloy. On this tutorial, we are finally going to build a Red-Black Tree, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/javascripts/spoiler.js"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Tango with code</a></h1>
+  
+    <h2>A blog about frustration and anger</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PicoleDeLimao.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Red-Black Tree in Alloy II</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-21T09:23:26-03:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>9:23 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>On the previous tutorial, we learnt how to build a consistent tree in Alloy.</p>
+
+<p>On this tutorial, we are finally going to build a Red-Black Tree, respecting all its properties.</p>
+
+<!-- more -->
+
+
+<p>If you remember, a Red-Black Tree is also a BST (Binary Search Tree). So we need to make a BST <em>before</em> we can do a RBT.</p>
+
+<p>BST properties are pretty simple:</p>
+
+<p>For each node X:<br/>
+- Left child data is always smaller than X&rsquo;s.<br/>
+- Right child data is always greater than X&rsquo;s.<br/></p>
+
+<p>And that&rsquo;s it!</p>
+
+<p>The first thing we need to increment on our previous model is the &ldquo;data&rdquo; concept. Data will be representated as an integer number:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">sig</span> <span class="n">Node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">...</span>
+</span><span class='line'>  <span class="n">data</span> <span class="p">:</span> <span class="k">one</span> <span class="kt">Int</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With only that, we already can see a difference in our model:</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy6.png" alt="" /></p>
+
+<p>As you can see, each node is associated with an integer number. In order to ease the visualization, let&rsquo;s modify our theme to put the &ldquo;data&rdquo; relation inside each node.</p>
+
+<p>Click on &ldquo;theme&rdquo;:</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy7.png" alt="" /></p>
+
+<p>On &ldquo;relations&rdquo;, select &ldquo;data&rdquo; (1), turn &ldquo;Show as arcs&rdquo; off and &ldquo;Show as attribute&rdquo; on (2). After that, click on &ldquo;Apply&rdquo; (3).</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy8.png" alt="" /></p>
+
+<p>Much better, right? :))</p>
+
+<p>Now we need only one fact in order to transform our current model in a BST:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">organizeLeftAndRightUsingData</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">l</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span><span class="o">.*</span><span class="n">children</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">data</span><span class="o">)</span> <span class="ow">and</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">r</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span><span class="o">.*</span><span class="n">children</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">.</span><span class="n">data</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s pretty easy to understand what it is doing: For each node (all), its data is greater than <em>all</em> its left children (recursively), and is smaller than <em>all</em> its right children (recursively).</p>
+
+<p>That&rsquo;s it!</p>
+
+<p>Now let&rsquo;s do our next step toward a Red-Black Tree. As you know, in a red-black tree, each node has one of those two colors: red or black. We play with those colors in order to make the tree balanced, that is, make left and right children with more or less with the same height. In order to ensure that, there are two properties we must respect:</p>
+
+<p>1) All children of a red node is black.</p>
+
+<p>2) The black height, that is, the number of black nodes from the root node of the three until a leaf, is the same for all the leaves.</p>
+
+<p>By convenction, we always make the root node as black.</p>
+
+<p>Similar to the BST, the first thing we need to add is the &ldquo;color&rdquo; concept. Color will be representated as an <em>enum</em>. In Alloy, enumerations have the following syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">enum</span> <span class="err">[</span><span class="n">Name</span><span class="err">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span> <span class="n">Values</span> <span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>For our case:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">enum</span> <span class="n">Color</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">RED</span><span class="p">,</span> <span class="n">BLACK</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now we just need to add a relation to our signature &ldquo;Node&rdquo;:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kd">sig</span> <span class="n">Node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">...</span>
+</span><span class='line'>  <span class="n">color</span><span class="p">:</span> <span class="k">one</span> <span class="n">Color</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you try to execute the model, we may get something like this (alike data, I also transformed &ldquo;color&rdquo; in an attribute):</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy9.png" alt="" /></p>
+
+<p>As expected, it&rsquo;s not respecting the red-black tree properties. Let&rsquo;s fix it, starting by the most trivial fact:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">rootIsBlack</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="k">no</span> <span class="n">children</span><span class="o">.</span><span class="n">n</span> <span class="o">=&gt;</span> <span class="n">n</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&ldquo;If a node has no parent, then its color is black!&rdquo;.</p>
+
+<p>As we defined previously that there was only a node that has no parent, then, by definition, it&rsquo;s the root.</p>
+
+<p>The second fact we are going to add is going to make all children of a red node black:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">redNodeChildrenAreBlack</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="n">n</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">RED</span> <span class="o">=&gt;</span>
+</span><span class='line'>          <span class="k">all</span> <span class="n">c</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Also easy to understand!</p>
+
+<p>And finally, let&rsquo;s fix the black height:</p>
+
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="k">fact</span> <span class="n">blackHeightIsSameToAllPaths</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">#(</span><span class="n">n</span><span class="o">.</span><span class="n">left</span><span class="o">.*</span><span class="n">children</span> <span class="o">-</span> <span class="n">color</span><span class="o">.</span><span class="n">RED</span><span class="o">)</span>  <span class="o">=</span> <span class="o">#(</span><span class="n">n</span><span class="o">.</span><span class="n">right</span><span class="o">.*</span><span class="n">children</span> <span class="o">-</span> <span class="n">color</span><span class="o">.</span><span class="n">RED</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&ldquo;#&rdquo; is an operator in Alloy that returns the number of elements in a set. So, in our fact above, we are saying that, for all nodes, the number of red nodes in the left child is equals to the number of red nodes in the right child. It&rsquo;s the same thing as to say that the number of black nodes is equal to them both, hence, respecting the black-height property.</p>
+
+<p>If you try to execute the model right now, you will see a very different scenario:</p>
+
+<p style="text-align:center;"><img src="/images/posts/alloy10.png" alt="" /></p>
+
+<p>Our red-black tree is alive!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-03-21T09:23:26-03:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>9:23 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/alloy/'>alloy</a>, <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">	
+      
+        <a class="basic-alignment left" href="/blog/2015/03/15/red-black-tree-in-alloy/" title="Previous Post: Red-Black tree in Alloy">&laquo; Red-Black tree in Alloy</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/21/red-black-tree-in-alloy-ii/">Red-Black Tree in Alloy II</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/15/red-black-tree-in-alloy/">Red-Black Tree in Alloy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/">Creating a Custom Widget on Android: The Loading Button</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/24/taking-photos-from-webcam-using-html5/">Taking Photos From Webcam Using HTML5</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/19/death-button/">Death Button</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/PicoleDeLimao">@PicoleDeLimao</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PicoleDeLimao',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Abner Matheus -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'deforadouniverso';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

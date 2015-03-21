@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-03-15T13:14:06-03:00</updated>
+  <updated>2015-03-21T10:33:53-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -28,7 +28,7 @@
 
 <h2>#Partiu</h2>
 
-<p style="text-align:center;"><img src="/images/posts/play-partiu.png" alt="" /></p>
+<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/play-partiu.png" alt="" /></p>
 
 <!-- more -->
 
@@ -46,7 +46,7 @@ Basically, it is a &ldquo;social network&rdquo; of travels, where you create a g
 
 <h2>CCFest</h2>
 
-<p style="text-align:center;"><img src="/images/posts/play-ccfest.png" alt="" />
+<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/play-ccfest.png" alt="" />
 Link: <a href="http://cchackfest.herokuapp.com/">http://cchackfest.herokuapp.com/</a><br/>
 Github repository: <a href="https://github.com/PicoleDeLimao/hackfest2">https://github.com/PicoleDeLimao/hackfest2</a></p>
 
@@ -404,9 +404,9 @@ public class System {
     <id>http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom</id>
     <content type="html"><![CDATA[<p>Here&rsquo;s some fool game I made some time ago in an attempt to learn about Swing. Have fun!</p>
 
-<p style="text-align:center;"><img src="/images/posts/hashboom.png" alt="" /></p>
+<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/hashboom.png" alt="" /></p>
 
-<p style="text-align:center;"><a href="/downloads/code/Hashboom.jar">Click here to download</a></p>
+<p style="text-align:center;"><a href="{{%20root_url}}/downloads/code/Hashboom.jar">Click here to download</a></p>
 ]]></content>
   </entry>
   

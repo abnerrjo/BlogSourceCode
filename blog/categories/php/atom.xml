@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Php | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/php/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-03-15T13:14:06-03:00</updated>
+  <updated>2015-03-21T10:33:53-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -147,7 +147,7 @@ session_destroy();
 
 <p>In today&rsquo;s post I show you how to make a simple code authentification using it. Let&rsquo;s go!</p>
 
-<p style="text-align:center;"> <a href="/downloads/code/auth.zip">Click here to download the complete example</a></p>
+<p style="text-align:center;"> <a href="{{%20root_url%20}}/downloads/code/auth.zip">Click here to download the complete example</a></p>
 
 <!-- more -->
 
@@ -853,136 +853,7 @@ class User extends CI_Controller {
 
 <p>Slow down, young man. I already took it for you. For didatic reasons, we are going to test some simple class that representates a number in scientific notation.</p>
 
-<p><figure class='code'><figcaption><span> (ScientificNotation.php)</span> <a href='/downloads/code/ScientificNotation.php'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">ScientificNotation</span> <span class="p">{</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">private</span> <span class="nv">$mantissa</span><span class="p">;</span>
-</span><span class='line'>	<span class="k">private</span> <span class="nv">$exponent</span><span class="p">;</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">,</span> <span class="nv">$exponent</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setMantissa</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setExponent</span><span class="p">(</span><span class="nv">$exponent</span><span class="p">);</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">getMantissa</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">;</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setMantissa</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">=</span> <span class="nv">$mantissa</span><span class="p">;</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">getExponent</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">;</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setExponent</span><span class="p">(</span><span class="nv">$exponent</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">=</span> <span class="nv">$exponent</span><span class="p">;</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">add</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>		<span class="k">if</span> <span class="p">(</span><span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>			<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t add two numbers with different exponents.&quot;</span><span class="p">);</span>
-</span><span class='line'>		<span class="p">}</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">+=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">subtract</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>		<span class="k">if</span> <span class="p">(</span><span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>			<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t subtract two numbers with different exponents.&quot;</span><span class="p">);</span>
-</span><span class='line'>		<span class="p">}</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">-=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">multiply</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">*=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">+=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">();</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">divide</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">/=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">-=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">();</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">normalize</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="k">while</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">;</span>
-</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-</span><span class='line'>		<span class="p">}</span>
-</span><span class='line'>		<span class="k">while</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
-</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
-</span><span class='line'>		<span class="p">}</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure></p>
+<p>{% include_code ScientificNotation.php %}</p>
 
 <p>As you can see, this is indeed a very simple class. I assume here it was long ago since you&rsquo;ve been on high-school, so I&rsquo;ll refresh your memory about some simple operations that can be done with scientific notation&hellip; (<a href="#tests">Click here</a> if you wish to cut the explanation off).</p>
 
@@ -1092,144 +963,7 @@ class ScientificNotationTest extends PHPUnit_Framework_TestCase {
 
 <p>In the end, here is our complete test unit class:</p>
 
-<p><figure class='code'><figcaption><span> (ScientificNotationTest.php)</span> <a href='/downloads/code/ScientificNotationTest.php'>download</a></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">ScientificNotationTest</span> <span class="k">extends</span> <span class="nx">PHPUnit_Framework_TestCase</span> <span class="p">{</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="k">require_once</span> <span class="s1">&#39;ScientificNotation.php&#39;</span><span class="p">;</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testMultiply</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">multiply</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testDivide</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">divide</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testAdd</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="c1">//must be ok</span>
-</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
-</span><span class='line'>		<span class="c1">//must throw exception</span>
-</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-</span><span class='line'>		<span class="k">try</span> <span class="p">{</span>
-</span><span class='line'>			<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
-</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fail</span><span class="p">();</span>
-</span><span class='line'>		<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testSubtract</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="c1">//must be ok</span>
-</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">subtract</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
-</span><span class='line'>		<span class="c1">//must throw exception</span>
-</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-</span><span class='line'>		<span class="k">try</span> <span class="p">{</span>
-</span><span class='line'>			<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">subtract</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
-</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fail</span><span class="p">();</span>
-</span><span class='line'>		<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testNormalize</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>		<span class="nv">$unmormalizedNumber1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">800.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$unnormalizedNumber2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">0.08</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">);</span>
-</span><span class='line'>		<span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">normalize</span><span class="p">();</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
-</span><span class='line'>		<span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">normalize</span><span class="p">();</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
-</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
-</span><span class='line'>	<span class="p">}</span>
-</span><span class='line'>	
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure></p>
+<p>{% include_code ScientificNotationTest.php %}</p>
 
 <p>To run the test, type in the terminal:</p>
 
@@ -1297,7 +1031,7 @@ class ScientificNotationTest extends PHPUnit_Framework_TestCase {
 
 <p>It will generate a HTML page called result containing the results of the analysis. When I open it, it show me the following informations:</p>
 
-<p><img src="/images/posts/phpunit-coverage.png" alt="" /></p>
+<p><img src="{{%20root_url%20}}/images/posts/phpunit-coverage.png" alt="" /></p>
 
 <p>:)</p>
 
