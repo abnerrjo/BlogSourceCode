@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Tutorials | Tango with code]]></title>
+  <title><![CDATA[Category: Tutorials, | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/tutorials/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-03-21T10:33:53-03:00</updated>
+  <updated>2015-10-12T00:32:35-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -14,1456 +14,147 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Red-Black Tree in Alloy II]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii/"/>
-    <updated>2015-03-21T09:23:26-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii</id>
-    <content type="html"><![CDATA[<p>On the previous tutorial, we learnt how to build a consistent tree in Alloy.</p>
+    <title type="html"><![CDATA[Taking Photos From Webcam Using HTML5]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/12/24/taking-photos-from-webcam-using-html5/"/>
+    <updated>2014-12-24T11:57:06-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/12/24/taking-photos-from-webcam-using-html5</id>
+    <content type="html"><![CDATA[<p>On today&rsquo;s tutorial I&rsquo;ll teach how to take snapshots from webcam using only HTML5.</p>
 
-<p>On this tutorial, we are finally going to build a Red-Black Tree, respecting all its properties.</p>
+<p>On the past, accessing user webcam was something onerous, sometimes falling back on Flash. Gladly, HTML5 brought an innovation to this area, thanks to the <code>&lt;video&gt;</code> tag.</p>
+
+<p style="text-align:center;"><img src="/images/posts/webcam-snapshot.png" alt="" /></p>
 
 <!-- more -->
 
 
-<p>If you remember, a Red-Black Tree is also a BST (Binary Search Tree). So we need to make a BST <em>before</em> we can do a RBT.</p>
+<h2>Getting webcam access</h2>
 
-<p>BST properties are pretty simple:</p>
+<p>On our demo we&rsquo;re going to create a tag to display the live stream of webcam, a tag to display a webcam snapshot, and two buttons: One to take a snapshot and another to save (download) the photo.</p>
 
-<p>For each node X:<br/>
-- Left child data is always smaller than X&rsquo;s.<br/>
-- Right child data is always greater than X&rsquo;s.<br/></p>
-
-<p>And that&rsquo;s it!</p>
-
-<p>The first thing we need to increment on our previous model is the &ldquo;data&rdquo; concept. Data will be representated as an integer number:</p>
-
-<pre><code class="Alloy RedBlackTree.als">sig Node {
-    ...
-    data : one Int
-}
+<pre><code class="HTML">&lt;video id="video" width="640" height="480" autoplay&gt;&lt;/video&gt; &lt;!-- Live stream of webcam --&gt;
+&lt;canvas id="canvas" width="640" height="480"&gt;&lt;/canvas&gt; &lt;!-- Snapshot of webcam --&gt;
+&lt;button id="snap"&gt;Take snapshot&lt;/button&gt; &lt;!-- Button to take snapshot --&gt;
+&lt;a id="save" download&gt;&lt;button&gt;Download photo&lt;/button&gt;&lt;/a&gt; &lt;!-- Button to download photo --&gt;
 </code></pre>
 
-<p>With only that, we already can see a difference in our model:</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy6.png" alt="" /></p>
-
-<p>As you can see, each node is associated with an integer number. In order to ease the visualization, let&rsquo;s modify our theme to put the &ldquo;data&rdquo; relation inside each node.</p>
-
-<p>Click on &ldquo;theme&rdquo;:</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy7.png" alt="" /></p>
-
-<p>On &ldquo;relations&rdquo;, select &ldquo;data&rdquo; (1), turn &ldquo;Show as arcs&rdquo; off and &ldquo;Show as attribute&rdquo; on (2). After that, click on &ldquo;Apply&rdquo; (3).</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy8.png" alt="" /></p>
-
-<p>Much better, right? :))</p>
-
-<p>Now we need only one fact in order to transform our current model in a BST:</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact organizeLeftAndRightUsingData {
-    all n: Node |
-        (all l: n.left.*children | n.data &gt; l.data) and
-        (all r: n.right.*children | n.data &lt; r.data)
-}
-</code></pre>
-
-<p>It&rsquo;s pretty easy to understand what it is doing: For each node (all), its data is greater than <em>all</em> its left children (recursively), and is smaller than <em>all</em> its right children (recursively).</p>
-
-<p>That&rsquo;s it!</p>
-
-<p>Now let&rsquo;s do our next step toward a Red-Black Tree. As you know, in a red-black tree, each node has one of those two colors: red or black. We play with those colors in order to make the tree balanced, that is, make left and right children with more or less with the same height. In order to ensure that, there are two properties we must respect:</p>
-
-<p>1) All children of a red node is black.</p>
-
-<p>2) The black height, that is, the number of black nodes from the root node of the three until a leaf, is the same for all the leaves.</p>
-
-<p>By convenction, we always make the root node as black.</p>
-
-<p>Similar to the BST, the first thing we need to add is the &ldquo;color&rdquo; concept. Color will be representated as an <em>enum</em>. In Alloy, enumerations have the following syntax:</p>
-
-<pre><code class="Alloy">enum [Name] {
-    [ Values ]
-}
-</code></pre>
-
-<p>For our case:</p>
-
-<pre><code class="Alloy RedBlackTree.als">enum Color {
-    RED, BLACK
-}
-</code></pre>
-
-<p>And now we just need to add a relation to our signature &ldquo;Node&rdquo;:</p>
-
-<pre><code class="Alloy RedBlackTree.als">sig Node {
-    ...
-    color: one Color
-}
-</code></pre>
-
-<p>If you try to execute the model, we may get something like this (alike data, I also transformed &ldquo;color&rdquo; in an attribute):</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy9.png" alt="" /></p>
-
-<p>As expected, it&rsquo;s not respecting the red-black tree properties. Let&rsquo;s fix it, starting by the most trivial fact:</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact rootIsBlack {
-    all n: Node |
-        no children.n =&gt; n.color = BLACK
-}
-</code></pre>
-
-<p>&ldquo;If a node has no parent, then its color is black!&rdquo;.</p>
-
-<p>As we defined previously that there was only a node that has no parent, then, by definition, it&rsquo;s the root.</p>
-
-<p>The second fact we are going to add is going to make all children of a red node black:</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact redNodeChildrenAreBlack {
-    all n: Node |
-        n.color = RED =&gt; 
-            all c: n.children | c.color = BLACK
-}
-</code></pre>
-
-<p>Also easy to understand!</p>
-
-<p>And finally, let&rsquo;s fix the black height:</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact blackHeightIsSameToAllPaths {
-    all n: Node |
-        #(n.left.*children - color.RED)  = #(n.right.*children - color.RED)
-}
-</code></pre>
-
-<p>&ldquo;#&rdquo; is an operator in Alloy that returns the number of elements in a set. So, in our fact above, we are saying that, for all nodes, the number of red nodes in the left child is equals to the number of red nodes in the right child. It&rsquo;s the same thing as to say that the number of black nodes is equal to them both, hence, respecting the black-height property.</p>
-
-<p>If you try to execute the model right now, you will see a very different scenario:</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy10.png" alt="" /></p>
-
-<p>Our red-black tree is alive!</p>
-
-<p>You can see the source code below:</p>
-
-<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
-
-
-<div id="code">
-&#8220;` Alloy RedBlackTree.als
-module RedBlackTree
-
-enum Color { BLACK, RED }
-
-sig Node {
-    parent: lone Node,
-    left: lone Node,
-    right: lone Node,
-    children: set Node,
-    data: one Int,
-    color: one Color    
-}
-
-pred isRoot[n: Node] {
-    no n.parent
-}
-
-// facts about nodes 
-fact makeChildren {
-    all n: Node | n.children = n.left + n.right
-}
-
-fact makeParent {
-    all n: Node |
-        (all c : n.children | c.parent = n) 
-    all n1, n2 : Node | n1 = n2.parent => n2 in n1.children
-}
-
-fact noCycles {
-    all n1, n2: Node |
-            (n1 in n2.children) => n2 !in n1.*children
-}
-
-fact leftAndRightAreDisjoint {
-    no left & right
-}
-
-fact theresOnlyOneRoot {
-    one n: Node | isRoot[n]
-}
-
-// facts about data
-fact dataIsUnique {
-    all n1, n2: Node | n1 != n2 => n1.data != n2.data
-}
-
-fact organizeLeftAndRightUsingData {
-    all n: Node |
-        (all l: n.left.*children | n.data > l.data) and
-        (all r: n.right.*children | n.data < r.data)
-}
-
-// facts about node colors
-fact rootIsBlack {
-    all n: Node |
-        no children.n => n.color = BLACK
-}
-
-fact redNodeChildrenAreBlack {
-    all n: Node |
-        n.color = RED => 
-            all c: n.children | c.color = BLACK
-}
-
-fact blackHeightIsSameToAllPaths {
-    all n: Node |
-        #(n.left.*children - color.RED)  = #(n.right.*children - color.RED)
-}
-
-pred show[] { 
-    #left > 2
-    #right > 2
-    all d: Node.data | d > 0
-}
-
-run show for 10
-&#8220;` 
-</div>
-
-
-<p></input></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Red-Black Tree in Alloy]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2015/03/15/red-black-tree-in-alloy/"/>
-    <updated>2015-03-15T08:30:39-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2015/03/15/red-black-tree-in-alloy</id>
-    <content type="html"><![CDATA[<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy.png" alt="" /></p>
-
-<p>Everyone who once worked as an analyst knows that one of the most ambiguous, error-prone part of building a software is the requisite engineering. It&rsquo;s a hell of a task to know what the client <em>wants</em> and <em>how</em> to build a system that meets his expectations.</p>
-
-<p>Bugs in the software specification are hundred, thousand times more expensive than bugs on internal logic, because in order to fix it you frequently need to change the behavior of your software, demanding a complete rethinking on your software architecture.</p>
-
-<p><strong>Alloy Analyzer</strong> is a tool for building models. Its very purpose is to find a specific instance of your model that contradicts your expectations about it. Because a model can have thousand or even infinite instances, it&rsquo;s restricted to a certain scope. A model can be thought as a high-high-level abstraction of your software. It may not find a bug of implementation, but it can spots illegal states that your software can assume, hence helping to find bugs in specification level.</p>
-
-<p>On today tutorial, we are going to learn how to specify a red-black tree in Alloy.</p>
-
-<!-- more -->
-
-
-<p>The very first thing you need to know about Alloy is <strong>Signature</strong>. Signature is an abstraction of a real-world entity. Signature also can be thought as a set of relations. Making a parallel, signatures are equivalent to classes in object-oriented programming.</p>
-
-<p>Signatures are declared as the following:</p>
-
-<pre><code class="Alloy">sig [Name] {
-    [ Relations ]
-}
-</code></pre>
-
-<p>For our red-black tree, we are just going to need one signature: Node. A node of the tree.</p>
-
-<pre><code class="Alloy RedBlackTree.als">signature Node {
-
-}
-</code></pre>
-
-<p>In the same way that our classes in OOP need attributes, so need our signatures. With the difference that here attributes are called <strong>relations</strong>. Relations have a name, cardinality and set of other signatures we want to relate to. They are declared as the following:
-<code>Alloy
-sig [Name] {
-    [ RelationName] : [ Cardinality] [ SignaturesNames ]
-}
-</code>
-Example:
-<code>Alloy
-sig aSignature {
-    aRelation : one aSignature
-}
-</code>
-A relation name must be unique inside a signature. The most common types of cardinality is <code>one</code> (one instance of signature A is related to one and only one instance of signature B), <code>lone</code> (one instance of signature A is related to zero or one instance of signature B), <code>set</code> (one instance of signature A is related to zero or more instances of signature B) and <code>some</code> (one instance of signature A is related to one or more instances of signature B), where A is the signature that contains that relation and B are the signatures refferenced by the relation.</p>
-
-<p>For our red-black tree, the signature node must contain as least four relations:</p>
-
-<pre><code class="Alloy RedBlackTree.als">sig Node {
-    parent: lone Node,
-    left: lone Node,
-    right: lone Node, 
-    children: set Node
-}
-</code></pre>
-
-<ul>
-<li><strong>parent</strong>: The parent node. It&rsquo;s lone because the root node doesn&rsquo;t have any parent.</li>
-<li><strong>left</strong>: The left child node. It&rsquo;s lone because a node may not have a left child.</li>
-<li><strong>right</strong>: The right child node. It&rsquo;s lone because a node may not have a right child.</li>
-<li><strong>children</strong>: The set of children node. It may seem redundant, but it will help us to constrain our model later on.</li>
-</ul>
-
-
-<p>Now let&rsquo;s start validating our model! There are two ways to check models in Alloy: Automatic and manual checks. Although automatic checks are more useful for our purposes, manual checks are good enough in the building phase of our model because we can see &ldquo;what&rsquo;s going on&rdquo;.</p>
-
-<p>For manual checks, first add one predicate to our model (more about predicates later on):</p>
-
-<pre><code class="Alloy RedBlackTree.als">pred show[] {
-
-}
-
-run show for 5
-</code></pre>
-
-<p>The statement &ldquo;run&rdquo; run a predicate for a certain scope (we need a scope because there may be infinite instances of our model). Now you just need to execute it:</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy2.png" alt="" /></p>
-
-<p>A message will appear in the right-side of the screen indicating if any instance was found (on manual check, unlike automatic check, it&rsquo;s bad when none instance is found, because it means that there wasn&rsquo;t any instance for that scope that attended to your models contraints, meaning there is some logical contradiction).</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy3.png" alt="" /></p>
-
-<p>Now you just need to click on &ldquo;Instance&rdquo; to start visualizing the existing instances for your current model.</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy4.png" alt="" /></p>
-
-<p>Here, a instance is representated like a directed graph, what&rsquo;s very useful for us, because the graph representation is the tree itself. :))</p>
-
-<p>And <strong>oops</strong>&hellip; We already found a bug (many, actually). First: A node is being parent of itself (what&rsquo;s not allowed in trees, because trees don&rsquo;t allow cycles), and a node is being at the same time parent and left child of another node (what&rsquo;s not allowed, again, because the non-cycle constraint).</p>
-
-<p>As you can see, the sole reason of those bugs is because we are allowing our tree to make cycles. We need to add some constraint to forbid it. But how? With <em>facts</em>!</p>
-
-<p>Facts are constraints that must be valid <em>all the time</em>. They are declared as the following:</p>
-
-<pre><code class="Alloy ">fact [Name] {
-    [ FactBody ]
-}
-</code></pre>
-
-<p>The very first fact we are going to add is that the set of children is the union of right and left child. We need that before going on with the next facts.</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact makeChildren {
-    all n : Node | n.children = n.left + n.right
-} 
-</code></pre>
-
-<p>Wow, slow down, slow down!</p>
-
-<p>First, &ldquo;all&rdquo; has the same semantic of the universal quantifier. It means that something must be valid for all elements of a set. In this case, we are using as set &ldquo;Node&rdquo;, meaning all instances of the signature Node, and we are naming each particular instance being iterated as &ldquo;n&rdquo;, so we can access it on the &ldquo;all&rdquo; body.</p>
-
-<p>In the &ldquo;all&rdquo; body, we are setting the &ldquo;children&rdquo; set as the union (in Alloy, unions are representated as the &ldquo;+&rdquo; operator) between left and right children (that also are sets, but unitary ones). Yea, that&rsquo;s the dirty fact about Alloy: As it&rsquo;s a formal specification tool, everything is grounded on the Set Theory.</p>
-
-<p>Now let&rsquo;s specify a fact about the parent of the nodes: If a Node A is parent of another Node B, then Node B is inside Node A&rsquo;s children. Makes sense, right? :))</p>
-
-<p>But before that, we need to specify that the tree must there be have one and only one root. Root is a node that has no parent, so it&rsquo;s pretty straight-forward:</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact theresOnlyOneRoot {
-    one n: Node | no n.parent
-}
-</code></pre>
-
-<p>&ldquo;no&rdquo; is a operator that returns true if the set is empty.
-&ldquo;one&rdquo; indicates that there must be one and only one element inside the set that attends to its condition.</p>
-
-<p>Now we have everything necessary to constrain a node parent:</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact makeParent {
-    all n: Node |
-        (all c : n.children | c.parent = n) 
-    all n1, n2 : Node | n1 = n2.parent =&gt; n2 in n1.children
-}
-</code></pre>
-
-<p>First, for every element inside a node&rsquo;s children, then the child parent is the node itself. Nothing more fair!</p>
-
-<p>Second, if a Node A is parent of another Node B, then Node B must be inside Node A&rsquo;s children. The &ldquo;=>&rdquo; operator means &ldquo;implies&rdquo;. If the left side of implies is true, then, by definition, the right side must also be true (however, if the left side is false, nothing can be said about the right side).</p>
-
-<p>If you run a manual check now, you will notice that many inconsistences were fixed, but many remain. Let&rsquo;s fix some of them:</p>
-
-<p>First, in none moment we define that left and right child must be different. Hence, something like that can happen in our current model:</p>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/alloy5.png" alt="" /></p>
-
-<p>That&rsquo;s the tricky part about understanding modeling in Alloy: If we don&rsquo;t define anything, everything may be possible!</p>
-
-<p>Let&rsquo;s fix partially this problem:</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact leftAndRightAreDisjoint {
-    no left &amp; right
-}
-</code></pre>
-
-<p>Actually, this is a more strong constraint than if we defined something like that:</p>
-
-<pre><code>fact leftAndRightAreDisjoint {
-    all n : Node | n.left != n.right
-}
-</code></pre>
-
-<p>Because, in the latter, only the left and right child of the <em>immediate</em> node must be different, but nothing is said about their possible children. So, something like that could happen: Node A has Node B as left child and Node C as right child, and Node B has Node C as right child. So, the disjunction must be tree level, not node level. That&rsquo;s why I came with the first solution.</p>
-
-<p>Yea, you <em>can</em> use the relation name independent of the signature. It will return a set of tuples &lt;Node, Node> representating the relation. The &ldquo;&amp;&rdquo; operator is equals to &ldquo;disjoint&rdquo;. It returns true if, for each element in the first set, it&rsquo;s not inside the second set.</p>
-
-<p>Just that solved a lot of trouble for us, but we still have the &ldquo;cycle&rdquo; problem, our, oh! so hated bug. Let&rsquo;s solve it once for all!</p>
-
-<pre><code class="Alloy RedBlackTree.als">fact noCycles {
-    all n1, n2: Node |
-            (n1 in n2.children) =&gt; n2 !in n1.*children
-}
-</code></pre>
-
-<p>Hmmm&hellip;. What&rsquo;s going on? We get any two nodes: n1 and n2. If n1 is a child of n2, then n2 can&rsquo;t be a child of n1, otherwise, there would be a cycle!</p>
-
-<p>Of course, the same rule is valid for all the children of n1 downto the leaves nodes: n2 can&rsquo;t be a child of any node on a level below n1. But how do we get all children below n1 level? Using the &ldquo;*&rdquo; operator! It applies the relation (children, in our case) recursively until it can&rsquo;t be applied anymore (when the node is leaf).</p>
-
-<p>Now let&rsquo;s get everything together:
-&#8220;` Alloy RedBlackTree.als
-sig Node {
-    parent: lone Node,
-    left: lone Node,
-    right: lone Node,
-    children: set Node
-}</p>
-
-<p>fact makeChildren {
-  all n : Node | n.children = n.left + n.right
-}</p>
-
-<p>fact theresOnlyOneRoot {
-  one n: Node | no n.parent
-}</p>
-
-<p>fact makeParent {
-    all n: Node |
-        (all c : n.children | c.parent = n)
-    all n1, n2 : Node | n1 = n2.parent => n2 in n1.children
-}</p>
-
-<p>fact leftAndRightAreDisjoint {
-    no left &amp; right
-}</p>
-
-<p>fact noCycles {
-    all n1, n2: Node |
-            (n1 in n2.children) => n2 !in n1.*children
-}</p>
-
-<p>pred show[] {
-    some n : Node | n.left = n.right
-}</p>
-
-<p>run show for 5
-&#8220;`</p>
-
-<p>Wow!! All this work just to specify a <em>consistent</em> tree, not even a BST, imagine a red-black tree! Fortunately, a good part of Alloy syntax was covered in this simple tutorial. On the next part of this tutorial, we will learn how to make our tree a red-black tree. Until there!</p>
-
-<p>And if you can&rsquo;t hold the curiosity, here&rsquo;s the complete code for the red-black tree:</p>
-
-<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
-
-
-<div id="code">
-&#8220;` Alloy RedBlackTree.als
-module RedBlackTree
-
-enum Color { BLACK, RED }
-
-sig Node {
-    parent: lone Node,
-    left: lone Node,
-    right: lone Node,
-    children: set Node,
-    data: one Int,
-    color: one Color    
-}
-
-pred isRoot[n: Node] {
-    no n.parent
-}
-
-// facts about nodes 
-fact makeChildren {
-    all n: Node | n.children = n.left + n.right
-}
-
-fact makeParent {
-    all n: Node |
-        (all c : n.children | c.parent = n) 
-    all n1, n2 : Node | n1 = n2.parent => n2 in n1.children
-}
-
-fact noCycles {
-    all n1, n2: Node |
-            (n1 in n2.children) => n2 !in n1.*children
-}
-
-fact leftAndRightAreDisjoint {
-    no left & right
-}
-
-fact theresOnlyOneRoot {
-    one n: Node | isRoot[n]
-}
-
-// facts about data
-fact dataIsUnique {
-    all n1, n2: Node | n1 != n2 => n1.data != n2.data
-}
-
-fact organizeLeftAndRightUsingData {
-    all n: Node |
-        (all l: n.left.*children | n.data > l.data) and
-        (all r: n.right.*children | n.data < r.data)
-}
-
-// facts about node colors
-fact rootIsBlack {
-    all n: Node |
-        no children.n => n.color = BLACK
-}
-
-fact redNodeChildrenAreBlack {
-    all n: Node |
-        n.color = RED => 
-            all c: n.children | c.color = BLACK
-}
-
-fact blackHeightIsSameToAllPaths {
-    all n: Node |
-        #(n.left.*children - color.RED)  = #(n.right.*children - color.RED)
-}
-
-pred show[] { 
-    #left > 2
-    #right > 2
-    all d: Node.data | d > 0
-}
-
-run show for 10
-&#8220;` 
-</div>
-
-
-<p></input></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating a Custom Widget on Android: The Loading Button]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/"/>
-    <updated>2015-01-04T18:57:51-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button</id>
-    <content type="html"><![CDATA[<p>Here I&rsquo;ll ilustrate the creation of a custom widget
-through a pratical example: A Loading Button. A loading button is a
-button with a spinning indicator. It&rsquo;s useful for buttons that
-trigger servers requests.</p>
-
-<p style="text-align:center;"><img src="{{%20root_url%20}}/images/posts/spinning_button.png" alt="" /></p>
-
-<p style="text-align:center;"><a href="{{root_url}}/downloads/code/TutorialButton.zip">Click here to download the example</a></p>
-
-<!-- more -->
-
-
-<p>As our first step, let&rsquo;s create a Java class called &ldquo;LoadingButton&rdquo;
-that extends of RelativeLayout view. You may be asking why we are
-extending of RelativeLayout instead of Button class. The quick answer
-is Button doesn&rsquo;t allow views inside of it, Layouts does, and we&rsquo;re
-going to need that functionality. :) (But don&rsquo;t worry, that won&rsquo;t make
-our button less than a button!).</p>
-
-<pre><code class="Java LoadingButton.java">
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.RelativeLayout;
-
-public class LoadingButton extends RelativeLayout {
-
-    public LoadingButton(Context context) {
-        super(context);
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-}
-</code></pre>
-
-<p>Notice we need the three constructors to make our custom widgets
-work. They all are necessary.</p>
-
-<p>Now let&rsquo;s &ldquo;draw&rdquo; our widget. Create a method called &ldquo;init&rdquo; and
-call it inside the all constructors.</p>
-
-<pre><code class="Java LoadingButton.java">
-public class LoadingButton extends RelativeLayout {
-
-    private void init() {
-
-    }
-
-    public LoadingButton(Context context) {
-        super(context);
-        init();
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-}
-</code></pre>
-
-<p>Now, inside this method, let&rsquo;s begin defining our layout as
-&ldquo;clickable&rdquo; (it&rsquo;s false as default) and setting its background as the
-same as a button background.</p>
-
-<pre><code class="Java LoadingButton.java">
-    private void init() {
-        setClickable(true);
-        setBackgroundResource(android.R.drawable.btn_default);
-    }
-</code></pre>
-
-<p>For our button, we need two children: A TextView and a ProgressBar.
-The TextView will display the button text, while the progressbar will
-display the spinning indicator.</p>
-
-<pre><code class="Java LoadingButton.java">
-    private TextView mTextView;
-    private ProgressBar mProgressBar;
-
-    private void init() {
-        setClickable(true);
-        setBackgroundResource(android.R.drawable.btn_default);
-        mTextView = new TextView(getContext());
-        mProgressBar = new ProgressBar(getContext());
-        addView(mTextView);
-        addView(mProgressBar);
-    }
-</code></pre>
-
-<p>Simple like that! By using the &ldquo;addView&rdquo; method we are adding a new view to
-our layout. But we still need to define things like: width,
-height and style. For width and height, we&rsquo;re going to use something called
-LayoutParams, that acts the same as android:layout_* attributes on XML
-Layout files.</p>
-
-<pre><code class="Java LoadingButton.java">
-    private void init() {
-        setClickable(true);
-        setBackgroundResource(android.R.drawable.btn_default);
-        LayoutParams textViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        textViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        LayoutParams progressBarParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        progressBarParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mTextView = new TextView(getContext());
-        mTextView.setLayoutParams(textViewParams);
-        mProgressBar = new ProgressBar(getContext());
-        mProgressBar.setLayoutParams(progressBarParams);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        addView(mTextView);
-        addView(mProgressBar);
-    }
-</code></pre>
-
-<p>It&rsquo;s pretty straight-forward. We&rsquo;re here setting width and height to
-&ldquo;wrap_content&rdquo; and centering both widgets. Of course, we&rsquo;re not going
-to show both at the same time, that&rsquo;s why I hid the progressbar using
-the &ldquo;setVisibility&rdquo; method.</p>
-
-<p>Now we just need two others methods, that either will display the spinning
-indicator either will display the text.</p>
-
-<pre><code class="Java LoadingButton.java">
-    public void startLoading() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mTextView.setVisibility(View.INVISIBLE);
-    }
-
-    public void stopLoading() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mTextView.setVisibility(View.VISIBLE);
-    }
-</code></pre>
-
-<p>And here&rsquo;s the complete class:</p>
-
-<pre><code class="Java LoadingButton.java">
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-public class LoadingButton extends RelativeLayout {
-
-    private TextView mTextView;
-    private ProgressBar mProgressBar;
-
-    private void init() {
-        setClickable(true);
-        setBackgroundResource(android.R.drawable.btn_default);
-        LayoutParams textViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        textViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        LayoutParams progressBarParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        progressBarParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mTextView = new TextView(getContext());
-        mTextView.setLayoutParams(textViewParams);
-        mProgressBar = new ProgressBar(getContext());
-        mProgressBar.setLayoutParams(progressBarParams);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        addView(mTextView);
-        addView(mProgressBar);
-    }
-
-    public void startLoading() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mTextView.setVisibility(View.INVISIBLE);
-    }
-
-    public void stopLoading() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mTextView.setVisibility(View.VISIBLE);
-    }
-
-    public LoadingButton(Context context) {
-        super(context);
-        init();
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-}
-</code></pre>
-
-<blockquote><p>Wait! Something is missing! We are using a RelativeLayout to simulate
-a button, but layouts don&rsquo;t have the attribute &ldquo;android:text&rdquo;. So how
-do you set the text?</p></blockquote>
-
-<p>For that we&rsquo;re going to need a styleable.</p>
-
-<p>Styleable is, in short, a set of custom attributes. For example, when
-you declare in your layouts xml files on your top-parent view the
-following attribute:
-<code>xmlns:android="http://schemas.android.com/apk/res/android"</code>, you are
-actually saying where are Android default styleables and naming it &ldquo;android&rdquo;,
-so you can access the attributes through the prefix &ldquo;android:&rdquo;.</p>
-
-<p>To create a new styleable, go to res > values > attrs.xml. If this
-file is not created yet, create it with the following structure:</p>
-
-<pre><code class="XML attrs.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;resources&gt;
-&lt;/resources&gt;
-</code></pre>
-
-<p>Now, inside of the newly created file, type the following structure:</p>
-
-<pre><code class="XML attrs.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;resources&gt;
-
-    &lt;declare-styleable name="LoadingButton"&gt;
-    &lt;/declare-styleable&gt;
-
-&lt;/resources&gt;
-</code></pre>
-
-<p>Through the tag <code>&lt;declare-styleable&gt;</code> we are setting a new styleable
-and its name attribute defines its&hellip; name (it has no impact, it&rsquo;s
-just a matter of identification).</p>
-
-<p>Now let&rsquo;s define a custom attribute called &ldquo;text&rdquo; to serve as a way to
-set our button text.</p>
-
-<pre><code class="XML attrs.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;resources&gt;
-
-    &lt;declare-styleable name="LoadingButton" &gt;
-        &lt;attr name="text" format="string" /&gt;
-    &lt;/declare-styleable&gt;
-
-&lt;/resources&gt;
-</code></pre>
-
-<p>To create a new attribute just create a new tag of type <code>&lt;attr&gt;</code>
-inside the <code>&lt;declare-styleable&gt;</code> tag. A tag has a name (the attribute
-name) and a format, namely the input type it accepts. The format can
-be of the several types, among them: string, integer, boolean, &hellip;</p>
-
-<p>And we are done with styleables! If we need to pass more informations
-for our button beyond its text, like, for example, text color, just
-create a new attribute!</p>
-
-<p>Now let&rsquo;s go back to our Java class. Now we need to link our newly
-created styleble to our class. For that create a method called
-&ldquo;setAttributes&rdquo; that receives as parameter a variable of kind &ldquo;Context&rdquo;
-and another of kind &ldquo;AttributeSet&rdquo; and returns void and calls this
-method inside all constructors except the one that just receives one
-parameter.</p>
-
-<pre><code class="Java LoadingButton.java">
-    private void setAttributes(Context context, AttributeSet attrs) {
-
-    }
-
-    public LoadingButton(Context context) {
-        super(context);
-        init();
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-        setAttributes(context, attrs);
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-        setAttributes(context, attrs);
-    }
-</code></pre>
-
-<p>Now, inside this method, we are going to link to our styleable
-throught the following code:</p>
-
-<pre><code class="Java LoadingButton.java">
-    private String mText;
-
-    private void setAttributes(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton, 0, 0);
-        try {
-            mText = ta.getString(R.styleable.LoadingButton_text);
-        } finally {
-            ta.recycle();
-        }
-    }
-</code></pre>
-
-<p>I created a new class member called &ldquo;mText&rdquo; to store the string we are
-going to get through the attribute &ldquo;text&rdquo;. To link to our styleable se
-use the method &ldquo;obtainStyledAttributes&rdquo;, that receives as parameter
-the set of attributes (attrs) and the styleable name. Finally, we
-extract an attribute value calling the called &ldquo;get*&rdquo;, where * is the
-type of attribute we want to extract. This type is related to the
-&ldquo;format&rdquo; we defined on our XML file.</p>
-
-<p>Now we just need to adjust the method &ldquo;init&rdquo; to now set the text of
-EditText to our variable &ldquo;mText&rdquo;.</p>
-
-<pre><code class="Java LoadingButton.java">
-    private void init() {
-        setClickable(true);
-        setBackgroundResource(android.R.drawable.btn_default);
-        LayoutParams textViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        textViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        LayoutParams progressBarParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        progressBarParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mTextView = new TextView(getContext());
-        mTextView.setLayoutParams(textViewParams);
-        mTextView.setText(mText);
-        mProgressBar = new ProgressBar(getContext());
-        mProgressBar.setLayoutParams(progressBarParams);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        addView(mTextView);
-        addView(mProgressBar);
-    }
-</code></pre>
-
-<p>And now here is our fully completed class:</p>
-
-<pre><code class="Java LoadingButton.java">
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-public class LoadingButton extends RelativeLayout {
-
-    private TextView mTextView;
-    private ProgressBar mProgressBar;
-    private String mText;
-
-    private void init() {
-        setClickable(true);
-        setBackgroundResource(android.R.drawable.btn_default);
-        LayoutParams textViewParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        textViewParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        LayoutParams progressBarParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        progressBarParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mTextView = new TextView(getContext());
-        mTextView.setLayoutParams(textViewParams);
-        mTextView.setText(mText);
-        mProgressBar = new ProgressBar(getContext());
-        mProgressBar.setLayoutParams(progressBarParams);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        addView(mTextView);
-        addView(mProgressBar);
-    }
-
-    public void startLoading() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mTextView.setVisibility(View.INVISIBLE);
-    }
-
-    public void stopLoading() {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mTextView.setVisibility(View.VISIBLE);
-    }
-
-    private void setAttributes(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton, 0, 0);
-        try {
-            mText = ta.getString(R.styleable.LoadingButton_text);
-        } finally {
-            ta.recycle();
-        }
-    }
-
-    public LoadingButton(Context context) {
-        super(context);
-        init();
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setAttributes(context, attrs);
-        init();
-    }
-
-    public LoadingButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setAttributes(context, attrs);
-        init();
-    }
-
-}
-</code></pre>
-
-<p>And now it&rsquo;s ready to be used!</p>
-
-<pre><code class="XML">
-    &lt;PACKAGE_NAME.LoadingButton
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/loading_button"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        app:text="Hello world!" /&gt;
-</code></pre>
-
-<p>You must replace &ldquo;PACKAGE_NAME&rdquo; for the package where the
-LoadingButton class is within. Also, notice I must define to where my
-styleable is before using its attribute. You could pass the real path
-(<a href="http://schemas.android.com/apk/res/values/attrs.xml">http://schemas.android.com/apk/res/values/attrs.xml</a>), but the res-auto
-automatically redirects to &ldquo;attrs.xml&rdquo;. After naming it &ldquo;app&rdquo;, I could
-have access to the &ldquo;text&rdquo; attribute through the prefix &ldquo;app:&rdquo;.</p>
-
-<p>And here&rsquo;s a snippet to demonstrate it working:</p>
-
-<pre><code class="Java MyActivity.java">
-    private LoadingButton button;
-    private boolean loading = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my);
-
-        button = (LoadingButton) findViewById(R.id.loading_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (loading) {
-                    button.stopLoading();
-                    loading = false;
-                } else {
-                    button.startLoading();
-                    loading = true;
-                }
-            }
+<p>However, that alone will not performe anything. We need a bit of Javascript to do the magic.</p>
+
+<p>There are three ways to get access to the user webcam, depending on his browser: getUserMedia (for IE and alike), webkitGetUserMedia (for Chrome and Safari) and mozGetUserMedia (for Firefox), so we need to handle all them.</p>
+
+<pre><code class="Javascript">window.addEventListener("DOMContentLoaded", function() {
+    var canvas = document.getElementById("canvas");
+    var video = document.getElementById("video");
+    if(navigator.getUserMedia) {
+        navigator.getUserMedia({ "video": true }, function(stream) {
+            video.src = stream;
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    } else if(navigator.webkitGetUserMedia) { 
+        navigator.webkitGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.webkitURL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
         });
     }
+    else if(navigator.mozGetUserMedia) { 
+        navigator.mozGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    }
+});
 </code></pre>
 
-<p style="text-align:center;"><img src="{{%20root_url%20}}/images/posts/spinning_button.png" alt="" /></p>
+<p>First I&rsquo;m creating a listener to when content is loaded. It&rsquo;s important, otherwise Javascript won&rsquo;t be able to find the tags! :-)</p>
 
-<p style="text-align:center;"><a href="{{root_url}}/downloads/code/TutorialButton.zip">Click here to download the example</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Managing Sessions in PHP]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/11/12/managing-sessions-in-php/"/>
-    <updated>2014-11-12T20:40:47-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/11/12/managing-sessions-in-php</id>
-    <content type="html"><![CDATA[<p>HTTP is a stateless protocol. However, sometimes we <em>do</em> want to keep some state of the application, like, for example, some information about the current user who is browsing your site. In PHP and most backend languages in general, there are two ways to do that:</p>
+<p>Inside the listener there are three &ldquo;if&rdquo;, for compatibility reasons described above.</p>
 
-<ul>
-<li>Cookies</li>
-<li>Sessions</li>
-</ul>
+<p>Each &ldquo;if&rdquo; is similar, just some changes here and there: We are setting &ldquo;video.src&rdquo; to webcam stream (remember: video variable is the <code>&lt;video&gt;</code> tag we set previously) and immediately playing it through the function &ldquo;play()&rdquo;. We also need to pass a callback function in case of error (permission not given or webcam not found, for example).</p>
 
+<h2>Taking a snapshot</h2>
 
-<p>There are some differences between the two techniques:</p>
+<p>Now we&rsquo;re going to implement the take snapshot functionality. First thing: Create a listener to when button &ldquo;Take snapshot&rdquo; is clicked:</p>
 
-<!-- more -->
+<pre><code class="Javascript">document.getElementById("snap").addEventListener("click", function() {
 
-
-<ul>
-<li>Cookies are kept on user&rsquo;s machine while sessions stay on server;</li>
-<li>Usually, cookies last longer than sessions, where the latter lasts until the user closes the browser;</li>
-<li>Sessions support a bigger quantity of data.</li>
-</ul>
-
-
-<p>On this tutorial we&rsquo;re going to focus in sessions.</p>
-
-<h2>Starting a session</h2>
-
-<p>To start a session, use the method session_start()</p>
-
-<pre><code class="PHP">&lt;?php
-session_start();
-//$_SESSION says: USE MEEE!!!
-?&gt;
+});
 </code></pre>
 
-<p>Sessions are accessible through the superglobal variable $_SESSION. This variable is a simple array, wherein its values are persisted on a file on the server machine. To identify each user, sessions use a small cookie called session_id.</p>
+<p>This listener must be inside &ldquo;DOMContentLoaded&rdquo; listener created previously.</p>
 
-<p>Generally sessions are started automatically after the first time use start them. This behavior is defined on the parameter <em>session.auto_start</em> on the config file <em>php.ini</em>. Because of that, it&rsquo;s a good pratice to check if a session is already started before you start it again:</p>
+<p>Now, inside this new listener that we&rsquo;ve created, let&rsquo;s draw a webcam frame inside the <code>&lt;canvas&gt;</code> tag that we created on first section of this tutorial. To be able to draw an image inside a canvas, we first need to get its &ldquo;context&rdquo; and through it call the function &ldquo;drawImage(x, y, width, height)&rdquo;, where x, y representates the origin of source image (if you need to translate it&hellip;) and width, height the area you are going to take from source image (if you need to crop it&hellip;).</p>
 
-<pre><code class="PHP">if (!isset($_SESSION)) {
-    session_start();
-}
+<pre><code class="Javascript">document.getElementById("snap").addEventListener("click", function() {
+    canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
+});
 </code></pre>
 
-<p>Since version 5.3, PHP will print an error message whenever you start an already started session.</p>
+<p>Aaaaaand it&rsquo;s done! Pretty easy, huh? :-)</p>
 
-<h2>Creating session variables</h2>
+<h2>Downloading a photo</h2>
 
-<p>Create session variables is pretty simple. You just need to assign a value to a array key. Example:</p>
+<p>Now we just need to implement the &ldquo;Download photo&rdquo; button. That is easy too. Inside the listener of &ldquo;Take snapshot&rdquo; button, add the following line:</p>
 
-<pre><code class="PHP">&lt;?php
-if (!isset($_SESSION)) {
-    session_start();
-}
-$_SESSION["name"] = "Abner";
-?&gt;
+<pre><code class="Javascript">document.getElementById("save").href = canvas.toDataURL("image/jpeg");
 </code></pre>
 
-<h2>Accessing variables</h2>
+<p>&ldquo;toDataURL()&rdquo; convert canvas image to a URL. We can also define the image extension.</p>
 
-<p>In order to access session variables, you first need to start a session. After that, all variables are accessible through the superglobal variable $_SESSION. That&rsquo;s that simple. :)</p>
+<p>It&rsquo;s simple like that! :)</p>
 
-<pre><code class="PHP">&lt;?php
-if (!isset($_SESSION)) {
-    session_start();
-}
-echo $_SESSION["name"]; //Abner
-?&gt;
-</code></pre>
+<p>Now the complete code:</p>
 
-<h2>Modify variables</h2>
+<p>&#8220;` HTML
+<video id="video" width="640" height="480" autoplay></video> <!-- Live stream of webcam -->
+<canvas id="canvas" width="640" height="480"></canvas> <!-- Snapshot of webcam -->
+<button id="snap">Take snapshot</button> <!-- Button to take snapshot -->
+<a id="save" download><button>Download photo</button></a> <!-- Button to download photo --></p>
 
-<p>That follows the same principle of create. Just override the old value.</p>
-
-<pre><code class="PHP">&lt;?php
-$_SESSION["name"] = "Ana"; //overrided what was there before
-?&gt;
-</code></pre>
-
-<h2>Deleting variables or the entire session</h2>
-
-<p>To delete a session variable, use the method unset, as you&rsquo;d do with any other variable:</p>
-
-<pre><code class="PHP">&lt;?php
-unset($_SESSION["name"]); //variable is deleted from session
-?&gt;
-</code></pre>
-
-<p>But if you wish to delete all variables at once, the way to do that is using the method session_unset.</p>
-
-<pre><code class="PHP">&lt;?php
-session_unset();
-?&gt;
-</code></pre>
-
-<p>Notice this method is deprecated. The correct way to do that is simply setting a new array to $_SESSION.</p>
-
-<pre><code class="PHP">&lt;?php
-$_SESSION = array();
-?&gt; 
-</code></pre>
-
-<p>And then the Garbage Collect will free the memory allocation for the old variables.</p>
-
-<p>Even so, if you really wish to destroy the session by complete and not just clean it, you can use session_destroy.</p>
-
-<pre><code class="PHP">&lt;?php
-session_destroy();
-?&gt;
-</code></pre>
-
-<p>While this method destroys the session file on server machine, the session (and its variables) still exists on memory and will keep existing until the user go to another page. Because of that, it&rsquo;s recommended you clean the session before destroying it.</p>
-
-<p>Well, that&rsquo;s it folks! :)</p>
-
-<p>I hope you appreciated today&rsquo;s tutorial.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Little Things That Can Make Your Java Programs Better]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/"/>
-    <updated>2014-10-18T11:17:45-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/10/18/little-things-that-can-make-your-java-programs-better</id>
-    <content type="html"><![CDATA[<p>On the past months I&rsquo;ve been reading this incredible book called <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672">Refactoring: Improving the design of existing code</a>, by Martin Fowler.</p>
-
-<p>This one is classic on Software Engineering, and somewhat changed the way I think about software design in general.</p>
-
-<p>In the book there are dozens or hundreds of examples and tips. I gathered <strong>five</strong> that I consider easier and simpler to be applied but still have some impact on final product. Those tips, though inspired in the book, are also product of my own experience.</p>
-
-<p>I picked Java cause that&rsquo;s my more familiar language and it&rsquo;s also the book language choice.</p>
-
-<!-- more -->
-
-
-<h2>1. Do not create a &ldquo;set&rdquo; method for an attribute that can&rsquo;t change</h2>
-
-<p>This tip seems a bit foolish, and it really is, but you won&rsquo;t believe the amount of times this mistake is done over and over again.</p>
-
-<p>But, wait! Does an attribute that can&rsquo;t change really make sense? It does! It&rsquo;s too common nowadays to use some form of ORM (Object Relation Mapping), where some attribute will become the primary key. Allowing the programmer to change the attribute that representates the primary key may lead to some form of inconsistency in some extreme cases.</p>
-
-<p>If you aren&rsquo;t still convinced, just remember: Why wasting time doing something unnecessary? Less lines = better!</p>
-
-<h2>2. Do not allow classes modify other classes collections</h2>
-
-<p>This tip seems bit &ldquo;fishy&rdquo; at first. Actually, classes can indeed modify other classes collections, the problem here is the way it&rsquo;s done. Let me show you by example:</p>
-
-<pre><code class="Java System.java">public class System {
-
-    private Set&lt;User&gt; users;
-
-    public void setUsers(Set&lt;User&gt; users) {
-        this.users = users;
+<script type="text/javascript">
+window.addEventListener("DOMContentLoaded", function() {
+    var canvas = document.getElementById("canvas");
+    var video = document.getElementById("video");
+    if(navigator.getUserMedia) {
+        navigator.getUserMedia({ "video": true }, function(stream) {
+            video.src = stream;
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    } else if(navigator.webkitGetUserMedia) { 
+        navigator.webkitGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.webkitURL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
     }
-
-    public Set&lt;Usuario&gt; getUsers() {
-        return this.users;
+    else if(navigator.mozGetUserMedia) { 
+        navigator.mozGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
     }
+    document.getElementById("snap").addEventListener("click", function() {
+        canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
+        document.getElementById("save").href = canvas.toDataURL("image/jpeg");
+    });
+});
+</script>
 
-    ...
 
-}
-</code></pre>
+<p>&#8220;`</p>
 
-<pre><code class="Java PrivacyInvader.java">public class PrivacyInvader {
+<p style="text-align:center;"><img src="/images/posts/webcam-snapshot.png" alt="" /></p>
 
-    private System system;
-
-    public boolean addUser(String login, String password) {
-        return system.getUsers().add(new User(login, password));
-    }
-
-    public boolean removeUser(User user) {
-        return system.getUsers().remove(user);
-    }
-
-    ...
-
-}
-</code></pre>
-
-<p>What&rsquo;s the problem of this design?</p>
-
-<p>The problem is that the &ldquo;PrivacyInvader&rdquo; class is adding and removing elements of &ldquo;users&rdquo; collection from System in a direct way. Let&rsquo;s suppose you are using this collection to persist into your database from times to times. Now imagine that any class can insert any user, not respecting any constraint you put in this process, as, for example, a repeated user login. What will happen? Yea, you guessed right&hellip;</p>
-
-<p>Another problem, this way a bit more subtile, is that &ldquo;User&rdquo; is being created in an inappropriated place. If we allow such things to happen, the User construtor will be called all over the code. What if now you want to change its signature? That&rsquo;s a classic problem of coupling. PrivacyInvader is knowing too much about User, where the only one who should know that much is that one that will really use it, in this case, &ldquo;System&rdquo;.</p>
-
-<p>Now how do we fix all that? Let&rsquo;s start fixing the second problem listed.</p>
-
-<pre><code class="Java System.java">public class System {
-
-    private Set&lt;User&gt; users;
-
-    public void setUsers(Set&lt;Usuario&gt; users) {
-        this.users = users;
-    }
-
-    public Set&lt;Usuario&gt; getUsers() {
-        return this.users;
-    }
-
-    public boolean addUser(String login, String password) {
-        return this.users.add(new User(login, password));
-    }
-
-    public boolean removeUser(User user) {
-        return this.users.remove(user);
-    }
-
-    ...
-
-}
-</code></pre>
-
-<pre><code class="Java PrivacyInvader.java">public class PrivacyInvader {
-
-    private System system;
-
-    public boolean addUser(String login, String password) {
-        return system.addUser(login, password);
-    }
-
-    public boolean removeUser(User user) {
-        return system.remove(user);
-    }
-
-    ...
-
-}
-</code></pre>
-
-<p>Much better now! Now User class coupling was reduced to System class. So what do we do now to avoid direct access to our collection? One way would be to remove the &ldquo;get&rdquo; method, but this is a sub-optimal solution, since sometimes we do really need to access the collection.</p>
-
-<p>Happily, Java provides us an elegant solution to solve this problem: Collections.unmodifiable!</p>
-
-<p>Collections.unmodifiable is a set of methods which receive a collection and return this collection modified in such way that it doesn&rsquo;t allow any insert or delete method, only search methods as &ldquo;get&rdquo;! Awesome, isn&rsquo;t it? :P</p>
-
-<p>Here is some supported methods:</p>
-
-<ul>
-<li>Collections.unmodifiableList(originalList);</li>
-<li>Collections.unmodifiableSet(originalSet);</li>
-<li>Collections.unmodifiableMap(originalMap);</li>
-<li>Collections.unmodifiableCollection(originalCollection);</li>
-</ul>
-
-
-<p>And that&rsquo;s our solution using this little trick:</p>
-
-<pre><code class="Java Sistema.java">import java.util.Collections;
-
-public class System {
-
-  private Set&lt;User&gt; users;
-
-  public Set&lt;User&gt; getUsers() {
-      return Collections.unmodifiableSet(this.users);
-  }
-
-  public boolean addUser(String login, String password) {
-      return this.users.add(new User(login, password));
-  }
-
-  public boolean removeUser(User user) {
-      return this.users.remove(user);
-  }
-
-  ...
-
-}
-</code></pre>
-
-<p>Also notice we removed the &ldquo;set&rdquo; method for the collection. The reason was explained in topic #1 :P</p>
-
-<h2>3. Let a method be public only if really necessary</h2>
-
-<p>Some OOPs gurus say that the worth of a class is its interface. And I can&rsquo;t agree more. Simpler interfaces are easier to use, you don&rsquo;t need to search the method that does &ldquo;this&rdquo; or &ldquo;that&rdquo; because they are fewer.</p>
-
-<p>Of course, I&rsquo;m not saying: Create as less methods as possible. What I&rsquo;m saying is: Create as much methods as possible (indeed, it&rsquo;s even encouraged, since more methods lead to smaller methods and smaller methods are easier to understand), but let all the auxiliar methods <strong>private</strong>.</p>
-
-<h2>4. Know when to use Enum and when to use Inheritance</h2>
-
-<p>That&rsquo;s a trick one, isn&rsquo;t it? Enum is a big ally. It saves times. But enums are almost always followed by switch statements. And switch statements are evil. Why? Because they are not flexible enough to change. If you want to add a new enum value, for example, you must have to change ALL the switch statements that use that enum. And it&rsquo;s <strong>bad</strong>! Changes like that almost always lead to bugs. Here is an example:</p>
-
-<pre><code class="Java Role.java">public enum Role {
-
-    TRAINEE, JUNIOR, EXPERT, SENIOR
-
-}
-</code></pre>
-
-<pre><code class="Java Developer.java ">public class Developer {
-
-    private Role role; 
-
-    public double getSalary() {
-        switch(this.role) {
-            case TRAINEE:
-                return 500;
-            case JUNIOR:
-                return 1000;
-            case EXPERT:
-                return 2000;
-            case SENIOR:
-                return 4000;
-            default:
-                throw new RoleException("Invalid role.");
-        }
-    }
-
-    public boolean promote() {
-        switch(this.role) {
-            case TRAINEE:
-                this.role = Role.JUNIOR;
-                break;
-            case JUNIOR:
-                this.role = Role.EXPERT;
-                break;
-            case EXPERT:
-                this.role = Role.SENIOR;
-                break;
-            default:
-                return false;
-        }
-        return true;
-    }
-
-    ... 
-
-} 
-</code></pre>
-
-<p>This could be done is a similar way using Inheritance and polymorphism:</p>
-
-<pre><code class="Java Role.java">public interface Role {
-
-    public double getSalary();
-    public boolean promote(Developer context);
-
-}
-</code></pre>
-
-<pre><code class="Java Trainee.java">public class Trainee implements Role {
-
-    @Override
-    public double getSalary() {
-        return 500;
-    }
-
-    @Override
-    public boolean promote(Developer context) {
-        context.setRole(new Junior());
-        return true;
-    }
-
-}
-</code></pre>
-
-<pre><code class="Java Junior.java">public class Junior implements Role {
-
-    @Override
-    public double getSalary() {
-        return 1000;
-    }
-
-    @Override
-    public boolean promote(Developer context) {
-        context.setRole(new Expert());
-        return true;
-    }
-
-}
-</code></pre>
-
-<pre><code class="Java Expert.java">public class Expert implements Role {
-
-    @Override
-    public double getSalary() {
-        return 2000;
-    }
-
-    @Override
-    public boolean promote(Developer context) {
-        context.setRole(new Senior());
-        return true;
-    }
-
-}
-</code></pre>
-
-<pre><code class="Java Senior.java">public class Senior implements Role {
-
-    @Override
-    public double getSalary() {
-        return 4000;
-    }
-
-    @Override
-    public boolean promote(Developer context) {
-        return false;
-    }
-
-}
-</code></pre>
-
-<pre><code class="Java Developer.java">public class Developer {
-
-    private Role role;
-
-    protected void setRole(Role role) {
-        this.role = role;
-    }
-
-    public double getSalary() {
-        return this.role.getSalary();
-    }
-
-    public boolean promote() {
-        return this.role.promote(this);
-    }
-
-}
-</code></pre>
-
-<p>This is very similar to <em>State</em> pattern from the Gange Of Four.</p>
-
-<p>But anyway, what&rsquo;s the advantages of one over another?</p>
-
-<p>The advantage of the second solution in comparison to the first is that, if we want to add a new role in the hierarchy, we don&rsquo;t need to modify any line of code other than the new class itself.</p>
-
-<p>But, hey! I&rsquo;m not saying to throw the Enum in the gargabe and never use it again. Far from it. What I&rsquo;m trying to say is that there are situations where the enum is not really appropriate. A role of thumb is: Never use enum to representate a hierarchy that can change. Use inheritance instead!</p>
-
-<h2>5. Use affirmatives instead of negatives sentences in conditionals</h2>
-
-<p>This tip is really simple. It won&rsquo;t affect your code quality directly, but it may make your code more readable, and that&rsquo;s so important that I can&rsquo;t emphasize it enough!</p>
-
-<p>But why are affirmatives sentences more readable than negatives? Well, just try to read the following sentences:</p>
-
-<blockquote><p>I do not want to not to go to Shopping</p></blockquote>
-
-<p>And then compare to this:</p>
-
-<blockquote><p>I want to go to Shopping</p></blockquote>
-
-<p>Because in the core they mean the same things, with the difference the second contains redundant informations. Most of negatives sentences contain some kind of redundant information.</p>
-
-<h2>Final thoughts</h2>
-
-<p>Some tips were quite obvious and intuitives, and some weren&rsquo;t. Well, but so is life&hellip; I don&rsquo;t expect you to agree with all I said here, neither you should! It&rsquo;s through discussion we can grow up, so, if you have a different opinion from mine, don&rsquo;t hesitate to comment! See ya!</p>
+<p>I hope you&rsquo;ve enjoyed and Merry Christmas! :-)</p>
 ]]></content>
   </entry>
   

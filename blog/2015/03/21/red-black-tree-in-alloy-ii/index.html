@@ -21,6 +21,7 @@
   <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -60,6 +61,7 @@
 <ul class="main-navigation">
   <li><a href="/">Home</a></li>
   <li><a href="/blog/archives">Entries</a></li>
+  <li><a href="http://github.com/picoledelimao"><i class="fa fa-github"></i> Github</a></li>
 </ul>
 
 </nav>
@@ -254,6 +256,170 @@
 <p style="text-align:center;"><img src="/images/posts/alloy10.png" alt="" /></p>
 
 <p>Our red-black tree is alive!</p>
+
+<p>You can see the source code below:</p>
+
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
+
+
+<div id="code">
+<figure class='code'><figcaption><span>RedBlackTree.als</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+</pre></td><td class='code'><pre><code class='Alloy'><span class='line'><span class="kn">module</span> <span class="n">RedBlackTree</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">enum</span> <span class="n">Color</span> <span class="o">{</span> <span class="n">BLACK</span><span class="p">,</span> <span class="n">RED</span> <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">sig</span> <span class="n">Node</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">parent</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">left</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">right</span><span class="p">:</span> <span class="k">lone</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">children</span><span class="p">:</span> <span class="k">set</span> <span class="n">Node</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">data</span><span class="p">:</span> <span class="k">one</span> <span class="kt">Int</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">color</span><span class="p">:</span> <span class="k">one</span> <span class="n">Color</span>    
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">pred</span> <span class="n">isRoot</span><span class="o">[</span><span class="n">n</span><span class="p">:</span> <span class="n">Node</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">no</span> <span class="n">n</span><span class="o">.</span><span class="n">parent</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// facts about nodes </span>
+</span><span class='line'><span class="k">fact</span> <span class="n">makeChildren</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span> <span class="o">+</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">makeParent</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">c</span> <span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">n</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">n2</span><span class="o">.</span><span class="n">parent</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">n1</span><span class="o">.</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">noCycles</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>          <span class="o">(</span><span class="n">n1</span> <span class="ow">in</span> <span class="n">n2</span><span class="o">.</span><span class="n">children</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">n2</span> <span class="o">!</span><span class="ow">in</span> <span class="n">n1</span><span class="o">.*</span><span class="n">children</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">leftAndRightAreDisjoint</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">no</span> <span class="n">left</span> <span class="o">&amp;</span> <span class="n">right</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">theresOnlyOneRoot</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">one</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">isRoot</span><span class="o">[</span><span class="n">n</span><span class="o">]</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// facts about data</span>
+</span><span class='line'><span class="k">fact</span> <span class="n">dataIsUnique</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span> <span class="n">n1</span> <span class="o">!=</span> <span class="n">n2</span> <span class="o">=&gt;</span> <span class="n">n1</span><span class="o">.</span><span class="n">data</span> <span class="o">!=</span> <span class="n">n2</span><span class="o">.</span><span class="n">data</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">organizeLeftAndRightUsingData</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">l</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">left</span><span class="o">.*</span><span class="n">children</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">data</span><span class="o">)</span> <span class="ow">and</span>
+</span><span class='line'>      <span class="o">(</span><span class="k">all</span> <span class="n">r</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">right</span><span class="o">.*</span><span class="n">children</span> <span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">.</span><span class="n">data</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// facts about node colors</span>
+</span><span class='line'><span class="k">fact</span> <span class="n">rootIsBlack</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="k">no</span> <span class="n">children</span><span class="o">.</span><span class="n">n</span> <span class="o">=&gt;</span> <span class="n">n</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">redNodeChildrenAreBlack</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="n">n</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">RED</span> <span class="o">=&gt;</span>
+</span><span class='line'>          <span class="k">all</span> <span class="n">c</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">BLACK</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">fact</span> <span class="n">blackHeightIsSameToAllPaths</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">n</span><span class="p">:</span> <span class="n">Node</span> <span class="o">|</span>
+</span><span class='line'>      <span class="o">#(</span><span class="n">n</span><span class="o">.</span><span class="n">left</span><span class="o">.*</span><span class="n">children</span> <span class="o">-</span> <span class="n">color</span><span class="o">.</span><span class="n">RED</span><span class="o">)</span>  <span class="o">=</span> <span class="o">#(</span><span class="n">n</span><span class="o">.</span><span class="n">right</span><span class="o">.*</span><span class="n">children</span> <span class="o">-</span> <span class="n">color</span><span class="o">.</span><span class="n">RED</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">pred</span> <span class="n">show</span><span class="o">[]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="o">#</span><span class="n">left</span> <span class="o">&gt;</span> <span class="mi">2</span>
+</span><span class='line'>  <span class="o">#</span><span class="n">right</span> <span class="o">&gt;</span> <span class="mi">2</span>
+</span><span class='line'>  <span class="k">all</span> <span class="n">d</span><span class="p">:</span> <span class="n">Node</span><span class="o">.</span><span class="n">data</span> <span class="o">|</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">run</span> <span class="n">show</span> <span class="k">for</span> <span class="mi">10</span>
+</span></code></pre></td></tr></table></div></figure> 
+</div>
+
+
+<p></input></p>
 </div>
 
 
@@ -293,6 +459,8 @@
         <a class="basic-alignment left" href="/blog/2015/03/15/red-black-tree-in-alloy/" title="Previous Post: Red-Black tree in Alloy">&laquo; Red-Black tree in Alloy</a>
       
       
+        <a class="basic-alignment right" href="/blog/2015/10/11/parallel-genetic-algorithm-on-c-plus-plus-using-tbb/" title="Next Post: Parallel Genetic Algorithm on C++ using TBB">Parallel Genetic Algorithm on C++ using TBB &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -312,6 +480,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/11/parallel-genetic-algorithm-on-c-plus-plus-using-tbb/">Parallel Genetic Algorithm on C++ Using TBB</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/21/red-black-tree-in-alloy-ii/">Red-Black Tree in Alloy II</a>
       </li>
     
@@ -325,10 +497,6 @@
     
       <li class="post">
         <a href="/blog/2014/12/24/taking-photos-from-webcam-using-html5/">Taking Photos From Webcam Using HTML5</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/12/19/death-button/">Death Button</a>
       </li>
     
   </ul>

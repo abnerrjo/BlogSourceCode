@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-03-21T10:33:53-03:00</updated>
+  <updated>2015-10-12T00:32:35-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -12,57 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[My Experience on Information Systems I]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2014/10/27/my-experience-on-information-systems-i/"/>
-    <updated>2014-10-27T00:35:50-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2014/10/27/my-experience-on-information-systems-i</id>
-    <content type="html"><![CDATA[<p>On Information Systems I we learn about project design and web systems.</p>
-
-<p>There, we utilize a framework called Play!, that is done for Java and Scala.</p>
-
-<p>Play! Framework is excellent, and the integration part with Scala really helps, turning things smoother.</p>
-
-<p>Here are some web systems I developed during this discipline:</p>
-
-<h2>#Partiu</h2>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/play-partiu.png" alt="" /></p>
-
-<!-- more -->
-
-
-<p></p>
-
-<center>Link: <a href="http://si1-partiu.herokuapp.com">http://si1-partiu.herokuapp.com</a>/<br/><br/>
-Github repository: <a href="https://github.com/felipemdrs/Partiu_Projeto_SI1">https://github.com/felipemdrs/Partiu_Projeto_SI1</a></center>
-
-
-<p><br/></p>
-
-<p>That was the discipline&rsquo;s final project and it was made together with a classmate, <a href="https://github.com/felipemdrs">Felipe Miranda</a>.
-Basically, it is a &ldquo;social network&rdquo; of travels, where you create a group for you travel and call people to share information about it, very much like Facebook groups. You can set you travels as public or private.</p>
-
-<h2>CCFest</h2>
-
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/play-ccfest.png" alt="" />
-Link: <a href="http://cchackfest.herokuapp.com/">http://cchackfest.herokuapp.com/</a><br/>
-Github repository: <a href="https://github.com/PicoleDeLimao/hackfest2">https://github.com/PicoleDeLimao/hackfest2</a></p>
-
-<p>Originally made by <a href="https://github.com/felipemdrs">Felipe Miranda</a>, the challenge was deal with a complete system and evolve it (of course, I couldn&rsquo;t be able to create such beautiful GUI :p).</p>
-
-<p>I was responsible for user validation (previously there wasn&rsquo;t a signup option), possibility to add an event place and check it as priority for experienced programmer. Another thing I learned during this project was how to work with AJAX technology.</p>
-
-<h2>Final thoughts</h2>
-
-<p>My experience while on this discipline was very positive. My knowledge with web systems was from zero to now the possibility to create pretty complex sites. :P</p>
-
-<p>I learnt many technologies (Play!, MVC, Heroku, Hibernate, AJAX, Javascript, just to quote few :P) and there&rsquo;s still many to learn! Well&hellip; That&rsquo;s a programmer life. But it&rsquo;s better that way.</p>
-
-<p>That&rsquo;s it. See ya!</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Little Things That Can Make Your Java Programs Better]]></title>
@@ -404,9 +353,9 @@ public class System {
     <id>http://PicoleDeLimao.github.io/blog/2014/09/28/java-hashboom</id>
     <content type="html"><![CDATA[<p>Here&rsquo;s some fool game I made some time ago in an attempt to learn about Swing. Have fun!</p>
 
-<p style="text-align:center;"><img src="{{%20root_url}}/images/posts/hashboom.png" alt="" /></p>
+<p style="text-align:center;"><img src="/images/posts/hashboom.png" alt="" /></p>
 
-<p style="text-align:center;"><a href="{{%20root_url}}/downloads/code/Hashboom.jar">Click here to download</a></p>
+<p style="text-align:center;"><a href="/downloads/code/Hashboom.jar">Click here to download</a></p>
 ]]></content>
   </entry>
   

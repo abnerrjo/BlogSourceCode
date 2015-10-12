@@ -3,6 +3,14 @@
   
   
   <url>
+    <loc>http://PicoleDeLimao.github.io/blog/2015/10/11/parallel-genetic-algorithm-on-c-plus-plus-using-tbb/</loc>
+    
+    <lastmod>2015-10-11T09:55:50-03:00</lastmod>
+    
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://PicoleDeLimao.github.io/blog/2015/03/21/red-black-tree-in-alloy-ii/</loc>
     
     <lastmod>2015-03-21T09:23:26-03:00</lastmod>
@@ -35,25 +43,9 @@
   </url>
   
   <url>
-    <loc>http://PicoleDeLimao.github.io/blog/2014/12/19/death-button/</loc>
-    
-    <lastmod>2014-12-19T08:57:25-03:00</lastmod>
-    
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
     <loc>http://PicoleDeLimao.github.io/blog/2014/11/12/managing-sessions-in-php/</loc>
     
     <lastmod>2014-11-12T20:40:47-03:00</lastmod>
-    
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>http://PicoleDeLimao.github.io/blog/2014/10/27/my-experience-on-information-systems-i/</loc>
-    
-    <lastmod>2014-10-27T00:35:50-03:00</lastmod>
     
     <priority>0.8</priority>
   </url>
@@ -133,21 +125,21 @@
   
   <url>
     <loc>http://PicoleDeLimao.github.io/blog/archives/</loc>
-    <lastmod>2015-03-21T10:33:53-03:00</lastmod>
+    <lastmod>2015-10-12T00:32:35-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/</loc>
-    <lastmod>2015-03-21T10:33:53-03:00</lastmod>
+    <lastmod>2015-10-12T00:32:35-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
     <loc>http://PicoleDeLimao.github.io/about/</loc>
-    <lastmod>2015-03-21T10:33:53-03:00</lastmod>
+    <lastmod>2015-10-12T00:32:35-03:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
