@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Parallel Genetic Algorithm on C++ using TBB"
+title: "Parallel Genetic Algorithm in C++ using TBB"
 date: 2015-10-11 09:55:50 -0300
 comments: true
 categories: [tutorials, c++, tbb, parallel]
