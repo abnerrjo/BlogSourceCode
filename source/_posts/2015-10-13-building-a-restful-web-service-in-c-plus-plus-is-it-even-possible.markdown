@@ -5,30 +5,34 @@ date: 2015-10-13 08:38:35 -0300
 comments: true
 categories: Tutorials, C++, Web, Service, REST
 ---
-If you ever thought about building a multi-platform system, you should know which a [Web Service](https://en.wikipedia.org/wiki/Web_service) is an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it's better to move all those operations to a common Web Service and establish the communication through [HTTP requests](https://en.wikipedia.org/wiki/HTTP). 
+If you ever thought about building a multi-platform system, you should know that a [Web Service](https://en.wikipedia.org/wiki/Web_service) is an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it's better to move all those operations to a common Web Service and establish the communication through [HTTP requests](https://en.wikipedia.org/wiki/HTTP). 
 
 <!-- more --> 
-
-Recently, a class of web services has become pretty popular: [The REST web service](https://en.wikipedia.org/wiki/Representational_state_transfer). REST stands for **Re**presentational **S**tate **T**transfer. It's an architectural pattern where the requisitions are totally independent and don't keep any state on server. (It's different from a web service where you must first pass through an "authentication phase" before any requisition). Another remarking aspect of the REST is the use of common HTTP methods to implement "CRUD-like" systems.
+ 
+Recently, a class of web services has become pretty popular: [The REST web service](https://en.wikipedia.org/wiki/Representational_state_transfer). REST stands for **Re**presentational **S**tate **T**transfer. It's an architectural pattern where the requisitions are totally independent and don't keep any state on server. (It's different from a web service that keeps a "session" of the user). Another remarking aspect of the REST is the use of common HTTP methods to implement "CRUD-like" systems.
 
 -> ![](https://www.chemaxon.com/app/themes/chemaxon/images/product_pages/jws/rest.jpg) <-
 
 Web services can be implemented in almost any programming language you wish, though somes are more adequated to this task than others, like PHP or Javascript. When we are talking about programming languages which process HTTP requests, it's common the use of the term "[CGI](http://www.w3.org/CGI/)", which stands for **C**ommon **G**ateway **I**nterface. So here comes the C++ language: Can it be used as a CGI language? The answer is **yes**, THOUGH not recommended, and the reason is simple: Taks which could be easily implemented in languages like PHP would be a hell to be done in C++. But sometimes we have no choice. If that's your case, let's continue. 
 
-First, I'll assume which you are using a Unix-Variant SO with [Apache2](http://www.apache.org/) installed. For this tutorial, we are going to use the [FastCGI++](http://www.nongnu.org/fastcgipp/).
+First, I'll assume that you are using a Unix-Variant SO with [Apache2](http://www.apache.org/) installed. For this tutorial, we are going to use the [FastCGI++](http://www.nongnu.org/fastcgipp/).
 
 The very first step is to install mods on Apache2 to enable support for FastCGI. The mods are: ```mod_fastcgi``` and ```mod_fcgid``` (Download link: [here](http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html) and [here](http://httpd.apache.org/mod_fcgid/)). On Ubuntu, you can simply call:
 
 ```
 
-sudo apt-get install libapache2-mod-fastcgi
-sudo apt-get install libapache2-mod-fcgid
+sudo apt-get install libapache2-mod-fastcgi libapache2-mod-fcgid
 
 ```
 
-Once installed, restart the Apache2 service by using ```sudo service apache2 restart```. 
+Once installed, restart the Apache2 service by calling ```sudo service apache2 restart```. 
 
-Now it's necessary to download and install Boost. You can do it [here](http://www.boost.org/).
+Now it's necessary to download and install Boost. You can do it [here](http://www.boost.org/). Download it from the official website, unpack it and call the following commands on terminal:
+
+```
+./boostrap
+sudo ./b2 install
+```
 
 And finally, download FastCGI++ through the following link: http://www.nongnu.org/fastcgipp/
 
@@ -102,7 +106,7 @@ int main()
 </div>
 </input>
 
-Now compile it using:
+Now compile by calling:
 
 ``` Bash 
 
@@ -118,7 +122,7 @@ hello_world.fcgi: error while loading shared libraries: libfastcgipp.so.2: canno
 
 ```
 
-You may need to copy the libraries inside /usr/local/lib to /usr/lib. Copy and past the following statements:
+You may need to copy the libraries inside /usr/local/lib to /usr/lib. Copy and past the following commands on terminal:
 
 ```
 
