@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: C++, | Tango with code]]></title>
-  <link href="http://PicoleDeLimao.github.io/blog/categories/c-plus-plus/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Service, | Tango with code]]></title>
+  <link href="http://PicoleDeLimao.github.io/blog/categories/service/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
   <updated>2015-10-13T19:27:02-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>

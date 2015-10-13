@@ -1,0 +1,1673 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Building a RESTful Web Service in C++ (Is It Even Possible?) - Tango with code</title>
+  <meta name="author" content="Abner Matheus">
+
+  
+  <meta name="description" content="If you ever thought about building a multi-platform system, you should know which a Web Service is an essential part of your system. Instead of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/javascripts/spoiler.js"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Tango with code</a></h1>
+  
+    <h2>A blog about frustration and anger</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PicoleDeLimao.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
+  <li><a href="http://github.com/picoledelimao"><i class="fa fa-github"></i> Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Building a RESTful Web Service in C++ (Is It Even Possible?)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-13T08:38:35-03:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:38 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>If you ever thought about building a multi-platform system, you should know which a <a href="https://en.wikipedia.org/wiki/Web_service">Web Service</a> is an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it&rsquo;s better to move all those operations to a common Web Service and establish the communication through <a href="https://en.wikipedia.org/wiki/HTTP">HTTP requests</a>.</p>
+
+<!-- more -->
+
+
+<p></p>
+
+<p>Recently, a class of web services has become pretty popular: <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">The REST web service</a>. REST stands for <strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>transfer. It&rsquo;s an architectural pattern where the requisitions are totally independent and don&rsquo;t keep any state on server. (It&rsquo;s different from a web service where you must first pass through an &ldquo;authentication phase&rdquo; before any requisition). Another remarking aspect of the REST is the use of common HTTP methods to implement &ldquo;CRUD-like&rdquo; systems.</p>
+
+<p style="text-align:center;"> <img src="https://www.chemaxon.com/app/themes/chemaxon/images/product_pages/jws/rest.jpg" alt="" /></p>
+
+<p>Web services can be implemented in almost any programming language you wish, though somes are more adequated to this task than others, like PHP or Javascript. When we are talking about programming languages which process HTTP requests, it&rsquo;s common the use of the term &ldquo;<a href="http://www.w3.org/CGI/">CGI</a>&rdquo;, which stands for <strong>C</strong>ommon <strong>G</strong>ateway <strong>I</strong>nterface. So here comes the C++ language: Can it be used as a CGI language? The answer is <strong>yes</strong>, THOUGH not recommended, and the reason is simple: Taks which could be easily implemented in languages like PHP would be a hell to be done in C++. But sometimes we have no choice. If that&rsquo;s your case, let&rsquo;s continue.</p>
+
+<p>First, I&rsquo;ll assume which you are using a Unix-Variant SO with <a href="http://www.apache.org/">Apache2</a> installed. For this tutorial, we are going to use the <a href="http://www.nongnu.org/fastcgipp/">FastCGI++</a>.</p>
+
+<p>The very first step is to install mods on Apache2 to enable support for FastCGI. The mods are: <code>mod_fastcgi</code> and <code>mod_fcgid</code> (Download link: <a href="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html">here</a> and <a href="http://httpd.apache.org/mod_fcgid/">here</a>). On Ubuntu, you can simply call:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>sudo apt-get install libapache2-mod-fastcgi
+</span><span class='line'>sudo apt-get install libapache2-mod-fcgid
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once installed, restart the Apache2 service by using <code>sudo service apache2 restart</code>.</p>
+
+<p>Now it&rsquo;s necessary to download and install Boost. You can do it <a href="http://www.boost.org/">here</a>.</p>
+
+<p>And finally, download FastCGI++ through the following link: <a href="http://www.nongnu.org/fastcgipp/">http://www.nongnu.org/fastcgipp/</a></p>
+
+<p>The procedure to install it is the default one:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>./configure
+</span><span class='line'>make
+</span><span class='line'>sudo make install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order to check if everything is working, let&rsquo;s compile a simple program. Create a new .cpp file named hello_world.cpp and copy/past the following content:</p>
+
+<center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
+
+
+<div id="code">
+<figure class='code'><figcaption><span>hello_world.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'><span class="kt">void</span> <span class="nf">error_log</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'>   <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="p">;</span>
+</span><span class='line'>   <span class="k">static</span> <span class="n">ofstream</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'>   <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/tmp/errlog&quot;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">out</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">app</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">imbue</span><span class="p">(</span><span class="n">locale</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">getloc</span><span class="p">(),</span> <span class="k">new</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">time_facet</span><span class="p">()));</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;[&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">second_clock</span><span class="o">::</span><span class="n">local_time</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">HelloWorld</span><span class="o">:</span> <span class="k">public</span> <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Request</span><span class="o">&lt;</span><span class="kt">wchar_t</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="kt">bool</span> <span class="n">response</span><span class="p">()</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>      <span class="kt">wchar_t</span> <span class="n">russian</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span> <span class="mh">0x041f</span><span class="p">,</span> <span class="mh">0x0440</span><span class="p">,</span> <span class="mh">0x0438</span><span class="p">,</span> <span class="mh">0x0432</span><span class="p">,</span> <span class="mh">0x0435</span><span class="p">,</span> <span class="mh">0x0442</span><span class="p">,</span> <span class="mh">0x0020</span><span class="p">,</span> <span class="mh">0x043c</span><span class="p">,</span> <span class="mh">0x0438</span><span class="p">,</span> <span class="mh">0x0440</span><span class="p">,</span> <span class="mh">0x0000</span> <span class="p">};</span>
+</span><span class='line'>      <span class="kt">wchar_t</span> <span class="n">chinese</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span> <span class="mh">0x4e16</span><span class="p">,</span> <span class="mh">0x754c</span><span class="p">,</span> <span class="mh">0x60a8</span><span class="p">,</span> <span class="mh">0x597d</span><span class="p">,</span> <span class="mh">0x0000</span> <span class="p">};</span>
+</span><span class='line'>      <span class="kt">wchar_t</span> <span class="n">greek</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span> <span class="mh">0x0393</span><span class="p">,</span> <span class="mh">0x03b5</span><span class="p">,</span> <span class="mh">0x03b9</span><span class="p">,</span> <span class="mh">0x03b1</span><span class="p">,</span> <span class="mh">0x0020</span><span class="p">,</span> <span class="mh">0x03c3</span><span class="p">,</span> <span class="mh">0x03b1</span><span class="p">,</span> <span class="mh">0x03c2</span><span class="p">,</span> <span class="mh">0x0020</span><span class="p">,</span> <span class="mh">0x03ba</span><span class="p">,</span> <span class="mh">0x03cc</span><span class="p">,</span> <span class="mh">0x03c3</span><span class="p">,</span> <span class="mh">0x03bc</span><span class="p">,</span> <span class="mh">0x03bf</span><span class="p">,</span> <span class="mh">0x0000</span> <span class="p">};</span>
+</span><span class='line'>      <span class="kt">wchar_t</span> <span class="n">japanese</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span> <span class="mh">0x4eca</span><span class="p">,</span> <span class="mh">0x65e5</span><span class="p">,</span> <span class="mh">0x306f</span><span class="p">,</span> <span class="mh">0x4e16</span><span class="p">,</span> <span class="mh">0x754c</span><span class="p">,</span> <span class="mh">0x0000</span> <span class="p">};</span>
+</span><span class='line'>      <span class="kt">wchar_t</span> <span class="n">runic</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span> <span class="mh">0x16ba</span><span class="p">,</span> <span class="mh">0x16d6</span><span class="p">,</span> <span class="mh">0x16da</span><span class="p">,</span> <span class="mh">0x16df</span><span class="p">,</span> <span class="mh">0x0020</span><span class="p">,</span> <span class="mh">0x16b9</span><span class="p">,</span> <span class="mh">0x16df</span><span class="p">,</span> <span class="mh">0x16c9</span><span class="p">,</span> <span class="mh">0x16da</span><span class="p">,</span> <span class="mh">0x16de</span><span class="p">,</span> <span class="mh">0x0000</span> <span class="p">};</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Content-Type: text/html; charset=utf-8</span><span class="se">\r\n\r\n</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;html&gt;&lt;head&gt;&lt;meta http-equiv=&#39;Content-Type&#39; content=&#39;text/html; charset=utf-8&#39; /&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;title&gt;fastcgi++: Hello World in UTF-8&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;English: Hello World&lt;br /&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Russian: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">russian</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;br /&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Greek: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">greek</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;br /&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Chinese: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">chinese</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;br /&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Japanese: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">japanese</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;br /&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Runic English?: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">runic</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;br /&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">err</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Hello apache error log&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="n">try</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>      <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Manager</span><span class="o">&lt;</span><span class="n">HelloWorld</span><span class="o">&gt;</span> <span class="n">fcgi</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">fcgi</span><span class="p">.</span><span class="n">handler</span><span class="p">();</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="k">catch</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>   <span class="p">{</span>
+</span><span class='line'>      <span class="n">error_log</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+</div>
+
+
+<p></input></p>
+
+<p>Now compile it using:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>g++ hello_world.cpp -lfastcgipp -lboost_date_time -lboost_system -lboost_thread -o hello_world.fcgi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After compiled, try to execute it. If an error similar to this appear:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>hello_world.fcgi: error <span class="k">while</span> loading shared libraries: libfastcgipp.so.2: cannot open shared object file: No such file or directory
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You may need to copy the libraries inside /usr/local/lib to /usr/lib. Copy and past the following statements:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'><span class="nb">cd</span> /usr/lib
+</span><span class='line'>ln -s /usr/local/lib/libboost_* .
+</span><span class='line'>ln -s /usr/local/lib/libfast* .
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It may solve your problem.</p>
+
+<p>Now create a folder on /var/www/html called &ldquo;hello_world&rdquo; and move the executable to there. Now if you try to access the following URL: <a href="http://localhost/hello_world/hello_world.fcgi,">http://localhost/hello_world/hello_world.fcgi,</a> an error like the following is likely to happen:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>You don<span class="err">&#39;</span>t have permission to access /hello_world/hello_world.fcgi on this server.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this case, go to <code>/etc/apache2/</code> and edit the file <code>apache2.conf</code>, by substituing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="nt">&lt;Directory</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        Options FollowSymLinks
+</span><span class='line'>        AllowOverride None
+</span><span class='line'>        Require all granted
+</span><span class='line'><span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'>
+</span><span class='line'>...
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;Directory</span> <span class="err">/var/www</span><span class="nt">/&gt;</span>
+</span><span class='line'>        Options Indexes FollowSymLinks
+</span><span class='line'>        AllowOverride None
+</span><span class='line'>        Require all granted
+</span><span class='line'><span class="nt">&lt;/Directory&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'><span class="nt">&lt;Directory</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        Options  Indexes FollowSymLinks Includes ExecCGI
+</span><span class='line'>        AllowOverride All
+</span><span class='line'>        Allow from all
+</span><span class='line'><span class="nt">&lt;/Directory&gt;</span>
+</span><span class='line'>
+</span><span class='line'>...
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;Directory</span> <span class="err">/var/www</span><span class="nt">/&gt;</span>
+</span><span class='line'>        Options Indexes FollowSymLinks Includes ExecCGI
+</span><span class='line'>        AllowOverride All
+</span><span class='line'>        Allow from all
+</span><span class='line'><span class="nt">&lt;/Directory&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now restart the Apache2 service by calling <code>sudo service apache2 restart</code> and try to access the link again: <a href="http://localhost/hello_world/hello_world.fcgi.">http://localhost/hello_world/hello_world.fcgi.</a></p>
+
+<p>A message like that must be displayed:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'>English: Hello World
+</span><span class='line'>Russian: Привет мир
+</span><span class='line'>Greek: Γεια σας κόσμο
+</span><span class='line'>Chinese: 世界您好
+</span><span class='line'>Japanese: 今日は世界
+</span><span class='line'>Runic English?: ᚺᛖᛚᛟ ᚹᛟᛉᛚᛞ
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Got the message? Excellent! Now we can continue (otherwise either check the previous steps to verify if you didn&rsquo;t mistake anything or reply with a comment to this tutorial).</p>
+
+<h2>Our dummy system (the comics shop)</h2>
+
+<p>We are going to design a dummy system in order to implementate our RESTful web service in C++. This system is very simple: An owner of a comics shop asked us to implementate a system for him. Our system will have only one entity: The comic itself. A comic has:</p>
+
+<ul>
+<li>A name;</li>
+<li>A publisher;</li>
+<li>A release date;</li>
+<li>An edition number.</li>
+</ul>
+
+
+<p>We are going to use MySQL to persist those data. You can dowload MySQL <a href="https://www.MySQL.com/">here</a> (or alternativelly you can use <code>sudo apt-get install MySQL-server</code> on Ubuntu).</p>
+
+<p>Let&rsquo;s initialize MySQL by calling on terminal:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='XML'><span class='line'>mysql -u USERNAME -p
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once logged in, create a new database named &ldquo;comics_shop&rdquo; by calling:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">comics_shop</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now enter on the recently created database:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="n">USE</span> <span class="n">comics_shop</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And finally let&rsquo;s create a table for &ldquo;comic&rdquo;:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">comic</span><span class="p">(</span>
+</span><span class='line'>  <span class="n">id</span> <span class="nb">INT</span> <span class="n">UNSIGNED</span> <span class="n">AUTO_INCREMENT</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">publisher</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="nb">date</span> <span class="k">TIMESTAMP</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">edition</span> <span class="nb">INT</span>
+</span><span class='line'><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the database part is done for now! Now, in order to establish the communication among our C++ programs and our MySQL database, we need to install the <a href="https://dev.mysql.com/doc/connector-cpp/en/index.html">MySQL C++ connector</a>. You can download it <a href="https://dev.mysql.com/downloads/connector/cpp/1.1.html">here</a>. Once downloaded, unpack it and move the content of &ldquo;lib&rdquo; folder to your /usr/lib folder, while moving the content of &ldquo;include&rdquo; to /usr/local/include/mysqlcppconn folder.</p>
+
+<p>Now go to /var/www/html and create a new folder called &ldquo;comics&rdquo;. The first method we are going to implementate is the CREATE/POST. For that reason, inside the recently created folder, create a new folder named &ldquo;comic&rdquo; and inside of it create a new .cpp file named &ldquo;post.cpp&rdquo;. Let&rsquo;s start by creating the skeleton of our application:</p>
+
+<figure class='code'><figcaption><span>post.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/stat.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;cppconn/driver.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/exception.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/resultset.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/statement.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">error_log</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">ofstream</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/tmp/errlog&quot;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">out</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">app</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">imbue</span><span class="p">(</span><span class="n">locale</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">getloc</span><span class="p">(),</span> <span class="k">new</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">time_facet</span><span class="p">()));</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;[&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">second_clock</span><span class="o">::</span><span class="n">local_time</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PostComic</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Request</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="n">response</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// TODO</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">try</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Manager</span><span class="o">&lt;</span><span class="n">PostComic</span><span class="o">&gt;</span> <span class="n">fcgi</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">fcgi</span><span class="p">.</span><span class="n">handler</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>          <span class="n">error_log</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>  
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+The method &ldquo;error_log&rdquo; is one created only for logging reasons. It creates a new file inside the /tmp/errlog folder containing the date and the error message.</p>
+
+<p>The very first thing we are going to implementate is the connection with our database. Since it&rsquo;s something which will be repeated for every HTTP method, let&rsquo;s create a separated file named &ldquo;connector.hpp&rdquo; with the same skeleton as shown above:</p>
+
+<figure class='code'><figcaption><span>connector.hpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/stat.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;cppconn/driver.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/exception.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/resultset.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/statement.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Connector</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Request</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We will then, on constructor, simply initialize a new connection with the database.</p>
+
+<figure class='code'><figcaption><span>connector.hpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/stat.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;cppconn/driver.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/exception.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/resultset.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/statement.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Connector</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Request</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">Connector</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">driver</span> <span class="o">=</span> <span class="n">get_driver_instance</span><span class="p">();</span>
+</span><span class='line'>      <span class="n">con</span> <span class="o">=</span> <span class="n">driver</span><span class="o">-&gt;</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;tcp://127.0.0.1:3306&quot;</span><span class="p">,</span> <span class="s">&quot;USERNAME&quot;</span><span class="p">,</span> <span class="s">&quot;PASSWORD&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">con</span><span class="o">-&gt;</span><span class="n">setSchema</span><span class="p">(</span><span class="s">&quot;comics_shop&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">virtual</span> <span class="o">~</span><span class="n">Connector</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="k">delete</span> <span class="n">con</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="k">protected</span><span class="o">:</span>
+</span><span class='line'>  <span class="n">sql</span><span class="o">::</span><span class="n">Driver</span><span class="o">*</span> <span class="n">driver</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">sql</span><span class="o">::</span><span class="n">Connection</span><span class="o">*</span> <span class="n">con</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And after that, we&rsquo;ll modify our PostComic class to extend the Connector class.</p>
+
+<figure class='code'><figcaption><span>post.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/stat.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;cppconn/driver.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/exception.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/resultset.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/statement.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &quot;connector.hpp&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">error_log</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">ofstream</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/tmp/errlog&quot;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">out</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">app</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">imbue</span><span class="p">(</span><span class="n">locale</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">getloc</span><span class="p">(),</span> <span class="k">new</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">time_facet</span><span class="p">()));</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;[&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">second_clock</span><span class="o">::</span><span class="n">local_time</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PostComic</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Connector</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="n">response</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// TODO</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">try</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Manager</span><span class="o">&lt;</span><span class="n">PostComic</span><span class="o">&gt;</span> <span class="n">fcgi</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">fcgi</span><span class="p">.</span><span class="n">handler</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>          <span class="n">error_log</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>  
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let&rsquo;s get the POST parameters. We expect the parameters be the same of the table attributes (except for ID). We can access the post parameters through the <code>environment().posts</code> list:</p>
+
+<figure class='code'><figcaption><span>post.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="kt">bool</span> <span class="nf">response</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Content-Type: application/json; charset=ISO-8859-1</span><span class="se">\r\n\r\n</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">parameters</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Http</span><span class="o">::</span><span class="n">Environment</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">Posts</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">parameters</span><span class="p">[</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the above example, we are saving the parameters in a map. Now let&rsquo;s check if all parameters are OK:</p>
+
+<figure class='code'><figcaption><span>post.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="kr">inline</span> <span class="kt">void</span> <span class="nf">sendError</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">errorMsg</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 0, </span><span class="se">\&quot;</span><span class="s">message</span><span class="se">\&quot;</span><span class="s"> : </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">errorMsg</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s"> }&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="kr">inline</span> <span class="kt">void</span> <span class="nf">sendSuccess</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 1 }&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="kt">bool</span> <span class="nf">response</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Content-Type: application/json; charset=ISO-8859-1</span><span class="se">\r\n\r\n</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">parameters</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Http</span><span class="o">::</span><span class="n">Environment</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">Posts</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">parameters</span><span class="p">[</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Name is missing&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;publisher&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Publisher is missing&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Date is missing&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;edition&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>    
+</span><span class='line'>      <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Edition is missing&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>  <span class="p">{</span>        
+</span><span class='line'>      <span class="c1">// TODO</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can notice, we are sending a JSON file indicating if the operation was successful or not. Using JSON or XML files as a protocol of communitation is another remarking aspect of REST architectures.</p>
+
+<p>Now compile it using:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>sudo g++ post.cpp -I/usr/local/include/mysqlcppconn/ -lfastcgipp -lboost_date_time -lboost_system -lboost_thread -lmysqlcppconn -o post.fcgi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The other methods follow a very similar logic. For example, here&rsquo;s the PUT (edit) method:</p>
+
+<figure class='code'><figcaption><span>put.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/stat.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/http.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;cppconn/driver.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/exception.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/resultset.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/statement.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &quot;connector.hpp&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">error_log</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">ofstream</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/tmp/errlog&quot;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">out</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">app</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">imbue</span><span class="p">(</span><span class="n">locale</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">getloc</span><span class="p">(),</span> <span class="k">new</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">time_facet</span><span class="p">()));</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;[&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">second_clock</span><span class="o">::</span><span class="n">local_time</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PutComic</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Connector</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">sendError</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">errorMsg</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 0, </span><span class="se">\&quot;</span><span class="s">message</span><span class="se">\&quot;</span><span class="s"> : </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">errorMsg</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s"> }&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">sendSuccess</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 1 }&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="n">response</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Content-Type: application/json; charset=ISO-8859-1</span><span class="se">\r\n\r\n</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">parameters</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Http</span><span class="o">::</span><span class="n">Environment</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">Posts</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">parameters</span><span class="p">[</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Missing id&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">columns</span><span class="p">;</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">columns</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;publisher&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">columns</span><span class="p">[</span><span class="s">&quot;publisher&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;publisher&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">columns</span><span class="p">[</span><span class="s">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;FROM_UNIXTIME(&#39;&quot;</span> <span class="o">+</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;date&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;&#39;)&quot;</span><span class="p">;</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;edition&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>          <span class="p">{</span>    
+</span><span class='line'>              <span class="n">columns</span><span class="p">[</span><span class="s">&quot;edition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;edition&quot;</span><span class="p">];</span>
+</span><span class='line'>          <span class="p">}</span>        
+</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">columns</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;There is no column to be updated&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">else</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">query</span> <span class="o">=</span> <span class="s">&quot;UPDATE comic SET &quot;</span><span class="p">;</span>
+</span><span class='line'>              <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">columns</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">columns</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span><span class='line'>              <span class="p">{</span>
+</span><span class='line'>                  <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">columns</span><span class="p">.</span><span class="n">begin</span><span class="p">())</span> <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot;, &quot;</span><span class="p">;</span>
+</span><span class='line'>                  <span class="n">query</span> <span class="o">+=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span> <span class="o">+</span> <span class="s">&quot;=&quot;</span> <span class="o">+</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+</span><span class='line'>              <span class="p">}</span>
+</span><span class='line'>              <span class="n">query</span> <span class="o">+=</span> <span class="s">&quot; WHERE id=&quot;</span> <span class="o">+</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">];</span>
+</span><span class='line'>              <span class="n">sql</span><span class="o">::</span><span class="n">Statement</span><span class="o">*</span> <span class="n">stmt</span> <span class="o">=</span> <span class="n">con</span><span class="o">-&gt;</span><span class="n">createStatement</span><span class="p">();</span>
+</span><span class='line'>              <span class="n">try</span>
+</span><span class='line'>              <span class="p">{</span>
+</span><span class='line'>                  <span class="n">stmt</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">);</span>
+</span><span class='line'>                  <span class="n">sendSuccess</span><span class="p">();</span>
+</span><span class='line'>              <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">sql</span><span class="o">::</span><span class="n">SQLException</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>              <span class="p">{</span>
+</span><span class='line'>                  <span class="n">sendError</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+</span><span class='line'>              <span class="p">}</span>
+</span><span class='line'>              <span class="k">delete</span> <span class="n">stmt</span><span class="p">;</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">try</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Manager</span><span class="o">&lt;</span><span class="n">PutComic</span><span class="o">&gt;</span> <span class="n">fcgi</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">fcgi</span><span class="p">.</span><span class="n">handler</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>          <span class="n">error_log</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>  
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We are simply getting a row by ID and then updating the columns from which values exist on the POST request (unhappily, FastCGI++ doesn&rsquo;t provide support for PUT requests, so we have to implement it as a POST request).</p>
+
+<p>The DELETE method is even simpler:</p>
+
+<figure class='code'><figcaption><span>delete.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/stat.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/http.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;cppconn/driver.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/exception.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/resultset.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/statement.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &quot;connector.hpp&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">error_log</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">ofstream</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/tmp/errlog&quot;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">out</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">app</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">imbue</span><span class="p">(</span><span class="n">locale</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">getloc</span><span class="p">(),</span> <span class="k">new</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">time_facet</span><span class="p">()));</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;[&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">second_clock</span><span class="o">::</span><span class="n">local_time</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PutComic</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Connector</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">sendError</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">errorMsg</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 0, </span><span class="se">\&quot;</span><span class="s">message</span><span class="se">\&quot;</span><span class="s"> : </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">errorMsg</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s"> }&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">sendSuccess</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 1 }&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="n">response</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Content-Type: application/json; charset=ISO-8859-1</span><span class="se">\r\n\r\n</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">parameters</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Http</span><span class="o">::</span><span class="n">Environment</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">Posts</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">environment</span><span class="p">().</span><span class="n">posts</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">parameters</span><span class="p">[</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">.</span><span class="n">value</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Missing id&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>      
+</span><span class='line'>          <span class="n">sql</span><span class="o">::</span><span class="n">Statement</span><span class="o">*</span> <span class="n">stmt</span> <span class="o">=</span> <span class="n">con</span><span class="o">-&gt;</span><span class="n">createStatement</span><span class="p">();</span>
+</span><span class='line'>          <span class="n">try</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">stmt</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;DELETE FROM comic WHERE id = &quot;</span> <span class="o">+</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">]);</span>
+</span><span class='line'>              <span class="n">sendSuccess</span><span class="p">();</span>
+</span><span class='line'>          <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">sql</span><span class="o">::</span><span class="n">SQLException</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">sendError</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">delete</span> <span class="n">stmt</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">try</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Manager</span><span class="o">&lt;</span><span class="n">PutComic</span><span class="o">&gt;</span> <span class="n">fcgi</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">fcgi</span><span class="p">.</span><span class="n">handler</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>          <span class="n">error_log</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>  
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now the only method missing is the GET, to retrieve informations of a comic by ID. That&rsquo;s also very simple:</p>
+
+<figure class='code'><figcaption><span>get.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+</pre></td><td class='code'><pre><code class='C++'><span class='line'><span class="cp">#include &lt;fstream&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;sys/types.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;sys/stat.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/request.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/manager.hpp&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;fastcgi++/http.hpp&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;cppconn/driver.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/exception.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/resultset.h&gt;</span>
+</span><span class='line'><span class="cp">#include &lt;cppconn/statement.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &quot;connector.hpp&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">void</span> <span class="nf">error_log</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">static</span> <span class="n">ofstream</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;/tmp/errlog&quot;</span><span class="p">,</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">out</span> <span class="o">|</span> <span class="n">ios_base</span><span class="o">::</span><span class="n">app</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">error</span><span class="p">.</span><span class="n">imbue</span><span class="p">(</span><span class="n">locale</span><span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">getloc</span><span class="p">(),</span> <span class="k">new</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">time_facet</span><span class="p">()));</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;[&#39;</span> <span class="o">&lt;&lt;</span> <span class="n">posix_time</span><span class="o">::</span><span class="n">second_clock</span><span class="o">::</span><span class="n">local_time</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;] &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">msg</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">PutComic</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Connector</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">sendError</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">errorMsg</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 0, </span><span class="se">\&quot;</span><span class="s">message</span><span class="se">\&quot;</span><span class="s"> : </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">errorMsg</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s"> }&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="kt">bool</span> <span class="n">response</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Content-Type: application/json; charset=ISO-8859-1</span><span class="se">\r\n\r\n</span><span class="s">&quot;</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">parameters</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">for</span> <span class="p">(</span><span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Http</span><span class="o">::</span><span class="n">Environment</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">Gets</span><span class="o">::</span><span class="n">const_iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">environment</span><span class="p">().</span><span class="n">gets</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">environment</span><span class="p">().</span><span class="n">gets</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">parameters</span><span class="p">[</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">parameters</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">parameters</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Missing id&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>      <span class="p">{</span>
+</span><span class='line'>          <span class="n">sql</span><span class="o">::</span><span class="n">Statement</span><span class="o">*</span> <span class="n">stmt</span> <span class="o">=</span> <span class="n">con</span><span class="o">-&gt;</span><span class="n">createStatement</span><span class="p">();</span>
+</span><span class='line'>          <span class="n">try</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">sql</span><span class="o">::</span><span class="n">ResultSet</span><span class="o">*</span> <span class="n">res</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">-&gt;</span><span class="n">executeQuery</span><span class="p">(</span><span class="s">&quot;SELECT name, publisher, UNIX_TIMESTAMP(date) as date, edition FROM comic WHERE id = &quot;</span> <span class="o">+</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">]);</span>
+</span><span class='line'>              <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">res</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">())</span>
+</span><span class='line'>              <span class="p">{</span>
+</span><span class='line'>                  <span class="n">sendError</span><span class="p">(</span><span class="s">&quot;Could not found comic with id = &quot;</span> <span class="o">+</span> <span class="n">parameters</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">]);</span>
+</span><span class='line'>              <span class="p">}</span>
+</span><span class='line'>              <span class="k">else</span>
+</span><span class='line'>              <span class="p">{</span>
+</span><span class='line'>                  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">result</span> <span class="o">=</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">success</span><span class="se">\&quot;</span><span class="s"> : 1, &quot;</span><span class="p">;</span>
+</span><span class='line'>                  <span class="n">result</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">name</span><span class="se">\&quot;</span><span class="s">: </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">res</span><span class="o">-&gt;</span><span class="n">getString</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">,&quot;</span><span class="p">;</span>
+</span><span class='line'>                  <span class="n">result</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">publisher</span><span class="se">\&quot;</span><span class="s">: </span><span class="se">\&quot;</span><span class="s">&quot;</span> <span class="o">+</span> <span class="n">res</span><span class="o">-&gt;</span><span class="n">getString</span><span class="p">(</span><span class="s">&quot;publisher&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">,&quot;</span><span class="p">;</span>
+</span><span class='line'>                  <span class="n">result</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">date</span><span class="se">\&quot;</span><span class="s">: &quot;</span> <span class="o">+</span> <span class="n">res</span><span class="o">-&gt;</span><span class="n">getString</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;,&quot;</span><span class="p">;</span>
+</span><span class='line'>                  <span class="n">result</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">edition</span><span class="se">\&quot;</span><span class="s">: &quot;</span> <span class="o">+</span> <span class="n">res</span><span class="o">-&gt;</span><span class="n">getString</span><span class="p">(</span><span class="s">&quot;edition&quot;</span><span class="p">);</span>
+</span><span class='line'>                  <span class="n">result</span> <span class="o">+=</span> <span class="s">&quot;}&quot;</span><span class="p">;</span>
+</span><span class='line'>                  <span class="k">delete</span> <span class="n">res</span><span class="p">;</span>
+</span><span class='line'>                  <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span><span class='line'>              <span class="p">}</span>
+</span><span class='line'>          <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">sql</span><span class="o">::</span><span class="n">SQLException</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>          <span class="p">{</span>
+</span><span class='line'>              <span class="n">sendError</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+</span><span class='line'>          <span class="p">}</span>
+</span><span class='line'>          <span class="k">delete</span> <span class="n">stmt</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">try</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="n">Fastcgipp</span><span class="o">::</span><span class="n">Manager</span><span class="o">&lt;</span><span class="n">PutComic</span><span class="o">&gt;</span> <span class="n">fcgi</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">fcgi</span><span class="p">.</span><span class="n">handler</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>          <span class="n">error_log</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>  
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Instead of <code>environment().posts</code>, now we are using <code>environment().gets</code>. Also, &ldquo;get&rdquo; parameters are a pair of string-string (instead of a POST, where the second value of the pair is an object), that&rsquo;s why we don&rsquo;t need to use <code>it-&gt;second.value</code>. <code>sql::ResultSet</code> representates a set of retrieved rows. Since we are indexing by the primary key, it will just return 0 or 1 (that&rsquo;s why we don&rsquo;t need to put it on a loop). If the method <code>getNext()</code> return false, it indicates which none row with given ID was found, otherwise, we build a JSON string with the columns values and then output it to the user.</p>
+
+<h2>Rewriting URLs</h2>
+
+<p>So we finally finished our four methods (GET, POST, PUT and DELETE), but one of annoying thing is that you must put the &ldquo;.fcgi&rdquo; extension in order to access the page. A more elegant solution would be, instead of <code>GET /comics/comic.fcgi?id=10</code>, the following: <code>GET /comics/10</code>. It&rsquo;s shorter and now the user don&rsquo;t need to know we are using a FCGI script.  URL rewriting is completely possible on Apache Web Server. You just need to do the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>sudo a2enmod rewrite
+</span><span class='line'>sudo service apache2 restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, on folder &ldquo;comics&rdquo; located on &ldquo;/var/www/html&rdquo;, create a new <code>.htaccess</code> file, and inside of it write the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>RewriteEngine on
+</span><span class='line'>RewriteRule comic/<span class="o">([</span>0-9<span class="o">]</span>+<span class="o">)</span><span class="nv">$ </span>comic/get.fcgi?id<span class="o">=</span><span class="nv">$1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now if you save it, you&rsquo;ll notice which calling the URL <a href="http://localhost/comics/comic/10">http://localhost/comics/comic/10</a> has the same effect as <a href="http://localhost/comics/comic/get.fcgi?id=10.">http://localhost/comics/comic/get.fcgi?id=10.</a> The reason is simple: We created a mapping rule where, if you call <code>comics/comic/&lt;A number&gt;</code>, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be &lsquo;copied&rsquo;.
+The other mapping rules are much more easier:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>RewriteEngine on
+</span><span class='line'>RewriteRule comic/<span class="o">([</span>0-9<span class="o">]</span>+<span class="o">)</span><span class="nv">$ </span>comic/get.fcgi?id<span class="o">=</span><span class="nv">$1</span>
+</span><span class='line'>RewriteRule comic/put comic/put.fcgi
+</span><span class='line'>RewriteRule comic/delete comic/delete.fcgi
+</span><span class='line'>RewriteRule comic/post comic/post.fcgi
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Conclusion</h2>
+
+<p>On this tutorial, we learnt about i) Web services ii) RESTful web services iii) CGI scripts iv) An easy way to use C++ as a CGI language v) MySQL connection with C++ vi) A complete dummy system containing all four HTTP methods to manipulate an entity vii) Apache URL rewriting. That was a lot of things! :) I really hope you have enjoyed this tutorial. Until the next!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-10-13T08:38:35-03:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:38 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c-plus-plus/'>c++,</a>, <a class='category' href='/blog/categories/rest/'>rest</a>, <a class='category' href='/blog/categories/service/'>service,</a>, <a class='category' href='/blog/categories/tutorials/'>tutorials,</a>, <a class='category' href='/blog/categories/web/'>web,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">	
+      
+        <a class="basic-alignment left" href="/blog/2015/10/11/parallel-genetic-algorithm-in-c-plus-plus-using-tbb/" title="Previous Post: Parallel Genetic Algorithm in C++ using TBB">&laquo; Parallel Genetic Algorithm in C++ using TBB</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/">Building a RESTful Web Service in C++ (Is It Even Possible?)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/11/parallel-genetic-algorithm-in-c-plus-plus-using-tbb/">Parallel Genetic Algorithm in C++ Using TBB</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/21/red-black-tree-in-alloy-ii/">Red-Black Tree in Alloy II</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/15/red-black-tree-in-alloy/">Red-Black Tree in Alloy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/">Creating a Custom Widget on Android: The Loading Button</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/PicoleDeLimao">@PicoleDeLimao</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PicoleDeLimao',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Abner Matheus -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'deforadouniverso';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
