@@ -5,13 +5,13 @@ date: 2015-10-11 09:55:50 -0300
 comments: true
 categories: [tutorials, c++, tbb, parallel]
 ---
-I've just finished my AI course, and the idea of [evolutionary computing](https://en.wikipedia.org/wiki/Evolutionary_computation) has appealed me pretty much. Basically, evolutionary computing is a set of algorithms inspired by [Charles Darwin's Theory of Evolution](https://en.wikipedia.org/wiki/Evolution) with intent of providing some intel on solving optimization problems. On this category, it's included its most prominent example, the [Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
+I've just finished my AI course, and the idea of [evolutionary computing](https://en.wikipedia.org/wiki/Evolutionary_computation) has appealed me incredibly. Basically, evolutionary computing is a set of algorithms inspired by [Charles Darwin's Theory of Evolution](https://en.wikipedia.org/wiki/Evolution) with intent of providing some intel on solving optimization problems. On this category, it's included its most prominent example, the [Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
 
 But what is the Genetic Algorithm? It's really pretty simple (and beautiful): Genetic Algorithm is a heuristic to search for the best solution of a optimization problem (such as the [Knapsack problem](https://en.wikipedia.org/wiki/Knapsack_problem), finding the best parameters of a neural network, and many others...), the 'best' here having direct analogy to the Theory of Evolution 'survival of the fittest'. 
 
 <!-- more --> 
 
-Each '**individual**' (a.k.a., candidate solution) is codified as a '**chromosome**', which is generally representated by a vector of numbers. Each vector value is called '**gene**'. A set of individuals is called '**population**'. Those 'individuals' will then compete to have a chance to 'reproduce', which is the act of mixing two chromosomes to generate a new one, different but similar to both parents. The fitter the individual, the greater the chance it has to reproduce (controlled by a function called '**crossover function**', which will always generate two new individuals, both having a certain percentage of genes of both parents. For example, if we define a crossover rate to being 30%, one child will have 30% of parent A's genes and 70% of parent B's genes, while the other will 70% of parent A's genes and 30% of parent B's genes. There's also a chance of a gene suffer '**mutation**', e.g., changing to a random value, during the crossover process). The fitness of an individual is measured through a function called '**fitness function**'. This is an iterative algorithm, and on each iteration we have a new '**generation**' of individuals. There are many stop criterias for this algorithm, one of them being the number of generations. Crystal clear? Then let's see a simple pseudo-code, shall we? :))
+Each '**individual**' (a.k.a., candidate solution) is codified as a '**chromosome**', which is generally representated by a vector of numbers. Each vector value is called '**gene**'. A set of individuals is called '**population**'. Those 'individuals' will then compete to have a chance to 'reproduce', which is the act of mixing two chromosomes to generate a new one, different but similar to both parents. The fitter the individual, the greater the chance it has to reproduce (controlled by a function called '**crossover function**', which will always generate two new individuals, both having a certain percentage of genes of both parents. For example, if we define a crossover rate to being 30%, one child will have 30% of parent A's genes and 70% of parent B's genes, while the other will have 70% of parent A's genes and 30% of parent B's genes. There's also a chance of a gene suffer '**mutation**', e.g., changing to a random value, during the crossover process). The fitness of an individual is measured through a function called '**fitness function**'. This is an iterative algorithm, and on each iteration we have a new '**generation**' of individuals. There are many stop criterias for this algorithm, one of them being the number of generations. Crystal clear? Then let's see a simple pseudo-code, shall we? :))
  
 ```  
 function GENETIC_ALGORITHM(population_size, max_num_generations, crossover_rate, mutation_chance) begin
@@ -77,7 +77,7 @@ end
 ```
 
 ## Implementation on C++
-As you can notice, the functions 'GENERATE_RANDOM_POPULATION', 'GET_FITNESS' and 'MUTATE' are all problem dependents. It depains on informations like chromosome size, domain of allowed values, etc., ... For our implementation on C++, we are letting the user provide pointers to their own-defined functions. Also, the user may use other informations other than numbers to codify their chromosomes. That's why we are going to use templates. Our little program starts as simple (or not) as following:
+As you can notice, the functions 'GENERATE_RANDOM_POPULATION', 'GET_FITNESS' and 'MUTATE' are all problem dependents. It depains on informations like chromosome size, domain of allowed values, etc., ... For our implementation on C++, we are letting the user provide pointers to their own-defined functions. Also, the user may use other informations other than numbers to codify their chromosomes. That's why we are going to use templates. Our little program starts as simple (or not) as follows:
 
 ``` C++ genetic_algorithm.cpp
 template <typename T>
@@ -156,7 +156,7 @@ void clear(T** population, size_t populationSize)
 	delete[] population;
 }
 ```
-Notice which on 'getFitnesses', we had to "invert" the fitness values in case of maximization is disabled. That's because the roulette always favours the individuals which have the biggest range of values. So we need to do this little trick by subtracing by the maximum value found. 
+Notice that on 'getFitnesses', we had to "invert" the fitness values in case of maximization is disabled. That's because the roulette always favours the individuals which have the biggest range of values. So we need to do this little trick by subtracing by the maximum value found. 
 
 Questions, please? No? Alright, let's then advance with the implementation of the inner loop.
 ``` C++ genetic_algorithm.cpp
@@ -191,7 +191,7 @@ T** geneticAlgorithm(size_t chromosomeSize, size_t populationSize, size_t maxNum
 	return population;
 }
 ```
-Notice we are getting the selected individuals through the method 'selectIndividuals', which returns a pair, the parents which will generate two new children through the method 'crossover'. Let's first take a look at the method 'selectIndividuals':
+Notice we are getting the selected individuals through the method 'selectIndividuals', that returns a pair, the parents which will generate two new children through the method 'crossover'. Let's first take a look at the method 'selectIndividuals':
 ``` C++ genetic_algorithm.cpp
 template <typename T>
 std::pair<T*, T*> selectIndividuals(T** population, size_t populationSize, float* fitnesses, float upperBound)
@@ -384,7 +384,7 @@ T** geneticAlgorithm(size_t chromosomeSize, size_t populationSize, size_t maxNum
 ## Algorithm parallelization
 If you read until here, you may feel cheated, since we didn't even mention the word 'parallel'. Fear not, my dear friend! Now is the time! However, we must first analyze what can and what cannot be parallelized. 
 
-If you give a quick look at the algorithm we just implemented, we may notice the existence of two loops, one nested on another, inside the function 'geneticAlgorithm'. There's also a loop for calculating the fitness value for all individuals (function 'getFitnesses'). There's a loop for applying the mutation operator (function 'crossover') and finally there's a loop for selecting the individuals (function 'selectIndividuals'). So far we have five candidates. Which of them can be parallelized? All (yay!)? None (awww...)?
+If you give a quick look at the algorithm we just implemented, we may notice the existence of two loops, one nested in another, inside the function 'geneticAlgorithm'. There's also a loop for calculating the fitness value for all individuals (function 'getFitnesses'). There's a loop for applying the mutation operator (function 'crossover') and finally there's a loop for selecting the individuals (function 'selectIndividuals'). So far we have five candidates. Which of them can be parallelized? All (yay!)? None (awww...)?
 
 * **Candidate I: The outer loop on 'geneticAlgorithm'** <br>
 That... cannot be parallelized. Aww... The reason is simple: The individuals of the next generation depains of the individuals of the previous generation. We cannot skip to the next generation without knowing which individuals composed the previous generation.
@@ -398,7 +398,7 @@ Though it can be parallelized, the mutation operator is too simple (it just assi
 That's a though one, since we need to syncronize two values (probA and probB) among several threads. Since we use the two values during the whole block, the lock would certainly break the parallelism and turn everything in a single-thread like schema! So, the answer is no. Aww... 
 
 Our score was 2/5, not bad, not bad at all. ;)
-Now we know *what* can be parallelized, let's find out *how* we can do it. 
+Now that we know *what* can be parallelized, let's find out *how* we can do it. 
 
 We can do it using the library [TBB](https://www.threadingbuildingblocks.org), which stands for **T**hreading **B**uilding **B**blocks. It provides several features for parallelism, such as multi-threads, locks, concurrent containers, etc., ... Everything on a high-level abstraction. Of course it's not our intent to explain the details of the library, so let's start with the simplest example: **[the parallel for](https://www.threadingbuildingblocks.org/docs/help/reference/algorithms/parallel_for_func.htm)**. 
 
@@ -454,7 +454,7 @@ T** geneticAlgorithm(size_t chromosomeSize, size_t populationSize, size_t maxNum
 ```
 That was pretty simple. We just simply created a 'parallel_for' with a blocked range from 0 to populationSize (identical to the previous for limits), and on the parallel_for body we almost use the same block of code, with the difference we don't increment the counter 'j' before add a new child. Instead of, we increment += 2 on the internal for loop. The reason we decided to adopt this logic instead of previous one is simple: Incrementing the range inside the body would imply in a lock *before* adding a new child, hence slowing the process unnecessarily. We also don't need a lock before assigning a new child to the new population, because it's a write-only array without key collision (we don't assign two or more to the same index).
 
-> OBS: As we are using lambda functions, don't forget to add the ```-std=c++0x``` flag to the compiler, since lambda functions are a feature from C++11. Also, don't forget to link the TBB library (```-ltbb```).
+> OBS: As we are using lambda functions, don't forget to add the ```-std=c++11``` flag to the compiler, since lambda functions are a feature from C++11. Also, don't forget to link the TBB library (```-ltbb```).
 
 Now let's parallelize our second candidate, the function 'getFitnesses'. That's also very simple. Indeed, simpler than the previous one. 
 
@@ -649,7 +649,7 @@ int main()
 }
 ```
 
-That's a piece of cake. The next step is to create our own definition of the fitness function. It seems which simply substituing the value of 'x' on the polynomial expression will be enough. The closer the result it is to zero, the fitter the solution. As we are dealing with a minimization problem, we have to be careful to prevent negative values. 
+That's a piece of cake. The next step is to create our own definition of the fitness function. It seems that simply substituing the value of 'x' on the polynomial expression will be enough. The closer the result it is to zero, the fitter the solution. As we are dealing with a minimization problem, we have to be careful to prevent negative values. 
 
 ``` C++ root_finder.cpp
 float getFitness(float* chromosome)
@@ -722,7 +722,7 @@ int main()
 }
 ```
 
-We use ```srand(time(0))``` to see a random seed every time the program is executed, and then a map to sort the retrieved results by the fitness value. The full code can be found below:
+We use ```srand(time(0))``` to send a random seed every time the program is executed, and then a map to sort the retrieved results by the fitness value. The full code can be found below:
 
 <center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 <div id="code">
@@ -930,7 +930,7 @@ int main()
 </div>
 </center>
 
-Let's make some simple experiments. For example, for the input: ```-100 100 100 1000 0.05 0.5 2 1 0``` representating the polynomial equation, x = 0, we get values similar to that:
+Let's make some simple experiments. For example, for the input: ```-100 100 100 1000 0.05 0.5 2 1 0``` representating the polynomial equation x = 0, we get values similar to that:
 
 ```
 
@@ -949,7 +949,7 @@ Let's make some simple experiments. For example, for the input: ```-100 100 100 
 
 As you can notice, the values are approximating to zero, which is, indeed, the solution for this equation.
 
-Let's try a harder example. For the input: ```-100 100 100 1000 0.05 0.5 3 1 30 2``` representating the polynomial equation, x^2 + 30x + 2 = 0, we get values similar to that:
+Let's try a harder example. For the input: ```-100 100 100 1000 0.05 0.5 3 1 30 2``` representating the polynomial equation x^2 + 30x + 2 = 0, we get values similar to that:
 
 ```
 

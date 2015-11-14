@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "Building a RESTful web service in C++ (is it even possible?)"
+title: "Building a RESTful web service in C++"
 date: 2015-10-13 08:38:35 -0300
 comments: true
 categories: Tutorials, C++, Web, Service, REST
 ---
-If you ever thought about building a multi-platform system, you should know that a [Web Service](https://en.wikipedia.org/wiki/Web_service) is an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it's better to move all those operations to a common Web Service and establish the communication through [HTTP requests](https://en.wikipedia.org/wiki/HTTP). 
+If you ever thought about building a multi-platform system, you should know that a [Web Service](https://en.wikipedia.org/wiki/Web_service) will be an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it's better to move all those operations to a common Web Service and establish the communication through [HTTP requests](https://en.wikipedia.org/wiki/HTTP). 
 
 <!-- more --> 
  
-Recently, a class of web services has become pretty popular: [The REST web service](https://en.wikipedia.org/wiki/Representational_state_transfer). REST stands for **Re**presentational **S**tate **T**transfer. It's an architectural pattern where the requisitions are totally independent and don't keep any state on server. (It's different from a web service that keeps a "session" of the user). Another remarking aspect of the REST is the use of common HTTP methods to implement "CRUD-like" systems.
+Recently, a class of web services has become pretty popular: [The REST web service](https://en.wikipedia.org/wiki/Representational_state_transfer). REST stands for **Re**presentational **S**tate **T**transfer. It's an architectural pattern where the requisitions are totally independent and don't keep any state on server. (It's different from a web service that keeps a "session" for the user, for example). Another remarking aspect of the REST is the use of common HTTP methods to implement "CRUD-like" systems.
 
 -> ![](https://www.chemaxon.com/app/themes/chemaxon/images/product_pages/jws/rest.jpg) <-
 
@@ -201,7 +201,7 @@ Got the message? Excellent! Now we can continue (otherwise either check the prev
 
 ## Our dummy system (the comics shop)
 
-We are going to design a dummy system in order to implementate our RESTful web service in C++. This system is very simple: An owner of a comics shop asked us to implementate a system for him. Our system will have only one entity: The comic itself. A comic has:
+We are going to design a dummy system in order to implementate our RESTful web service in C++. This system is very simple: An owner of a comics shop asked us to implementate a system for him. Our system will have only one entity/resource: The comic itself. A comic has:
 
 - A name;
 - A publisher;
@@ -224,7 +224,7 @@ Once logged in, create a new database named "comics_shop" by calling:
 CREATE DATABASE comics_shop;
 ```
 
-Now enter on the recently created database:
+Now select the recently created database:
 
 ``` SQL
 USE comics_shop;
@@ -241,7 +241,7 @@ CREATE TABLE comic(
 	edition INT
 );
 ```
-And the database part is done for now! Now, in order to establish the communication among our C++ programs and our MySQL database, we need to install the [MySQL C++ connector](https://dev.mysql.com/doc/connector-cpp/en/index.html). You can download it [here](https://dev.mysql.com/downloads/connector/cpp/1.1.html). Once downloaded, unpack it and move the content of "lib" folder to your /usr/lib folder, while moving the content of "include" to /usr/local/include/mysqlcppconn folder.
+Aaaaaand the database part is done for now! Now, in order to establish the communication among our C++ programs and our MySQL database, we need to install the [MySQL C++ connector](https://dev.mysql.com/doc/connector-cpp/en/index.html). You can download it [here](https://dev.mysql.com/downloads/connector/cpp/1.1.html). Once downloaded, unpack it and move the content of "lib" folder to your /usr/lib folder, while moving the content of "include" to /usr/local/include/mysqlcppconn folder.
 
 Now go to /var/www/html and create a new folder called "comics". The first method we are going to implementate is the CREATE/POST. For that reason, inside the recently created folder, create a new folder named "comic" and inside of it create a new .cpp file named "post.cpp". Let's start by creating the skeleton of our application:
 
@@ -784,7 +784,7 @@ int main()
 	return 0;
 }
 ```
-Instead of ```environment().posts```, now we are using ```environment().gets```. Also, "get" parameters are a pair of string-string (instead of a POST, where the second value of the pair is an object), that's why we don't need to use ```it->second.value```. ```sql::ResultSet``` representates a set of retrieved rows. Since we are indexing by the primary key, it will just return 0 or 1 (that's why we don't need to put it on a loop). If the method ```getNext()``` return false, it indicates which none row with given ID was found, otherwise, we build a JSON string with the columns values and then output it to the user.
+Instead of ```environment().posts```, now we are using ```environment().gets```. Also, "get" parameters are a pair of string-string (instead of a POST, where the second value of the pair is an object), that's why we don't need to use ```it->second.value```. ```sql::ResultSet``` representates a set of retrieved rows. Since we are indexing by the primary key, it will just return either 0 or 1 rows (that's why we don't need to put it on a loop). If the method ```getNext()``` return false, it indicates which none row with given ID was found, otherwise, we build a JSON string with the columns values and then output it to the user.
 
 ## Rewriting URLs
 So we finally finished our four methods (GET, POST, PUT and DELETE), but one of annoying thing is that you must put the ".fcgi" extension in order to access the page. A more elegant solution would be, instead of ```GET /comics/comic.fcgi?id=10```, the following: ```GET /comics/10```. It's shorter and now the user don't need to know we are using a FCGI script.  URL rewriting is completely possible on Apache Web Server. You just need to do the following:
@@ -803,7 +803,7 @@ RewriteRule comic/([0-9]+)$ comic/get.fcgi?id=$1
 
 ```
 
-Now if you save it, you'll notice which calling the URL http://localhost/comics/comic/10 has the same effect as http://localhost/comics/comic/get.fcgi?id=10. The reason is simple: We created a mapping rule where, if you call ```comics/comic/<A number>```, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be 'copied'. 
+Now if you save it, you'll notice that calling the URL http://localhost/comics/comic/10 has the same effect as http://localhost/comics/comic/get.fcgi?id=10. The reason is simple: We created a mapping rule where, if you call ```comics/comic/<A number>```, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be 'copied'. 
 The other mapping rules are much more easier:
 
 ```
@@ -817,4 +817,4 @@ RewriteRule comic/post comic/post.fcgi
 ```
 
 ## Conclusion
-On this tutorial, we learnt about i) Web services ii) RESTful web services iii) CGI scripts iv) An easy way to use C++ as a CGI language v) MySQL connection with C++ vi) A complete dummy system containing all four HTTP methods to manipulate an entity vii) Apache URL rewriting. That was a lot of things! :) I really hope you have enjoyed this tutorial. Until the next!
+On this tutorial, we learnt about i) Web services ii) RESTful web services iii) CGI scripts iv) An easy way to use C++ as a CGI language v) MySQL connection with C++ vi) A complete dummy system containing all four HTTP methods to manipulate a resource vii) Apache URL rewriting. That was a lot of things! :) I really hope you have enjoyed this tutorial. Until the next!
