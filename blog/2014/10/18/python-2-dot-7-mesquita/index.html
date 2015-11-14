@@ -666,9 +666,9 @@ if __name__ == &#39;__main__&#39;:
 
     class JanelaPoisson(JanelaDiscreta):
         def __init__(self, top_level):
-            JanelaDiscreta.__init__(self, top_level, &quot;Parâmetro λ&quot;)
+            JanelaDiscreta.__init__(self, top_level, &quot;Parâmetro gama&quot;)
         def clica_botao_ok(self, event):
-            alfa = self.entries[&quot;Parâmetro λ&quot;].get()
+            alfa = self.entries[&quot;Parâmetro gama&quot;].get()
             try:
                 self.modelo = Poisson(alfa)
                 JanelaDiscreta.clica_botao_ok(self, event)
@@ -892,9 +892,9 @@ if __name__ == &#39;__main__&#39;:
                 
     class JanelaExponencial(JanelaContinua):
         def __init__(self, top_level):
-            JanelaContinua.__init__(self, top_level, &quot;Parâmetro α&quot;)
+            JanelaContinua.__init__(self, top_level, &quot;Parâmetro alfa&quot;)
         def clica_botao_ok(self, event):
-            a = self.entries[&quot;Parâmetro α&quot;].get()
+            a = self.entries[&quot;Parâmetro alfa&quot;].get()
             try:
                 self.modelo = Exponencial(a)
                 JanelaContinua.clica_botao_ok(self, event)
@@ -903,10 +903,10 @@ if __name__ == &#39;__main__&#39;:
 
     class JanelaNormal(JanelaContinua):
         def __init__(self, top_level):
-            JanelaContinua.__init__(self, top_level, &quot;Parâmetro μ&quot;, &quot;Parâmetro σ²&quot;)
+            JanelaContinua.__init__(self, top_level, &quot;Média&quot;, &quot;Variância&quot;)
         def clica_botao_ok(self, event):
-            u = self.entries[&quot;Parâmetro μ&quot;].get()
-            o2 = self.entries[&quot;Parâmetro σ²&quot;].get()
+            u = self.entries[&quot;Média&quot;].get()
+            o2 = self.entries[&quot;Variância&quot;].get()
             try:
                 self.modelo = Normal(u, o2)
                 JanelaContinua.clica_botao_ok(self, event)
@@ -983,7 +983,7 @@ if __name__ == &#39;__main__&#39;:
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/">Building a RESTful Web Service in C++ (Is It Even Possible?)</a>
+        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus/">Building a RESTful Web Service in C++</a>
       </li>
     
       <li class="post">
