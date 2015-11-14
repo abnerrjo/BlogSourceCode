@@ -4,7 +4,7 @@
   <title><![CDATA[Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-10-13T19:27:02-03:00</updated>
+  <updated>2015-11-14T17:43:11-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -14,39 +14,43 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Building a RESTful Web Service in C++ (Is It Even Possible?)]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/"/>
+    <title type="html"><![CDATA[Building a RESTful Web Service in C++]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus/"/>
     <updated>2015-10-13T08:38:35-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible</id>
-    <content type="html"><![CDATA[<p>If you ever thought about building a multi-platform system, you should know which a <a href="https://en.wikipedia.org/wiki/Web_service">Web Service</a> is an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it&rsquo;s better to move all those operations to a common Web Service and establish the communication through <a href="https://en.wikipedia.org/wiki/HTTP">HTTP requests</a>.</p>
+    <id>http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus</id>
+    <content type="html"><![CDATA[<p>If you ever thought about building a multi-platform system, you should know that a <a href="https://en.wikipedia.org/wiki/Web_service">Web Service</a> will be an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it&rsquo;s better to move all those operations to a common Web Service and establish the communication through <a href="https://en.wikipedia.org/wiki/HTTP">HTTP requests</a>.</p>
 
 <!-- more -->
 
 
 <p></p>
 
-<p>Recently, a class of web services has become pretty popular: <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">The REST web service</a>. REST stands for <strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>transfer. It&rsquo;s an architectural pattern where the requisitions are totally independent and don&rsquo;t keep any state on server. (It&rsquo;s different from a web service where you must first pass through an &ldquo;authentication phase&rdquo; before any requisition). Another remarking aspect of the REST is the use of common HTTP methods to implement &ldquo;CRUD-like&rdquo; systems.</p>
+<p>Recently, a class of web services has become pretty popular: <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">The REST web service</a>. REST stands for <strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>transfer. It&rsquo;s an architectural pattern where the requisitions are totally independent and don&rsquo;t keep any state on server. (It&rsquo;s different from a web service that keeps a &ldquo;session&rdquo; for the user, for example). Another remarking aspect of the REST is the use of common HTTP methods to implement &ldquo;CRUD-like&rdquo; systems.</p>
 
 <p style="text-align:center;"> <img src="https://www.chemaxon.com/app/themes/chemaxon/images/product_pages/jws/rest.jpg" alt="" /></p>
 
 <p>Web services can be implemented in almost any programming language you wish, though somes are more adequated to this task than others, like PHP or Javascript. When we are talking about programming languages which process HTTP requests, it&rsquo;s common the use of the term &ldquo;<a href="http://www.w3.org/CGI/">CGI</a>&rdquo;, which stands for <strong>C</strong>ommon <strong>G</strong>ateway <strong>I</strong>nterface. So here comes the C++ language: Can it be used as a CGI language? The answer is <strong>yes</strong>, THOUGH not recommended, and the reason is simple: Taks which could be easily implemented in languages like PHP would be a hell to be done in C++. But sometimes we have no choice. If that&rsquo;s your case, let&rsquo;s continue.</p>
 
-<p>First, I&rsquo;ll assume which you are using a Unix-Variant SO with <a href="http://www.apache.org/">Apache2</a> installed. For this tutorial, we are going to use the <a href="http://www.nongnu.org/fastcgipp/">FastCGI++</a>.</p>
+<p>First, I&rsquo;ll assume that you are using a Unix-Variant SO with <a href="http://www.apache.org/">Apache2</a> installed. For this tutorial, we are going to use the <a href="http://www.nongnu.org/fastcgipp/">FastCGI++</a>.</p>
 
 <p>The very first step is to install mods on Apache2 to enable support for FastCGI. The mods are: <code>mod_fastcgi</code> and <code>mod_fcgid</code> (Download link: <a href="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html">here</a> and <a href="http://httpd.apache.org/mod_fcgid/">here</a>). On Ubuntu, you can simply call:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>sudo apt-get install libapache2-mod-fastcgi
-</span><span class='line'>sudo apt-get install libapache2-mod-fcgid
+</span><span class='line'>sudo apt-get install libapache2-mod-fastcgi libapache2-mod-fcgid
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Once installed, restart the Apache2 service by using <code>sudo service apache2 restart</code>.</p>
+<p>Once installed, restart the Apache2 service by calling <code>sudo service apache2 restart</code>.</p>
 
-<p>Now it&rsquo;s necessary to download and install Boost. You can do it <a href="http://www.boost.org/">here</a>.</p>
+<p>Now it&rsquo;s necessary to download and install Boost. You can do it <a href="http://www.boost.org/">here</a>. Download it from the official website, unpack it and call the following commands on terminal:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./boostrap
+</span><span class='line'>sudo ./b2 install</span></code></pre></td></tr></table></div></figure>
+
 
 <p>And finally, download FastCGI++ through the following link: <a href="http://www.nongnu.org/fastcgipp/">http://www.nongnu.org/fastcgipp/</a></p>
 
@@ -177,7 +181,7 @@
 
 <p></input></p>
 
-<p>Now compile it using:</p>
+<p>Now compile by calling:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='Bash'><span class='line'>g++ hello_world.cpp -lfastcgipp -lboost_date_time -lboost_system -lboost_thread -o hello_world.fcgi
@@ -191,7 +195,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>You may need to copy the libraries inside /usr/local/lib to /usr/lib. Copy and past the following statements:</p>
+<p>You may need to copy the libraries inside /usr/local/lib to /usr/lib. Copy and past the following commands on terminal:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -296,7 +300,7 @@
 
 <h2>Our dummy system (the comics shop)</h2>
 
-<p>We are going to design a dummy system in order to implementate our RESTful web service in C++. This system is very simple: An owner of a comics shop asked us to implementate a system for him. Our system will have only one entity: The comic itself. A comic has:</p>
+<p>We are going to design a dummy system in order to implementate our RESTful web service in C++. This system is very simple: An owner of a comics shop asked us to implementate a system for him. Our system will have only one entity/resource: The comic itself. A comic has:</p>
 
 <ul>
 <li>A name;</li>
@@ -322,7 +326,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now enter on the recently created database:</p>
+<p>Now select the recently created database:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="n">USE</span> <span class="n">comics_shop</span><span class="p">;</span>
@@ -348,7 +352,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>And the database part is done for now! Now, in order to establish the communication among our C++ programs and our MySQL database, we need to install the <a href="https://dev.mysql.com/doc/connector-cpp/en/index.html">MySQL C++ connector</a>. You can download it <a href="https://dev.mysql.com/downloads/connector/cpp/1.1.html">here</a>. Once downloaded, unpack it and move the content of &ldquo;lib&rdquo; folder to your /usr/lib folder, while moving the content of &ldquo;include&rdquo; to /usr/local/include/mysqlcppconn folder.</p>
+<p>Aaaaaand the database part is done for now! Now, in order to establish the communication among our C++ programs and our MySQL database, we need to install the <a href="https://dev.mysql.com/doc/connector-cpp/en/index.html">MySQL C++ connector</a>. You can download it <a href="https://dev.mysql.com/downloads/connector/cpp/1.1.html">here</a>. Once downloaded, unpack it and move the content of &ldquo;lib&rdquo; folder to your /usr/lib folder, while moving the content of &ldquo;include&rdquo; to /usr/local/include/mysqlcppconn folder.</p>
 
 <p>Now go to /var/www/html and create a new folder called &ldquo;comics&rdquo;. The first method we are going to implementate is the CREATE/POST. For that reason, inside the recently created folder, create a new folder named &ldquo;comic&rdquo; and inside of it create a new .cpp file named &ldquo;post.cpp&rdquo;. Let&rsquo;s start by creating the skeleton of our application:</p>
 
@@ -1405,7 +1409,7 @@ The method &ldquo;error_log&rdquo; is one created only for logging reasons. It c
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Instead of <code>environment().posts</code>, now we are using <code>environment().gets</code>. Also, &ldquo;get&rdquo; parameters are a pair of string-string (instead of a POST, where the second value of the pair is an object), that&rsquo;s why we don&rsquo;t need to use <code>it-&gt;second.value</code>. <code>sql::ResultSet</code> representates a set of retrieved rows. Since we are indexing by the primary key, it will just return 0 or 1 (that&rsquo;s why we don&rsquo;t need to put it on a loop). If the method <code>getNext()</code> return false, it indicates which none row with given ID was found, otherwise, we build a JSON string with the columns values and then output it to the user.</p>
+<p>Instead of <code>environment().posts</code>, now we are using <code>environment().gets</code>. Also, &ldquo;get&rdquo; parameters are a pair of string-string (instead of a POST, where the second value of the pair is an object), that&rsquo;s why we don&rsquo;t need to use <code>it-&gt;second.value</code>. <code>sql::ResultSet</code> representates a set of retrieved rows. Since we are indexing by the primary key, it will just return either 0 or 1 rows (that&rsquo;s why we don&rsquo;t need to put it on a loop). If the method <code>getNext()</code> return false, it indicates which none row with given ID was found, otherwise, we build a JSON string with the columns values and then output it to the user.</p>
 
 <h2>Rewriting URLs</h2>
 
@@ -1427,7 +1431,7 @@ The method &ldquo;error_log&rdquo; is one created only for logging reasons. It c
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now if you save it, you&rsquo;ll notice which calling the URL <a href="http://localhost/comics/comic/10">http://localhost/comics/comic/10</a> has the same effect as <a href="http://localhost/comics/comic/get.fcgi?id=10.">http://localhost/comics/comic/get.fcgi?id=10.</a> The reason is simple: We created a mapping rule where, if you call <code>comics/comic/&lt;A number&gt;</code>, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be &lsquo;copied&rsquo;.
+<p>Now if you save it, you&rsquo;ll notice that calling the URL <a href="http://localhost/comics/comic/10">http://localhost/comics/comic/10</a> has the same effect as <a href="http://localhost/comics/comic/get.fcgi?id=10.">http://localhost/comics/comic/get.fcgi?id=10.</a> The reason is simple: We created a mapping rule where, if you call <code>comics/comic/&lt;A number&gt;</code>, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be &lsquo;copied&rsquo;.
 The other mapping rules are much more easier:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -1445,7 +1449,7 @@ The other mapping rules are much more easier:</p>
 
 <h2>Conclusion</h2>
 
-<p>On this tutorial, we learnt about i) Web services ii) RESTful web services iii) CGI scripts iv) An easy way to use C++ as a CGI language v) MySQL connection with C++ vi) A complete dummy system containing all four HTTP methods to manipulate an entity vii) Apache URL rewriting. That was a lot of things! :) I really hope you have enjoyed this tutorial. Until the next!</p>
+<p>On this tutorial, we learnt about i) Web services ii) RESTful web services iii) CGI scripts iv) An easy way to use C++ as a CGI language v) MySQL connection with C++ vi) A complete dummy system containing all four HTTP methods to manipulate a resource vii) Apache URL rewriting. That was a lot of things! :) I really hope you have enjoyed this tutorial. Until the next!</p>
 ]]></content>
   </entry>
   
@@ -1454,7 +1458,7 @@ The other mapping rules are much more easier:</p>
     <link href="http://PicoleDeLimao.github.io/blog/2015/10/11/parallel-genetic-algorithm-in-c-plus-plus-using-tbb/"/>
     <updated>2015-10-11T09:55:50-03:00</updated>
     <id>http://PicoleDeLimao.github.io/blog/2015/10/11/parallel-genetic-algorithm-in-c-plus-plus-using-tbb</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve just finished my AI course, and the idea of <a href="https://en.wikipedia.org/wiki/Evolutionary_computation">evolutionary computing</a> has appealed me pretty much. Basically, evolutionary computing is a set of algorithms inspired by <a href="https://en.wikipedia.org/wiki/Evolution">Charles Darwin&rsquo;s Theory of Evolution</a> with intent of providing some intel on solving optimization problems. On this category, it&rsquo;s included its most prominent example, the <a href="https://en.wikipedia.org/wiki/Genetic_algorithm">Genetic Algorithm</a>.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve just finished my AI course, and the idea of <a href="https://en.wikipedia.org/wiki/Evolutionary_computation">evolutionary computing</a> has appealed me incredibly. Basically, evolutionary computing is a set of algorithms inspired by <a href="https://en.wikipedia.org/wiki/Evolution">Charles Darwin&rsquo;s Theory of Evolution</a> with intent of providing some intel on solving optimization problems. On this category, it&rsquo;s included its most prominent example, the <a href="https://en.wikipedia.org/wiki/Genetic_algorithm">Genetic Algorithm</a>.</p>
 
 <p>But what is the Genetic Algorithm? It&rsquo;s really pretty simple (and beautiful): Genetic Algorithm is a heuristic to search for the best solution of a optimization problem (such as the <a href="https://en.wikipedia.org/wiki/Knapsack_problem">Knapsack problem</a>, finding the best parameters of a neural network, and many others&hellip;), the &lsquo;best&rsquo; here having direct analogy to the Theory of Evolution &lsquo;survival of the fittest&rsquo;.</p>
 
@@ -1463,7 +1467,7 @@ The other mapping rules are much more easier:</p>
 
 <p></p>
 
-<p>Each &lsquo;<strong>individual</strong>&rsquo; (a.k.a., candidate solution) is codified as a &lsquo;<strong>chromosome</strong>&rsquo;, which is generally representated by a vector of numbers. Each vector value is called &lsquo;<strong>gene</strong>&rsquo;. A set of individuals is called &lsquo;<strong>population</strong>&rsquo;. Those &lsquo;individuals&rsquo; will then compete to have a chance to &lsquo;reproduce&rsquo;, which is the act of mixing two chromosomes to generate a new one, different but similar to both parents. The fitter the individual, the greater the chance it has to reproduce (controlled by a function called &lsquo;<strong>crossover function</strong>&rsquo;, which will always generate two new individuals, both having a certain percentage of genes of both parents. For example, if we define a crossover rate to being 30%, one child will have 30% of parent A&rsquo;s genes and 70% of parent B&rsquo;s genes, while the other will 70% of parent A&rsquo;s genes and 30% of parent B&rsquo;s genes. There&rsquo;s also a chance of a gene suffer &lsquo;<strong>mutation</strong>&rsquo;, e.g., changing to a random value, during the crossover process). The fitness of an individual is measured through a function called &lsquo;<strong>fitness function</strong>&rsquo;. This is an iterative algorithm, and on each iteration we have a new &lsquo;<strong>generation</strong>&rsquo; of individuals. There are many stop criterias for this algorithm, one of them being the number of generations. Crystal clear? Then let&rsquo;s see a simple pseudo-code, shall we? :))</p>
+<p>Each &lsquo;<strong>individual</strong>&rsquo; (a.k.a., candidate solution) is codified as a &lsquo;<strong>chromosome</strong>&rsquo;, which is generally representated by a vector of numbers. Each vector value is called &lsquo;<strong>gene</strong>&rsquo;. A set of individuals is called &lsquo;<strong>population</strong>&rsquo;. Those &lsquo;individuals&rsquo; will then compete to have a chance to &lsquo;reproduce&rsquo;, which is the act of mixing two chromosomes to generate a new one, different but similar to both parents. The fitter the individual, the greater the chance it has to reproduce (controlled by a function called &lsquo;<strong>crossover function</strong>&rsquo;, which will always generate two new individuals, both having a certain percentage of genes of both parents. For example, if we define a crossover rate to being 30%, one child will have 30% of parent A&rsquo;s genes and 70% of parent B&rsquo;s genes, while the other will have 70% of parent A&rsquo;s genes and 30% of parent B&rsquo;s genes. There&rsquo;s also a chance of a gene suffer &lsquo;<strong>mutation</strong>&rsquo;, e.g., changing to a random value, during the crossover process). The fitness of an individual is measured through a function called &lsquo;<strong>fitness function</strong>&rsquo;. This is an iterative algorithm, and on each iteration we have a new &lsquo;<strong>generation</strong>&rsquo; of individuals. There are many stop criterias for this algorithm, one of them being the number of generations. Crystal clear? Then let&rsquo;s see a simple pseudo-code, shall we? :))</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1589,7 +1593,7 @@ The other mapping rules are much more easier:</p>
 
 <h2>Implementation on C++</h2>
 
-<p>As you can notice, the functions &lsquo;GENERATE_RANDOM_POPULATION&rsquo;, &lsquo;GET_FITNESS&rsquo; and &lsquo;MUTATE&rsquo; are all problem dependents. It depains on informations like chromosome size, domain of allowed values, etc., &hellip; For our implementation on C++, we are letting the user provide pointers to their own-defined functions. Also, the user may use other informations other than numbers to codify their chromosomes. That&rsquo;s why we are going to use templates. Our little program starts as simple (or not) as following:</p>
+<p>As you can notice, the functions &lsquo;GENERATE_RANDOM_POPULATION&rsquo;, &lsquo;GET_FITNESS&rsquo; and &lsquo;MUTATE&rsquo; are all problem dependents. It depains on informations like chromosome size, domain of allowed values, etc., &hellip; For our implementation on C++, we are letting the user provide pointers to their own-defined functions. Also, the user may use other informations other than numbers to codify their chromosomes. That&rsquo;s why we are going to use templates. Our little program starts as simple (or not) as follows:</p>
 
 <figure class='code'><figcaption><span>genetic_algorithm.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1734,7 +1738,7 @@ The other mapping rules are much more easier:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice which on &lsquo;getFitnesses&rsquo;, we had to &ldquo;invert&rdquo; the fitness values in case of maximization is disabled. That&rsquo;s because the roulette always favours the individuals which have the biggest range of values. So we need to do this little trick by subtracing by the maximum value found.</p>
+<p>Notice that on &lsquo;getFitnesses&rsquo;, we had to &ldquo;invert&rdquo; the fitness values in case of maximization is disabled. That&rsquo;s because the roulette always favours the individuals which have the biggest range of values. So we need to do this little trick by subtracing by the maximum value found.</p>
 
 <p>Questions, please? No? Alright, let&rsquo;s then advance with the implementation of the inner loop.</p>
 
@@ -1801,7 +1805,7 @@ The other mapping rules are much more easier:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice we are getting the selected individuals through the method &lsquo;selectIndividuals&rsquo;, which returns a pair, the parents which will generate two new children through the method &lsquo;crossover&rsquo;. Let&rsquo;s first take a look at the method &lsquo;selectIndividuals&rsquo;:</p>
+<p>Notice we are getting the selected individuals through the method &lsquo;selectIndividuals&rsquo;, that returns a pair, the parents which will generate two new children through the method &lsquo;crossover&rsquo;. Let&rsquo;s first take a look at the method &lsquo;selectIndividuals&rsquo;:</p>
 
 <figure class='code'><figcaption><span>genetic_algorithm.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2170,7 +2174,7 @@ The other mapping rules are much more easier:</p>
 
 <p>If you read until here, you may feel cheated, since we didn&rsquo;t even mention the word &lsquo;parallel&rsquo;. Fear not, my dear friend! Now is the time! However, we must first analyze what can and what cannot be parallelized.</p>
 
-<p>If you give a quick look at the algorithm we just implemented, we may notice the existence of two loops, one nested on another, inside the function &lsquo;geneticAlgorithm&rsquo;. There&rsquo;s also a loop for calculating the fitness value for all individuals (function &lsquo;getFitnesses&rsquo;). There&rsquo;s a loop for applying the mutation operator (function &lsquo;crossover&rsquo;) and finally there&rsquo;s a loop for selecting the individuals (function &lsquo;selectIndividuals&rsquo;). So far we have five candidates. Which of them can be parallelized? All (yay!)? None (awww&hellip;)?</p>
+<p>If you give a quick look at the algorithm we just implemented, we may notice the existence of two loops, one nested in another, inside the function &lsquo;geneticAlgorithm&rsquo;. There&rsquo;s also a loop for calculating the fitness value for all individuals (function &lsquo;getFitnesses&rsquo;). There&rsquo;s a loop for applying the mutation operator (function &lsquo;crossover&rsquo;) and finally there&rsquo;s a loop for selecting the individuals (function &lsquo;selectIndividuals&rsquo;). So far we have five candidates. Which of them can be parallelized? All (yay!)? None (awww&hellip;)?</p>
 
 <ul>
 <li><strong>Candidate I: The outer loop on &lsquo;geneticAlgorithm&rsquo;</strong> <br>
@@ -2187,7 +2191,7 @@ That&rsquo;s a though one, since we need to syncronize two values (probA and pro
 
 
 <p>Our score was 2/5, not bad, not bad at all. ;)
-Now we know <em>what</em> can be parallelized, let&rsquo;s find out <em>how</em> we can do it.</p>
+Now that we know <em>what</em> can be parallelized, let&rsquo;s find out <em>how</em> we can do it.</p>
 
 <p>We can do it using the library <a href="https://www.threadingbuildingblocks.org">TBB</a>, which stands for <strong>T</strong>hreading <strong>B</strong>uilding <strong>B</strong>blocks. It provides several features for parallelism, such as multi-threads, locks, concurrent containers, etc., &hellip; Everything on a high-level abstraction. Of course it&rsquo;s not our intent to explain the details of the library, so let&rsquo;s start with the simplest example: <strong><a href="https://www.threadingbuildingblocks.org/docs/help/reference/algorithms/parallel_for_func.htm">the parallel for</a></strong>.</p>
 
@@ -2281,7 +2285,7 @@ The TBB then is responsible to not assign any repeated range value for any threa
 
 <p>That was pretty simple. We just simply created a &lsquo;parallel_for&rsquo; with a blocked range from 0 to populationSize (identical to the previous for limits), and on the parallel_for body we almost use the same block of code, with the difference we don&rsquo;t increment the counter &lsquo;j&rsquo; before add a new child. Instead of, we increment += 2 on the internal for loop. The reason we decided to adopt this logic instead of previous one is simple: Incrementing the range inside the body would imply in a lock <em>before</em> adding a new child, hence slowing the process unnecessarily. We also don&rsquo;t need a lock before assigning a new child to the new population, because it&rsquo;s a write-only array without key collision (we don&rsquo;t assign two or more to the same index).</p>
 
-<blockquote><p>OBS: As we are using lambda functions, don&rsquo;t forget to add the <code>-std=c++0x</code> flag to the compiler, since lambda functions are a feature from C++11. Also, don&rsquo;t forget to link the TBB library (<code>-ltbb</code>).</p></blockquote>
+<blockquote><p>OBS: As we are using lambda functions, don&rsquo;t forget to add the <code>-std=c++11</code> flag to the compiler, since lambda functions are a feature from C++11. Also, don&rsquo;t forget to link the TBB library (<code>-ltbb</code>).</p></blockquote>
 
 <p>Now let&rsquo;s parallelize our second candidate, the function &lsquo;getFitnesses&rsquo;. That&rsquo;s also very simple. Indeed, simpler than the previous one.</p>
 
@@ -2638,7 +2642,7 @@ A list of the 10 most fittest individuals after M generations.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>That&rsquo;s a piece of cake. The next step is to create our own definition of the fitness function. It seems which simply substituing the value of &lsquo;x&rsquo; on the polynomial expression will be enough. The closer the result it is to zero, the fitter the solution. As we are dealing with a minimization problem, we have to be careful to prevent negative values.</p>
+<p>That&rsquo;s a piece of cake. The next step is to create our own definition of the fitness function. It seems that simply substituing the value of &lsquo;x&rsquo; on the polynomial expression will be enough. The closer the result it is to zero, the fitter the solution. As we are dealing with a minimization problem, we have to be careful to prevent negative values.</p>
 
 <figure class='code'><figcaption><span>root_finder.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2772,7 +2776,7 @@ Notice we are using chromosome of size 1. That&rsquo;s because we just want to f
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>We use <code>srand(time(0))</code> to see a random seed every time the program is executed, and then a map to sort the retrieved results by the fitness value. The full code can be found below:</p>
+<p>We use <code>srand(time(0))</code> to send a random seed every time the program is executed, and then a map to sort the retrieved results by the fitness value. The full code can be found below:</p>
 
 <center><input id="spoiler" type="button" value="See source code" onclick="toggle_visibility('code');"></center>
 
@@ -3182,7 +3186,7 @@ Notice we are using chromosome of size 1. That&rsquo;s because we just want to f
 
 <p></center></p>
 
-<p>Let&rsquo;s make some simple experiments. For example, for the input: <code>-100 100 100 1000 0.05 0.5 2 1 0</code> representating the polynomial equation, x = 0, we get values similar to that:</p>
+<p>Let&rsquo;s make some simple experiments. For example, for the input: <code>-100 100 100 1000 0.05 0.5 2 1 0</code> representating the polynomial equation x = 0, we get values similar to that:</p>
 
 <figure class='code'><figcaption><span>root_finder.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -3209,7 +3213,7 @@ Notice we are using chromosome of size 1. That&rsquo;s because we just want to f
 
 <p>As you can notice, the values are approximating to zero, which is, indeed, the solution for this equation.</p>
 
-<p>Let&rsquo;s try a harder example. For the input: <code>-100 100 100 1000 0.05 0.5 3 1 30 2</code> representating the polynomial equation, x<sup>2</sup> + 30x + 2 = 0, we get values similar to that:</p>
+<p>Let&rsquo;s try a harder example. For the input: <code>-100 100 100 1000 0.05 0.5 3 1 30 2</code> representating the polynomial equation x<sup>2</sup> + 30x + 2 = 0, we get values similar to that:</p>
 
 <figure class='code'><figcaption><span>root_finder.cpp</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -5817,9 +5821,9 @@ if __name__ == &#39;__main__&#39;:
 
     class JanelaPoisson(JanelaDiscreta):
         def __init__(self, top_level):
-            JanelaDiscreta.__init__(self, top_level, &quot;Parâmetro λ&quot;)
+            JanelaDiscreta.__init__(self, top_level, &quot;Parâmetro gama&quot;)
         def clica_botao_ok(self, event):
-            alfa = self.entries[&quot;Parâmetro λ&quot;].get()
+            alfa = self.entries[&quot;Parâmetro gama&quot;].get()
             try:
                 self.modelo = Poisson(alfa)
                 JanelaDiscreta.clica_botao_ok(self, event)
@@ -6043,9 +6047,9 @@ if __name__ == &#39;__main__&#39;:
                 
     class JanelaExponencial(JanelaContinua):
         def __init__(self, top_level):
-            JanelaContinua.__init__(self, top_level, &quot;Parâmetro α&quot;)
+            JanelaContinua.__init__(self, top_level, &quot;Parâmetro alfa&quot;)
         def clica_botao_ok(self, event):
-            a = self.entries[&quot;Parâmetro α&quot;].get()
+            a = self.entries[&quot;Parâmetro alfa&quot;].get()
             try:
                 self.modelo = Exponencial(a)
                 JanelaContinua.clica_botao_ok(self, event)
@@ -6054,10 +6058,10 @@ if __name__ == &#39;__main__&#39;:
 
     class JanelaNormal(JanelaContinua):
         def __init__(self, top_level):
-            JanelaContinua.__init__(self, top_level, &quot;Parâmetro μ&quot;, &quot;Parâmetro σ²&quot;)
+            JanelaContinua.__init__(self, top_level, &quot;Média&quot;, &quot;Variância&quot;)
         def clica_botao_ok(self, event):
-            u = self.entries[&quot;Parâmetro μ&quot;].get()
-            o2 = self.entries[&quot;Parâmetro σ²&quot;].get()
+            u = self.entries[&quot;Média&quot;].get()
+            o2 = self.entries[&quot;Variância&quot;].get()
             try:
                 self.modelo = Normal(u, o2)
                 JanelaContinua.clica_botao_ok(self, event)
@@ -7751,7 +7755,7 @@ And you need to redirect the user to the fail page in case the login is incorrec
 <noscript><pre><code>#!/usr/bin/python
 # -*-coding=utf-8 -*-
 #-----------------------------------------------------------
-# PyInvaders v3.0
+# PyInvaders v3.1
 # Created by: Abner Matheus
 # E-mail: abner.math.c@gmail.com
 # Github: http://github.com/picoledelimao
@@ -8011,15 +8015,16 @@ def controller_windows():
             if not self.game.is_start_screen():
                 self.game.start()
             else:
-                self.game.update()
-            self.console.after(250, loop)
+                if not self.game.update():
+                        self.game = Game()
+            self.console.after(250, self.loop)
         def start_game(self):
             self.game.start()
             self.console = Tkinter.Tk()
             self.console.bind_all(&#39;&lt;Key&gt;&#39;, self.press_key)
             self.console.withdraw()
             try:
-                self.console.after(250, loop)
+                self.console.after(250, self.loop)
                 self.console.mainloop()
             except KeyboardInterrupt: pass
     Controller()
@@ -8724,17 +8729,17 @@ if __name__ == &#39;__main__&#39;:
 <div id="code">
 <div><script src='https://gist.github.com/892bf12a4a185721485f.js?file=PyPac.py'></script>
 <noscript><pre><code>#!/usr/bin/python
-# encoding: utf-8
+# -*-coding=utf-8 -*-
 #-----------------------------------------------------------------
-# PyPac v1.0
+# PyPac v1.2
 # Created by: Abner Matheus
 # E-mail: abner.math.c@gmail.com
 # Github: http://github.com/picoledelimao
 #-----------------------------------------------------------------
-import thread, time, termios, os, platform, sys, tty, select, math
+import time, os, platform, sys, select, math
 from random import randint
 from copy import copy
-
+ 
 &quot;&quot;&quot;
 Store a (x, y) coordinate of the terrain
 &quot;&quot;&quot;
@@ -8742,7 +8747,7 @@ class Position:
     def __init__(self, x, y):
         self.x = x
         self.y = y 
-
+ 
 &quot;&quot;&quot;
 Representates the terrain of the map.
 The terrain is a bidimensional matrix that is mapped through
@@ -8753,7 +8758,7 @@ class Terrain:
     PACMAN = Position(10, 8)
     GHOST_CHAR = &#39;^&#39;
     GHOST_WEAKEN_CHAR = &#39;*&#39;
-    PACMAN_CHAR = &#39;◔&#39;
+    PACMAN_CHAR = &#39;@&#39;
     BULLET = &#39;.&#39;
     GREATER_BULLET = &#39;0&#39;
     def __init__(self):
@@ -8817,8 +8822,8 @@ class Terrain:
         result = &quot;&quot;
         for i in range(len(matrix)):
             result += &quot;&quot;.join(matrix[i]) + &quot;\n&quot;
-        print result
-
+        print(result)
+ 
 &quot;&quot;&quot;
 Enumerate the possible directions that a walkable can take
 &quot;&quot;&quot;
@@ -8827,7 +8832,7 @@ class Direction:
     BACKWARD = 2
     UPWARD = 3
     DOWNWARD = 4
-
+ 
 &quot;&quot;&quot;
 Representates a walkable object in the map (ghost and pacman)
 &quot;&quot;&quot;
@@ -8866,7 +8871,7 @@ class Walkable:
                 self.position.y += 1
         else: return False
         return True
-
+ 
 &quot;&quot;&quot;
 Representates the ghosts in the map.
 A ghost is a walkable
@@ -8892,7 +8897,7 @@ class Ghost(Walkable):
     &quot;&quot;&quot;
     def strengthen(self):
         self.isWeaken = False
-
+ 
 &quot;&quot;&quot;
 Representates the Pacman
 &quot;&quot;&quot;
@@ -8901,7 +8906,7 @@ class Pacman(Walkable):
         Walkable.__init__(self)
         self.position = copy(Terrain.PACMAN)
         self.direction = Direction.FORWARD
-
+ 
 &quot;&quot;&quot;
 Main class of the game.
 It receives the input of the user and maps it to its state.
@@ -8927,7 +8932,7 @@ class Game:
     &quot;&quot;&quot;
     def start_new_game(self):
         self.state.start_new_game()
-
+ 
 &quot;&quot;&quot;
 Superclass of states of a game
 &quot;&quot;&quot;
@@ -8936,7 +8941,7 @@ class GameState:
     def loop(self):  raise NotImplementedException()
     def set_direction(self, direction): raise NotImplementedException()
     def start_new_game(self): raise NotImplementedException()
-
+ 
 &quot;&quot;&quot;
 Initial screen of the game.
 &quot;&quot;&quot;
@@ -8963,24 +8968,24 @@ PRESS &#39;N&#39; TO START A NEW GAME.
 &#39;A&#39;, &#39;S&#39;, &#39;D&#39;, &#39;W&#39; TO MOVE.
 &#39;ESC&#39; TO EXIT GAME.
 -----------------------------
-
+ 
 CREATED BY:
 -----------------------------
 ABNER MATHEUS (abner.math.c@gmail.com)
 &quot;&quot;&quot;
         Terrain.clear_screen()
-        print message
+        print(message.decode(&#39;utf-8&#39;))
     def set_direction(self, direction): pass
     def start_new_game(self):
         self.context.state = StatePlaying(self.context) 
-
+ 
 class StateGameOver(GameState):
     def __init__(self, context):
         GameState.__init__(self)
         self.context = context
     def loop(self): 
         Terrain.clear_screen()
-        print &quot;&quot;&quot;
+        print(&quot;&quot;&quot;
   ____   ____  ___ ___    ___       ___   __ __    ___  ____  
  /    | /    ||   |   |  /  _]     /   \ |  |  |  /  _]|    \ 
 |   __||  o  || _   _ | /  [_     |     ||  |  | /  [_ |  D  )
@@ -8989,11 +8994,11 @@ class StateGameOver(GameState):
 |     ||  |  ||   |   ||     |    |     | \   / |     ||  .  \ 
 |___,_||__|__||___|___||_____|     \___/   \_/  |_____||__|\_|
                                                               
-PRESS &#39;N&#39; TO START A NEW GAME.&quot;&quot;&quot;
+PRESS &#39;N&#39; TO START A NEW GAME.&quot;&quot;&quot;.decode(&#39;utf-8&#39;))
     def set_direction(self, direction): pass
     def start_new_game(self):
         self.context.state = StateInitial(self.context)
-
+ 
 &quot;&quot;&quot;
 Main state of the game.
 Here is where the stuff happens.
@@ -9088,13 +9093,13 @@ class StatePlaying(GameState):
     &quot;&quot;&quot;
     def __render(self):
         self.terrain.render(self.pacman, self.ghosts)
-        print (&quot;LIVES: %d    SCORE: %d    LEVEL: %d&quot; % (self.context.lives, self.context.score, self.context.level))
+        print(&quot;LIVES: %d    SCORE: %d    LEVEL: %d&quot; % (self.context.lives, self.context.score, self.context.level))
     def loop(self): 
         self.count_loop += 1
         if self.terrain.is_clear():
-            print &quot;&quot;&quot;
+            print(&quot;&quot;&quot;
 CONGRATULATIONS! 
-A NEW LEVEL WILL START IN FEW SECONDS.&quot;&quot;&quot;
+A NEW LEVEL WILL START IN FEW SECONDS.&quot;&quot;&quot;.decode(&#39;utf-8&#39;))
             time.sleep(1)
             self.context.level += 1
             self.start_new_level()
@@ -9132,8 +9137,8 @@ A NEW LEVEL WILL START IN FEW SECONDS.&quot;&quot;&quot;
             self.context.state = StateGameOver(self.context)
         else:
             self.__render()
-            print &quot;&quot;&quot;
-YOU LOST A LIVE.&quot;&quot;&quot;
+            print(&quot;&quot;&quot;
+YOU LOST A LIVE.&quot;&quot;&quot;.decode(&#39;utf-8&#39;))
             time.sleep(2)
             self.pacman = Pacman()
             self.pacman = Pacman()
@@ -9141,54 +9146,98 @@ YOU LOST A LIVE.&quot;&quot;&quot;
             for i in range(4): self.ghosts.append(Ghost(i))
             self.count_loop = 0
             self.countdown = 0
-
-class NonBlockingConsole(object):
-    def __enter__(self):
-        self.old_settings = termios.tcgetattr(sys.stdin)
-        tty.setcbreak(sys.stdin.fileno())
-        return self
-    def __exit__(self, type, value, traceback):
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
-    def get_data(self):
-        if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
-            return sys.stdin.read(1)
-        return False
-
-class Controller:
-    SPEED = 0.2
-    def __init__(self):
-        self.game = Game() 
-        self.start_game()
-    def press_key(self, nbc):
-        key = str(nbc.get_data())
-        if key == &#39;\x1b&#39;: #ESC
-            return False
-        elif key == &#39;n&#39;: #Enter
-            self.game.start_new_game()
-        elif key == &#39;d&#39;: #Right arrow
-            self.game.set_direction(Direction.FORWARD)
-        elif key == &#39;a&#39;: #Left arrow
-            self.game.set_direction(Direction.BACKWARD)
-        elif key == &#39;w&#39;: #Up arrow
-            self.game.set_direction(Direction.UPWARD)
-        elif key == &#39;s&#39;: #Down arrow
-            self.game.set_direction(Direction.DOWNWARD)
-        return True
-    def loop(self, threadName): 
-        while self.running:
-            time.sleep(Controller.SPEED)
+ 
+#---------------------------------
+# IO MANAGER
+#---------------------------------
+def controller_windows():
+    import Tkinter
+    class Controller:
+        SPEED = 0.2
+        def __init__(self):
+            self.game = Game() 
+            self.start_game()
+        def press_key(self, event):
+            key = event.keysym.lower()
+            if key == &quot;escape&quot;: #ESC
+                return False
+            elif key == &quot;n&quot;: #Enter
+                self.game.start_new_game()
+            elif key == &quot;d&quot;: #Right arrow
+                self.game.set_direction(Direction.FORWARD)
+            elif key == &quot;a&quot;: #Left arrow
+                self.game.set_direction(Direction.BACKWARD)
+            elif key == &quot;w&quot;: #Up arrow
+                self.game.set_direction(Direction.UPWARD)
+            elif key == &quot;s&quot;: #Down arrow
+                self.game.set_direction(Direction.DOWNWARD)
+            return True
+        def loop(self):
             self.game.loop()   
-    def start_game(self):
-        self.running = True
-        thread.start_new_thread(self.loop, (&quot;Thread-1&quot;,))
-        try:
-            with NonBlockingConsole() as nbc:
-                while self.press_key(nbc): pass
-        except KeyboardInterrupt: pass
-        self.running = False
-
+            self.console.after(250, self.loop)
+        def start_game(self):
+            self.console = Tkinter.Tk()
+            self.console.bind_all(&#39;&lt;Key&gt;&#39;, self.press_key)
+            self.console.withdraw()
+            try:
+                self.console.after(250, self.loop)
+                self.console.mainloop()
+            except KeyboardInterrupt: pass
+    Controller()
+ 
+def controller_unix():
+    import termios, tty, thread
+    class NonBlockingConsole(object):
+        def __enter__(self):
+            self.old_settings = termios.tcgetattr(sys.stdin)
+            tty.setcbreak(sys.stdin.fileno())
+            return self
+        def __exit__(self, type, value, traceback):
+            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
+        def get_data(self):
+            if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+                return sys.stdin.read(1)
+            return False
+                
+    class Controller:
+        SPEED = 0.2
+        def __init__(self):
+            self.game = Game() 
+            self.start_game()
+        def press_key(self, nbc):
+            key = str(nbc.get_data())
+            if key == &#39;\x1b&#39;: #ESC
+                return False
+            elif key == &#39;n&#39;: #Enter
+                self.game.start_new_game()
+            elif key == &#39;d&#39;: #Right arrow
+                self.game.set_direction(Direction.FORWARD)
+            elif key == &#39;a&#39;: #Left arrow
+                self.game.set_direction(Direction.BACKWARD)
+            elif key == &#39;w&#39;: #Up arrow
+                self.game.set_direction(Direction.UPWARD)
+            elif key == &#39;s&#39;: #Down arrow
+                self.game.set_direction(Direction.DOWNWARD)
+            return True
+        def loop(self, threadName): 
+            while self.running:
+                time.sleep(Controller.SPEED)
+                self.game.loop()   
+        def start_game(self):
+            self.running = True
+            thread.start_new_thread(self.loop, (&quot;Thread-1&quot;,))
+            try:
+                with NonBlockingConsole() as nbc:
+                    while self.press_key(nbc): pass
+            except KeyboardInterrupt: pass
+            self.running = False
+    Controller()
+    
 if __name__ == &#39;__main__&#39;:
-    Controller()</code></pre></noscript></div>
+    if platform.system() == &quot;Windows&quot;:
+        controller_windows()
+    else:
+        controller_unix()</code></pre></noscript></div>
 
 </div>
 
@@ -9222,16 +9271,16 @@ if __name__ == &#39;__main__&#39;:
 <div id="code">
 <div><script src='https://gist.github.com/300f93a9820c52e6a243.js?file=PySnake.py'></script>
 <noscript><pre><code>#!/usr/bin/python
-# encoding: utf-8
+# -*-coding=utf-8 -*-
 #-----------------------------------------------------------
-# PyGame v2.0
+# PySnake v2.2
 # Created by: Abner Matheus
 # E-mail: abner.math.c@gmail.com
 # Github: http://github.com/picoledelimao
 #-----------------------------------------------------------
-import os, platform, time, thread, sys, select, tty, termios
+import os, platform, time, sys, select
 from random import randint
-
+ 
 &quot;&quot;&quot;
 Enumerate the directions that a snake can take
 &quot;&quot;&quot;
@@ -9240,7 +9289,7 @@ class Direction:
     backward = 2
     upward = 3
     downward = 4
-
+ 
 &quot;&quot;&quot;
 Control the movement and position of a snake
 &quot;&quot;&quot;
@@ -9287,9 +9336,9 @@ class Snake:
     def turn_and_move(self, direction):
         self.turn(direction)
         return self.move() 
-
+ 
 &quot;&quot;&quot;
-Keep information of a terrain object (fruit or obstacles
+Keep information of a terrain object (fruit or obstacles)
 &quot;&quot;&quot;
 class TerrainObject:
     &quot;&quot;&quot;
@@ -9319,7 +9368,7 @@ class TerrainObject:
     &quot;&quot;&quot;
     def hit(self, snake):
         return self.x == snake.x and self.y == snake.y
-
+ 
 &quot;&quot;&quot;
 Keep information of the terrain
 &quot;&quot;&quot;
@@ -9361,7 +9410,7 @@ class Terrain:
             result += Terrain.__VER_BOUND + &quot;&quot;.join(line) + Terrain.__VER_BOUND + &quot;\n&quot;
         result += horizontal_bound
         return result
-
+ 
 &quot;&quot;&quot;
 Responsible to show elements in the screen
 &quot;&quot;&quot;
@@ -9375,27 +9424,27 @@ class View:
 ╚═╝        ╚═╝   ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 &quot;&quot;&quot;
     INITIAL = LOGO + &quot;&quot;&quot;
-
+ 
 GAME CONTROLS:
 =============================================================
 PRESS &#39;N&#39; TO START A NEW GAME.
 &#39;A&#39;, &#39;S&#39;, &#39;D&#39; OR &#39;W&#39; KEYS TO MOVE THE SNAKE.
 ESC TO EXIT GAME.
 =============================================================
-
+ 
 CREATED BY: 
 -------------------------------------------------------------
 ABNER MATHEUS (abner.math.c@gmail.com)
 &quot;&quot;&quot;
     DIFFICULTY = LOGO + &quot;&quot;&quot;
-
+ 
 CHOOSE A DIFFICULTY BELOW:
 =============================================================
 1. VERY EASY
 2. MEDIUM
 3. HARD
 =============================================================
-
+ 
 OBJECTS:
 -------------------------------------------------------------
 * Fruit
@@ -9436,9 +9485,12 @@ PRESS &#39;N&#39; TO START A NEW GAME.
     &quot;&quot;&quot;
     @staticmethod
     def render(message):
+        import sys
+        reload(sys)
+        sys.setdefaultencoding(&#39;utf-8&#39;)
         View.__clear_screen()
-        print message
-
+        print(message.decode(&#39;utf-8&#39;))
+ 
 &quot;&quot;&quot;
 Stores the actual state of the game (interface)
 &quot;&quot;&quot;
@@ -9451,7 +9503,7 @@ class GameState:
         raise NotImplementedError()
     def set_direction(self, direction):
         raise NotImplementedError()
-
+ 
 &quot;&quot;&quot;
 Initial state of the game
 &quot;&quot;&quot;
@@ -9464,7 +9516,7 @@ class StateInitial(GameState):
         self.context.state = StatePickDifficulty(self.context) 
     def set_difficulty(self, difficulty): pass
     def set_direction(self, direction): pass 
-
+ 
 &quot;&quot;&quot;
 Pick difficulty screen
 &quot;&quot;&quot;
@@ -9491,7 +9543,7 @@ class StatePickDifficulty(GameState):
     Change snake&#39;s direction
     &quot;&quot;&quot;
     def set_direction(self, direction): pass
-
+ 
 &quot;&quot;&quot;
 Here is where the game happens itself
 &quot;&quot;&quot;
@@ -9592,7 +9644,7 @@ class StatePlaying(GameState):
     def set_difficulty(self, difficulty): pass
     def set_direction(self, direction):
         self.direction = direction
-
+ 
 &quot;&quot;&quot;
 Game over screen
 &quot;&quot;&quot;
@@ -9605,7 +9657,7 @@ class StateGameOver(GameState):
         self.context.state = StatePickDifficulty(self.context)
     def set_difficulty(self, difficulty): pass
     def set_direction(self, direction): pass
-
+ 
 class Game:
     def __init__(self, width, height, lives):
         self.width = width
@@ -9620,57 +9672,102 @@ class Game:
         self.state.set_difficulty(difficulty)
     def set_direction(self, direction):
         self.state.set_direction(direction)
-
-class NonBlockingConsole(object):
-    def __enter__(self):
-        self.old_settings = termios.tcgetattr(sys.stdin)
-        tty.setcbreak(sys.stdin.fileno())
-        return self
-    def __exit__(self, type, value, traceback):
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
-    def get_data(self):
-        if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
-            return sys.stdin.read(1)
-        return False
-
-class Controller:
-    def __init__(self):
-        self.game = Game(30, 15, 3) 
-        self.speed = 300 
-        self.start_game()
-    def press_key(self, nbc):
-        key = str(nbc.get_data())
-        if key == &#39;\x1b&#39;: #ESC
-            return False
-        elif key == &#39;n&#39;: #Enter
-            self.game.new_game()
-        elif key == &#39;1&#39; or key == &#39;2&#39; or key == &#39;3&#39;: 
-            self.game.set_difficulty(int(key)) 
-        elif key == &#39;d&#39;: #Right arrow
-            self.game.set_direction(Direction.forward) 
-        elif key == &#39;a&#39;: #Left arrow
-            self.game.set_direction(Direction.backward)
-        elif key == &#39;w&#39;: #Up arrow
-            self.game.set_direction(Direction.upward)
-        elif key == &#39;s&#39;: #Down arrow
-            self.game.set_direction(Direction.downward)
-        return True
-    def loop(self, threadName): 
-        while self.running:
-            time.sleep(self.speed/1000.0)
+ 
+#-------------------------------
+# IO MANAGER
+#--------------------------------
+def controller_windows():
+    import Tkinter
+    class Controller:
+        def __init__(self):
+            self.game = Game(30, 15, 3) 
+            self.speed = 300 
+            self.start_game()
+        def press_key(self, event):
+            key = event.keysym.lower()
+            if key == &quot;escape&quot;: #ESC
+                return False
+            elif key == &quot;n&quot;: #Enter
+                self.game.new_game()
+            elif key == &quot;1&quot; or key == &quot;2&quot; or key == &quot;3&quot;: 
+                self.game.set_difficulty(int(key)) 
+            elif key == &quot;d&quot;: #Right arrow
+                self.game.set_direction(Direction.forward) 
+            elif key == &quot;a&quot;: #Left arrow
+                self.game.set_direction(Direction.backward)
+            elif key == &quot;w&quot;: #Up arrow
+                self.game.set_direction(Direction.upward)
+            elif key == &quot;s&quot;: #Down arrow
+                self.game.set_direction(Direction.downward)
+            return True
+        def loop(self): 
             self.game.loop(self)   
-    def start_game(self):
-        self.running = True
-        thread.start_new_thread(self.loop, (&quot;Thread-1&quot;,))
-        try:
-            with NonBlockingConsole() as nbc:
-                while self.press_key(nbc): pass
-        except KeyboardInterrupt: pass
-        self.running = False
-
-if __name__ == &#39;__main__&#39;:
+            self.console.after(self.speed, self.loop)
+        def start_game(self):
+            self.console = Tkinter.Tk()
+            self.console.bind_all(&#39;&lt;Key&gt;&#39;, self.press_key)
+            self.console.withdraw()
+            try:
+                self.console.after(self.speed, self.loop)
+                self.console.mainloop()
+            except KeyboardInterrupt: pass
     Controller()
-</code></pre></noscript></div>
+    
+def controller_unix():
+    import termios, tty, thread
+    class NonBlockingConsole(object):
+        def __enter__(self):
+            self.old_settings = termios.tcgetattr(sys.stdin)
+            tty.setcbreak(sys.stdin.fileno())
+            return self
+        def __exit__(self, type, value, traceback):
+            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
+        def get_data(self):
+            if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+                return sys.stdin.read(1)
+            return False
+     
+    class Controller:
+        def __init__(self):
+            self.game = Game(30, 15, 3) 
+            self.speed = 300 
+            self.start_game()
+        def press_key(self, nbc):
+            key = str(nbc.get_data())
+            if key == &#39;\x1b&#39;: #ESC
+                return False
+            elif key == &#39;n&#39;: #Enter
+                self.game.new_game()
+            elif key == &#39;1&#39; or key == &#39;2&#39; or key == &#39;3&#39;: 
+                self.game.set_difficulty(int(key)) 
+            elif key == &#39;d&#39;: #Right arrow
+                self.game.set_direction(Direction.forward) 
+            elif key == &#39;a&#39;: #Left arrow
+                self.game.set_direction(Direction.backward)
+            elif key == &#39;w&#39;: #Up arrow
+                self.game.set_direction(Direction.upward)
+            elif key == &#39;s&#39;: #Down arrow
+                self.game.set_direction(Direction.downward)
+            return True
+        def loop(self, threadName): 
+            while self.running:
+                time.sleep(self.speed/1000.0)
+                self.game.loop(self)   
+        def start_game(self):
+            self.running = True
+            thread.start_new_thread(self.loop, (&quot;Thread-1&quot;,))
+            try:
+                with NonBlockingConsole() as nbc:
+                    while self.press_key(nbc): pass
+            except KeyboardInterrupt: pass
+            self.running = False
+    Controller()
+    
+if __name__ == &#39;__main__&#39;:
+    if platform.system() == &quot;Windows&quot;:
+        controller_windows()
+    else:
+        controller_unix()</code></pre></noscript></div>
 
 </div>
 

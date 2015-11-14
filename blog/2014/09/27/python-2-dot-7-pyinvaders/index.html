@@ -111,7 +111,7 @@
 <noscript><pre><code>#!/usr/bin/python
 # -*-coding=utf-8 -*-
 #-----------------------------------------------------------
-# PyInvaders v3.0
+# PyInvaders v3.1
 # Created by: Abner Matheus
 # E-mail: abner.math.c@gmail.com
 # Github: http://github.com/picoledelimao
@@ -371,15 +371,16 @@ def controller_windows():
             if not self.game.is_start_screen():
                 self.game.start()
             else:
-                self.game.update()
-            self.console.after(250, loop)
+                if not self.game.update():
+                        self.game = Game()
+            self.console.after(250, self.loop)
         def start_game(self):
             self.game.start()
             self.console = Tkinter.Tk()
             self.console.bind_all(&#39;&lt;Key&gt;&#39;, self.press_key)
             self.console.withdraw()
             try:
-                self.console.after(250, loop)
+                self.console.after(250, self.loop)
                 self.console.mainloop()
             except KeyboardInterrupt: pass
     Controller()
@@ -511,7 +512,7 @@ if __name__ == &#39;__main__&#39;:
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/">Building a RESTful Web Service in C++ (Is It Even Possible?)</a>
+        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus/">Building a RESTful Web Service in C++</a>
       </li>
     
       <li class="post">

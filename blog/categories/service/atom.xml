@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Service, | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/service/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-10-13T19:27:02-03:00</updated>
+  <updated>2015-11-14T17:43:11-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -14,35 +14,38 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Building a RESTful Web Service in C++ (Is It Even Possible?)]]></title>
-    <link href="http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/"/>
+    <title type="html"><![CDATA[Building a RESTful Web Service in C++]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus/"/>
     <updated>2015-10-13T08:38:35-03:00</updated>
-    <id>http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible</id>
-    <content type="html"><![CDATA[<p>If you ever thought about building a multi-platform system, you should know which a <a href="https://en.wikipedia.org/wiki/Web_service">Web Service</a> is an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it&rsquo;s better to move all those operations to a common Web Service and establish the communication through <a href="https://en.wikipedia.org/wiki/HTTP">HTTP requests</a>.</p>
+    <id>http://PicoleDeLimao.github.io/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus</id>
+    <content type="html"><![CDATA[<p>If you ever thought about building a multi-platform system, you should know that a <a href="https://en.wikipedia.org/wiki/Web_service">Web Service</a> will be an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it&rsquo;s better to move all those operations to a common Web Service and establish the communication through <a href="https://en.wikipedia.org/wiki/HTTP">HTTP requests</a>.</p>
 
 <!-- more -->
 
 
 <p></p>
 
-<p>Recently, a class of web services has become pretty popular: <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">The REST web service</a>. REST stands for <strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>transfer. It&rsquo;s an architectural pattern where the requisitions are totally independent and don&rsquo;t keep any state on server. (It&rsquo;s different from a web service where you must first pass through an &ldquo;authentication phase&rdquo; before any requisition). Another remarking aspect of the REST is the use of common HTTP methods to implement &ldquo;CRUD-like&rdquo; systems.</p>
+<p>Recently, a class of web services has become pretty popular: <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">The REST web service</a>. REST stands for <strong>Re</strong>presentational <strong>S</strong>tate <strong>T</strong>transfer. It&rsquo;s an architectural pattern where the requisitions are totally independent and don&rsquo;t keep any state on server. (It&rsquo;s different from a web service that keeps a &ldquo;session&rdquo; for the user, for example). Another remarking aspect of the REST is the use of common HTTP methods to implement &ldquo;CRUD-like&rdquo; systems.</p>
 
 <p style="text-align:center;"> <img src="https://www.chemaxon.com/app/themes/chemaxon/images/product_pages/jws/rest.jpg" alt="" /></p>
 
 <p>Web services can be implemented in almost any programming language you wish, though somes are more adequated to this task than others, like PHP or Javascript. When we are talking about programming languages which process HTTP requests, it&rsquo;s common the use of the term &ldquo;<a href="http://www.w3.org/CGI/">CGI</a>&rdquo;, which stands for <strong>C</strong>ommon <strong>G</strong>ateway <strong>I</strong>nterface. So here comes the C++ language: Can it be used as a CGI language? The answer is <strong>yes</strong>, THOUGH not recommended, and the reason is simple: Taks which could be easily implemented in languages like PHP would be a hell to be done in C++. But sometimes we have no choice. If that&rsquo;s your case, let&rsquo;s continue.</p>
 
-<p>First, I&rsquo;ll assume which you are using a Unix-Variant SO with <a href="http://www.apache.org/">Apache2</a> installed. For this tutorial, we are going to use the <a href="http://www.nongnu.org/fastcgipp/">FastCGI++</a>.</p>
+<p>First, I&rsquo;ll assume that you are using a Unix-Variant SO with <a href="http://www.apache.org/">Apache2</a> installed. For this tutorial, we are going to use the <a href="http://www.nongnu.org/fastcgipp/">FastCGI++</a>.</p>
 
 <p>The very first step is to install mods on Apache2 to enable support for FastCGI. The mods are: <code>mod_fastcgi</code> and <code>mod_fcgid</code> (Download link: <a href="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html">here</a> and <a href="http://httpd.apache.org/mod_fcgid/">here</a>). On Ubuntu, you can simply call:</p>
 
 <pre><code>
-sudo apt-get install libapache2-mod-fastcgi
-sudo apt-get install libapache2-mod-fcgid
+sudo apt-get install libapache2-mod-fastcgi libapache2-mod-fcgid
 </code></pre>
 
-<p>Once installed, restart the Apache2 service by using <code>sudo service apache2 restart</code>.</p>
+<p>Once installed, restart the Apache2 service by calling <code>sudo service apache2 restart</code>.</p>
 
-<p>Now it&rsquo;s necessary to download and install Boost. You can do it <a href="http://www.boost.org/">here</a>.</p>
+<p>Now it&rsquo;s necessary to download and install Boost. You can do it <a href="http://www.boost.org/">here</a>. Download it from the official website, unpack it and call the following commands on terminal:</p>
+
+<pre><code>./boostrap
+sudo ./b2 install
+</code></pre>
 
 <p>And finally, download FastCGI++ through the following link: <a href="http://www.nongnu.org/fastcgipp/">http://www.nongnu.org/fastcgipp/</a></p>
 
@@ -168,7 +171,7 @@ sudo make install
 
 <p></input></p>
 
-<p>Now compile it using:</p>
+<p>Now compile by calling:</p>
 
 <pre><code class="Bash ">
 g++ hello_world.cpp -lfastcgipp -lboost_date_time -lboost_system -lboost_thread -o hello_world.fcgi
@@ -180,7 +183,7 @@ g++ hello_world.cpp -lfastcgipp -lboost_date_time -lboost_system -lboost_thread 
 hello_world.fcgi: error while loading shared libraries: libfastcgipp.so.2: cannot open shared object file: No such file or directory
 </code></pre>
 
-<p>You may need to copy the libraries inside /usr/local/lib to /usr/lib. Copy and past the following statements:</p>
+<p>You may need to copy the libraries inside /usr/local/lib to /usr/lib. Copy and past the following commands on terminal:</p>
 
 <pre><code>
 cd /usr/lib
@@ -249,7 +252,7 @@ Runic English?: ᚺᛖᛚᛟ ᚹᛟᛉᛚᛞ
 
 <h2>Our dummy system (the comics shop)</h2>
 
-<p>We are going to design a dummy system in order to implementate our RESTful web service in C++. This system is very simple: An owner of a comics shop asked us to implementate a system for him. Our system will have only one entity: The comic itself. A comic has:</p>
+<p>We are going to design a dummy system in order to implementate our RESTful web service in C++. This system is very simple: An owner of a comics shop asked us to implementate a system for him. Our system will have only one entity/resource: The comic itself. A comic has:</p>
 
 <ul>
 <li>A name;</li>
@@ -272,7 +275,7 @@ mysql -u USERNAME -p
 <pre><code class="SQL ">CREATE DATABASE comics_shop;
 </code></pre>
 
-<p>Now enter on the recently created database:</p>
+<p>Now select the recently created database:</p>
 
 <pre><code class="SQL">USE comics_shop;
 </code></pre>
@@ -288,7 +291,7 @@ mysql -u USERNAME -p
 );
 </code></pre>
 
-<p>And the database part is done for now! Now, in order to establish the communication among our C++ programs and our MySQL database, we need to install the <a href="https://dev.mysql.com/doc/connector-cpp/en/index.html">MySQL C++ connector</a>. You can download it <a href="https://dev.mysql.com/downloads/connector/cpp/1.1.html">here</a>. Once downloaded, unpack it and move the content of &ldquo;lib&rdquo; folder to your /usr/lib folder, while moving the content of &ldquo;include&rdquo; to /usr/local/include/mysqlcppconn folder.</p>
+<p>Aaaaaand the database part is done for now! Now, in order to establish the communication among our C++ programs and our MySQL database, we need to install the <a href="https://dev.mysql.com/doc/connector-cpp/en/index.html">MySQL C++ connector</a>. You can download it <a href="https://dev.mysql.com/downloads/connector/cpp/1.1.html">here</a>. Once downloaded, unpack it and move the content of &ldquo;lib&rdquo; folder to your /usr/lib folder, while moving the content of &ldquo;include&rdquo; to /usr/local/include/mysqlcppconn folder.</p>
 
 <p>Now go to /var/www/html and create a new folder called &ldquo;comics&rdquo;. The first method we are going to implementate is the CREATE/POST. For that reason, inside the recently created folder, create a new folder named &ldquo;comic&rdquo; and inside of it create a new .cpp file named &ldquo;post.cpp&rdquo;. Let&rsquo;s start by creating the skeleton of our application:</p>
 
@@ -1148,7 +1151,7 @@ Now the only method missing is the GET, to retrieve informations of a comic by I
     return 0;
 }
 <code>
-Instead of</code>environment().posts<code>, now we are using</code>environment().gets<code>. Also, "get" parameters are a pair of string-string (instead of a POST, where the second value of the pair is an object), that's why we don't need to use</code>it->second.value<code>.</code>sql::ResultSet<code>representates a set of retrieved rows. Since we are indexing by the primary key, it will just return 0 or 1 (that's why we don't need to put it on a loop). If the method</code>getNext()&#8220;` return false, it indicates which none row with given ID was found, otherwise, we build a JSON string with the columns values and then output it to the user.</p>
+Instead of</code>environment().posts<code>, now we are using</code>environment().gets<code>. Also, "get" parameters are a pair of string-string (instead of a POST, where the second value of the pair is an object), that's why we don't need to use</code>it->second.value<code>.</code>sql::ResultSet<code>representates a set of retrieved rows. Since we are indexing by the primary key, it will just return either 0 or 1 rows (that's why we don't need to put it on a loop). If the method</code>getNext()&#8220;` return false, it indicates which none row with given ID was found, otherwise, we build a JSON string with the columns values and then output it to the user.</p>
 
 <h2>Rewriting URLs</h2>
 
@@ -1165,7 +1168,7 @@ RewriteEngine on
 RewriteRule comic/([0-9]+)$ comic/get.fcgi?id=$1
 </code></pre>
 
-<p>Now if you save it, you&rsquo;ll notice which calling the URL <a href="http://localhost/comics/comic/10">http://localhost/comics/comic/10</a> has the same effect as <a href="http://localhost/comics/comic/get.fcgi?id=10.">http://localhost/comics/comic/get.fcgi?id=10.</a> The reason is simple: We created a mapping rule where, if you call <code>comics/comic/&lt;A number&gt;</code>, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be &lsquo;copied&rsquo;.
+<p>Now if you save it, you&rsquo;ll notice that calling the URL <a href="http://localhost/comics/comic/10">http://localhost/comics/comic/10</a> has the same effect as <a href="http://localhost/comics/comic/get.fcgi?id=10.">http://localhost/comics/comic/get.fcgi?id=10.</a> The reason is simple: We created a mapping rule where, if you call <code>comics/comic/&lt;A number&gt;</code>, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be &lsquo;copied&rsquo;.
 The other mapping rules are much more easier:</p>
 
 <pre><code>
@@ -1178,7 +1181,7 @@ RewriteRule comic/post comic/post.fcgi
 
 <h2>Conclusion</h2>
 
-<p>On this tutorial, we learnt about i) Web services ii) RESTful web services iii) CGI scripts iv) An easy way to use C++ as a CGI language v) MySQL connection with C++ vi) A complete dummy system containing all four HTTP methods to manipulate an entity vii) Apache URL rewriting. That was a lot of things! :) I really hope you have enjoyed this tutorial. Until the next!</p>
+<p>On this tutorial, we learnt about i) Web services ii) RESTful web services iii) CGI scripts iv) An easy way to use C++ as a CGI language v) MySQL connection with C++ vi) A complete dummy system containing all four HTTP methods to manipulate a resource vii) Apache URL rewriting. That was a lot of things! :) I really hope you have enjoyed this tutorial. Until the next!</p>
 ]]></content>
   </entry>
   

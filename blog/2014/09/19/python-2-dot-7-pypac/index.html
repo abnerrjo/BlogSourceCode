@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="Here is another game of my series, this time about the classic Pacman. Click here to download Have fun! #!/usr/bin/python
-# encoding: utf-8 &hellip;">
+# -*-coding=utf-8 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -109,17 +109,17 @@
 <div id="code">
 <div><script src='https://gist.github.com/892bf12a4a185721485f.js?file=PyPac.py'></script>
 <noscript><pre><code>#!/usr/bin/python
-# encoding: utf-8
+# -*-coding=utf-8 -*-
 #-----------------------------------------------------------------
-# PyPac v1.0
+# PyPac v1.2
 # Created by: Abner Matheus
 # E-mail: abner.math.c@gmail.com
 # Github: http://github.com/picoledelimao
 #-----------------------------------------------------------------
-import thread, time, termios, os, platform, sys, tty, select, math
+import time, os, platform, sys, select, math
 from random import randint
 from copy import copy
-
+ 
 &quot;&quot;&quot;
 Store a (x, y) coordinate of the terrain
 &quot;&quot;&quot;
@@ -127,7 +127,7 @@ class Position:
     def __init__(self, x, y):
         self.x = x
         self.y = y 
-
+ 
 &quot;&quot;&quot;
 Representates the terrain of the map.
 The terrain is a bidimensional matrix that is mapped through
@@ -138,7 +138,7 @@ class Terrain:
     PACMAN = Position(10, 8)
     GHOST_CHAR = &#39;^&#39;
     GHOST_WEAKEN_CHAR = &#39;*&#39;
-    PACMAN_CHAR = &#39;◔&#39;
+    PACMAN_CHAR = &#39;@&#39;
     BULLET = &#39;.&#39;
     GREATER_BULLET = &#39;0&#39;
     def __init__(self):
@@ -202,8 +202,8 @@ class Terrain:
         result = &quot;&quot;
         for i in range(len(matrix)):
             result += &quot;&quot;.join(matrix[i]) + &quot;\n&quot;
-        print result
-
+        print(result)
+ 
 &quot;&quot;&quot;
 Enumerate the possible directions that a walkable can take
 &quot;&quot;&quot;
@@ -212,7 +212,7 @@ class Direction:
     BACKWARD = 2
     UPWARD = 3
     DOWNWARD = 4
-
+ 
 &quot;&quot;&quot;
 Representates a walkable object in the map (ghost and pacman)
 &quot;&quot;&quot;
@@ -251,7 +251,7 @@ class Walkable:
                 self.position.y += 1
         else: return False
         return True
-
+ 
 &quot;&quot;&quot;
 Representates the ghosts in the map.
 A ghost is a walkable
@@ -277,7 +277,7 @@ class Ghost(Walkable):
     &quot;&quot;&quot;
     def strengthen(self):
         self.isWeaken = False
-
+ 
 &quot;&quot;&quot;
 Representates the Pacman
 &quot;&quot;&quot;
@@ -286,7 +286,7 @@ class Pacman(Walkable):
         Walkable.__init__(self)
         self.position = copy(Terrain.PACMAN)
         self.direction = Direction.FORWARD
-
+ 
 &quot;&quot;&quot;
 Main class of the game.
 It receives the input of the user and maps it to its state.
@@ -312,7 +312,7 @@ class Game:
     &quot;&quot;&quot;
     def start_new_game(self):
         self.state.start_new_game()
-
+ 
 &quot;&quot;&quot;
 Superclass of states of a game
 &quot;&quot;&quot;
@@ -321,7 +321,7 @@ class GameState:
     def loop(self):  raise NotImplementedException()
     def set_direction(self, direction): raise NotImplementedException()
     def start_new_game(self): raise NotImplementedException()
-
+ 
 &quot;&quot;&quot;
 Initial screen of the game.
 &quot;&quot;&quot;
@@ -348,24 +348,24 @@ PRESS &#39;N&#39; TO START A NEW GAME.
 &#39;A&#39;, &#39;S&#39;, &#39;D&#39;, &#39;W&#39; TO MOVE.
 &#39;ESC&#39; TO EXIT GAME.
 -----------------------------
-
+ 
 CREATED BY:
 -----------------------------
 ABNER MATHEUS (abner.math.c@gmail.com)
 &quot;&quot;&quot;
         Terrain.clear_screen()
-        print message
+        print(message.decode(&#39;utf-8&#39;))
     def set_direction(self, direction): pass
     def start_new_game(self):
         self.context.state = StatePlaying(self.context) 
-
+ 
 class StateGameOver(GameState):
     def __init__(self, context):
         GameState.__init__(self)
         self.context = context
     def loop(self): 
         Terrain.clear_screen()
-        print &quot;&quot;&quot;
+        print(&quot;&quot;&quot;
   ____   ____  ___ ___    ___       ___   __ __    ___  ____  
  /    | /    ||   |   |  /  _]     /   \ |  |  |  /  _]|    \ 
 |   __||  o  || _   _ | /  [_     |     ||  |  | /  [_ |  D  )
@@ -374,11 +374,11 @@ class StateGameOver(GameState):
 |     ||  |  ||   |   ||     |    |     | \   / |     ||  .  \ 
 |___,_||__|__||___|___||_____|     \___/   \_/  |_____||__|\_|
                                                               
-PRESS &#39;N&#39; TO START A NEW GAME.&quot;&quot;&quot;
+PRESS &#39;N&#39; TO START A NEW GAME.&quot;&quot;&quot;.decode(&#39;utf-8&#39;))
     def set_direction(self, direction): pass
     def start_new_game(self):
         self.context.state = StateInitial(self.context)
-
+ 
 &quot;&quot;&quot;
 Main state of the game.
 Here is where the stuff happens.
@@ -473,13 +473,13 @@ class StatePlaying(GameState):
     &quot;&quot;&quot;
     def __render(self):
         self.terrain.render(self.pacman, self.ghosts)
-        print (&quot;LIVES: %d    SCORE: %d    LEVEL: %d&quot; % (self.context.lives, self.context.score, self.context.level))
+        print(&quot;LIVES: %d    SCORE: %d    LEVEL: %d&quot; % (self.context.lives, self.context.score, self.context.level))
     def loop(self): 
         self.count_loop += 1
         if self.terrain.is_clear():
-            print &quot;&quot;&quot;
+            print(&quot;&quot;&quot;
 CONGRATULATIONS! 
-A NEW LEVEL WILL START IN FEW SECONDS.&quot;&quot;&quot;
+A NEW LEVEL WILL START IN FEW SECONDS.&quot;&quot;&quot;.decode(&#39;utf-8&#39;))
             time.sleep(1)
             self.context.level += 1
             self.start_new_level()
@@ -517,8 +517,8 @@ A NEW LEVEL WILL START IN FEW SECONDS.&quot;&quot;&quot;
             self.context.state = StateGameOver(self.context)
         else:
             self.__render()
-            print &quot;&quot;&quot;
-YOU LOST A LIVE.&quot;&quot;&quot;
+            print(&quot;&quot;&quot;
+YOU LOST A LIVE.&quot;&quot;&quot;.decode(&#39;utf-8&#39;))
             time.sleep(2)
             self.pacman = Pacman()
             self.pacman = Pacman()
@@ -526,54 +526,98 @@ YOU LOST A LIVE.&quot;&quot;&quot;
             for i in range(4): self.ghosts.append(Ghost(i))
             self.count_loop = 0
             self.countdown = 0
-
-class NonBlockingConsole(object):
-    def __enter__(self):
-        self.old_settings = termios.tcgetattr(sys.stdin)
-        tty.setcbreak(sys.stdin.fileno())
-        return self
-    def __exit__(self, type, value, traceback):
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
-    def get_data(self):
-        if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
-            return sys.stdin.read(1)
-        return False
-
-class Controller:
-    SPEED = 0.2
-    def __init__(self):
-        self.game = Game() 
-        self.start_game()
-    def press_key(self, nbc):
-        key = str(nbc.get_data())
-        if key == &#39;\x1b&#39;: #ESC
-            return False
-        elif key == &#39;n&#39;: #Enter
-            self.game.start_new_game()
-        elif key == &#39;d&#39;: #Right arrow
-            self.game.set_direction(Direction.FORWARD)
-        elif key == &#39;a&#39;: #Left arrow
-            self.game.set_direction(Direction.BACKWARD)
-        elif key == &#39;w&#39;: #Up arrow
-            self.game.set_direction(Direction.UPWARD)
-        elif key == &#39;s&#39;: #Down arrow
-            self.game.set_direction(Direction.DOWNWARD)
-        return True
-    def loop(self, threadName): 
-        while self.running:
-            time.sleep(Controller.SPEED)
+ 
+#---------------------------------
+# IO MANAGER
+#---------------------------------
+def controller_windows():
+    import Tkinter
+    class Controller:
+        SPEED = 0.2
+        def __init__(self):
+            self.game = Game() 
+            self.start_game()
+        def press_key(self, event):
+            key = event.keysym.lower()
+            if key == &quot;escape&quot;: #ESC
+                return False
+            elif key == &quot;n&quot;: #Enter
+                self.game.start_new_game()
+            elif key == &quot;d&quot;: #Right arrow
+                self.game.set_direction(Direction.FORWARD)
+            elif key == &quot;a&quot;: #Left arrow
+                self.game.set_direction(Direction.BACKWARD)
+            elif key == &quot;w&quot;: #Up arrow
+                self.game.set_direction(Direction.UPWARD)
+            elif key == &quot;s&quot;: #Down arrow
+                self.game.set_direction(Direction.DOWNWARD)
+            return True
+        def loop(self):
             self.game.loop()   
-    def start_game(self):
-        self.running = True
-        thread.start_new_thread(self.loop, (&quot;Thread-1&quot;,))
-        try:
-            with NonBlockingConsole() as nbc:
-                while self.press_key(nbc): pass
-        except KeyboardInterrupt: pass
-        self.running = False
-
+            self.console.after(250, self.loop)
+        def start_game(self):
+            self.console = Tkinter.Tk()
+            self.console.bind_all(&#39;&lt;Key&gt;&#39;, self.press_key)
+            self.console.withdraw()
+            try:
+                self.console.after(250, self.loop)
+                self.console.mainloop()
+            except KeyboardInterrupt: pass
+    Controller()
+ 
+def controller_unix():
+    import termios, tty, thread
+    class NonBlockingConsole(object):
+        def __enter__(self):
+            self.old_settings = termios.tcgetattr(sys.stdin)
+            tty.setcbreak(sys.stdin.fileno())
+            return self
+        def __exit__(self, type, value, traceback):
+            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
+        def get_data(self):
+            if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+                return sys.stdin.read(1)
+            return False
+                
+    class Controller:
+        SPEED = 0.2
+        def __init__(self):
+            self.game = Game() 
+            self.start_game()
+        def press_key(self, nbc):
+            key = str(nbc.get_data())
+            if key == &#39;\x1b&#39;: #ESC
+                return False
+            elif key == &#39;n&#39;: #Enter
+                self.game.start_new_game()
+            elif key == &#39;d&#39;: #Right arrow
+                self.game.set_direction(Direction.FORWARD)
+            elif key == &#39;a&#39;: #Left arrow
+                self.game.set_direction(Direction.BACKWARD)
+            elif key == &#39;w&#39;: #Up arrow
+                self.game.set_direction(Direction.UPWARD)
+            elif key == &#39;s&#39;: #Down arrow
+                self.game.set_direction(Direction.DOWNWARD)
+            return True
+        def loop(self, threadName): 
+            while self.running:
+                time.sleep(Controller.SPEED)
+                self.game.loop()   
+        def start_game(self):
+            self.running = True
+            thread.start_new_thread(self.loop, (&quot;Thread-1&quot;,))
+            try:
+                with NonBlockingConsole() as nbc:
+                    while self.press_key(nbc): pass
+            except KeyboardInterrupt: pass
+            self.running = False
+    Controller()
+    
 if __name__ == &#39;__main__&#39;:
-    Controller()</code></pre></noscript></div>
+    if platform.system() == &quot;Windows&quot;:
+        controller_windows()
+    else:
+        controller_unix()</code></pre></noscript></div>
 
 </div>
 
@@ -639,7 +683,7 @@ if __name__ == &#39;__main__&#39;:
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/">Building a RESTful Web Service in C++ (Is It Even Possible?)</a>
+        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus/">Building a RESTful Web Service in C++</a>
       </li>
     
       <li class="post">

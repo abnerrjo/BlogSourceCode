@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Apps | Tango with code]]></title>
   <link href="http://PicoleDeLimao.github.io/blog/categories/apps/atom.xml" rel="self"/>
   <link href="http://PicoleDeLimao.github.io/"/>
-  <updated>2015-10-13T19:27:02-03:00</updated>
+  <updated>2015-11-14T17:43:11-03:00</updated>
   <id>http://PicoleDeLimao.github.io/</id>
   <author>
     <name><![CDATA[Abner Matheus]]></name>
@@ -596,9 +596,9 @@ if __name__ == &#39;__main__&#39;:
 
     class JanelaPoisson(JanelaDiscreta):
         def __init__(self, top_level):
-            JanelaDiscreta.__init__(self, top_level, &quot;Parâmetro λ&quot;)
+            JanelaDiscreta.__init__(self, top_level, &quot;Parâmetro gama&quot;)
         def clica_botao_ok(self, event):
-            alfa = self.entries[&quot;Parâmetro λ&quot;].get()
+            alfa = self.entries[&quot;Parâmetro gama&quot;].get()
             try:
                 self.modelo = Poisson(alfa)
                 JanelaDiscreta.clica_botao_ok(self, event)
@@ -822,9 +822,9 @@ if __name__ == &#39;__main__&#39;:
                 
     class JanelaExponencial(JanelaContinua):
         def __init__(self, top_level):
-            JanelaContinua.__init__(self, top_level, &quot;Parâmetro α&quot;)
+            JanelaContinua.__init__(self, top_level, &quot;Parâmetro alfa&quot;)
         def clica_botao_ok(self, event):
-            a = self.entries[&quot;Parâmetro α&quot;].get()
+            a = self.entries[&quot;Parâmetro alfa&quot;].get()
             try:
                 self.modelo = Exponencial(a)
                 JanelaContinua.clica_botao_ok(self, event)
@@ -833,10 +833,10 @@ if __name__ == &#39;__main__&#39;:
 
     class JanelaNormal(JanelaContinua):
         def __init__(self, top_level):
-            JanelaContinua.__init__(self, top_level, &quot;Parâmetro μ&quot;, &quot;Parâmetro σ²&quot;)
+            JanelaContinua.__init__(self, top_level, &quot;Média&quot;, &quot;Variância&quot;)
         def clica_botao_ok(self, event):
-            u = self.entries[&quot;Parâmetro μ&quot;].get()
-            o2 = self.entries[&quot;Parâmetro σ²&quot;].get()
+            u = self.entries[&quot;Média&quot;].get()
+            o2 = self.entries[&quot;Variância&quot;].get()
             try:
                 self.modelo = Normal(u, o2)
                 JanelaContinua.clica_botao_ok(self, event)
