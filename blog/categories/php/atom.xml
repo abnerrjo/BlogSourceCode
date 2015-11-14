@@ -1,0 +1,1308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Php | Tango with code]]></title>
+  <link href="http://PicoleDeLimao.github.io/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://PicoleDeLimao.github.io/"/>
+  <updated>2015-10-13T19:27:02-03:00</updated>
+  <id>http://PicoleDeLimao.github.io/</id>
+  <author>
+    <name><![CDATA[Abner Matheus]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Managing Sessions in PHP]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/11/12/managing-sessions-in-php/"/>
+    <updated>2014-11-12T20:40:47-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/11/12/managing-sessions-in-php</id>
+    <content type="html"><![CDATA[<p>HTTP is a stateless protocol. However, sometimes we <em>do</em> want to keep some state of the application, like, for example, some information about the current user who is browsing your site. In PHP and most backend languages in general, there are two ways to do that:</p>
+
+<ul>
+<li>Cookies</li>
+<li>Sessions</li>
+</ul>
+
+
+<p>There are some differences between the two techniques:</p>
+
+<!-- more -->
+
+
+<ul>
+<li>Cookies are kept on user&rsquo;s machine while sessions stay on server;</li>
+<li>Usually, cookies last longer than sessions, where the latter lasts until the user closes the browser;</li>
+<li>Sessions support a bigger quantity of data.</li>
+</ul>
+
+
+<p>On this tutorial we&rsquo;re going to focus in sessions.</p>
+
+<h2>Starting a session</h2>
+
+<p>To start a session, use the method session_start()</p>
+
+<pre><code class="PHP">&lt;?php
+session_start();
+//$_SESSION says: USE MEEE!!!
+?&gt;
+</code></pre>
+
+<p>Sessions are accessible through the superglobal variable $_SESSION. This variable is a simple array, wherein its values are persisted on a file on the server machine. To identify each user, sessions use a small cookie called session_id.</p>
+
+<p>Generally sessions are started automatically after the first time use start them. This behavior is defined on the parameter <em>session.auto_start</em> on the config file <em>php.ini</em>. Because of that, it&rsquo;s a good pratice to check if a session is already started before you start it again:</p>
+
+<pre><code class="PHP">if (!isset($_SESSION)) {
+    session_start();
+}
+</code></pre>
+
+<p>Since version 5.3, PHP will print an error message whenever you start an already started session.</p>
+
+<h2>Creating session variables</h2>
+
+<p>Create session variables is pretty simple. You just need to assign a value to a array key. Example:</p>
+
+<pre><code class="PHP">&lt;?php
+if (!isset($_SESSION)) {
+    session_start();
+}
+$_SESSION["name"] = "Abner";
+?&gt;
+</code></pre>
+
+<h2>Accessing variables</h2>
+
+<p>In order to access session variables, you first need to start a session. After that, all variables are accessible through the superglobal variable $_SESSION. That&rsquo;s that simple. :)</p>
+
+<pre><code class="PHP">&lt;?php
+if (!isset($_SESSION)) {
+    session_start();
+}
+echo $_SESSION["name"]; //Abner
+?&gt;
+</code></pre>
+
+<h2>Modify variables</h2>
+
+<p>That follows the same principle of create. Just override the old value.</p>
+
+<pre><code class="PHP">&lt;?php
+$_SESSION["name"] = "Ana"; //overrided what was there before
+?&gt;
+</code></pre>
+
+<h2>Deleting variables or the entire session</h2>
+
+<p>To delete a session variable, use the method unset, as you&rsquo;d do with any other variable:</p>
+
+<pre><code class="PHP">&lt;?php
+unset($_SESSION["name"]); //variable is deleted from session
+?&gt;
+</code></pre>
+
+<p>But if you wish to delete all variables at once, the way to do that is using the method session_unset.</p>
+
+<pre><code class="PHP">&lt;?php
+session_unset();
+?&gt;
+</code></pre>
+
+<p>Notice this method is deprecated. The correct way to do that is simply setting a new array to $_SESSION.</p>
+
+<pre><code class="PHP">&lt;?php
+$_SESSION = array();
+?&gt; 
+</code></pre>
+
+<p>And then the Garbage Collect will free the memory allocation for the old variables.</p>
+
+<p>Even so, if you really wish to destroy the session by complete and not just clean it, you can use session_destroy.</p>
+
+<pre><code class="PHP">&lt;?php
+session_destroy();
+?&gt;
+</code></pre>
+
+<p>While this method destroys the session file on server machine, the session (and its variables) still exists on memory and will keep existing until the user go to another page. Because of that, it&rsquo;s recommended you clean the session before destroying it.</p>
+
+<p>Well, that&rsquo;s it folks! :)</p>
+
+<p>I hope you appreciated today&rsquo;s tutorial.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating User Authentification With Code Igniter]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter/"/>
+    <updated>2014-09-30T07:45:45-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter</id>
+    <content type="html"><![CDATA[<p>I&rsquo;m a complete n00b in PHP. My first sites were done without a framework, I even got them to work, but the experience was a bit.. traumatizing, to say the least :P</p>
+
+<p>I badly needed a framework to help me, but that wasn&rsquo;t necessary to spend more time learning how to use it than to developing the site. Oh boy, Code Igniter <em>is</em> that framework!</p>
+
+<p>It&rsquo;s totally clean and intuitive, and it contains the only necessary to put it together.</p>
+
+<p>In today&rsquo;s post I show you how to make a simple code authentification using it. Let&rsquo;s go!</p>
+
+<p style="text-align:center;"> <a href="/downloads/code/auth.zip">Click here to download the complete example</a></p>
+
+<!-- more -->
+
+
+<p>I designed this tutorial to a completly novice person. So if you already know a bit about this framework, I apologize in advance.</p>
+
+<p>And was a prerequisite I assume that you aready have a HTTP local server that supports PHP. If you don&rsquo;t, don&rsquo;t worry, you can do it with a <a href="https://www.apachefriends.org/pt_br/index.html">LAMP software</a>.</p>
+
+<h2>&ldquo;Installing&rdquo; the framework</h2>
+
+<p>Now let&rsquo;s download the CodeIgniter! :D</p>
+
+<p>Go to <a href="https://ellislab.com/codeigniter">CodeIgniter site</a> and click on Download.</p>
+
+<p>To create a new project with it, you just need to copy and paste the CodeIgniter folder. Damn, the simplicity makes me want to cry! T_T</p>
+
+<h2>Creating our database</h2>
+
+<p>Our first task is to create our database. We are going to need a User containing name, login and password, so our database will have only one table, and it&rsquo;s pretty simple:</p>
+
+<pre><code class="SQL">CREATE TABLE IF NOT EXISTS `User` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(30) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `login` (`login`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+</code></pre>
+
+<p>To link your database to the CodeIgniter, go to your project&rsquo;s folder > application > config > database.php</p>
+
+<p>In the lines 52 to 54, you can find the following code:</p>
+
+<pre><code class="PHP">$db['default']['username'] = '';
+$db['default']['password'] = '';
+$db['default']['database'] = '';
+</code></pre>
+
+<p>You just need to fill it with the informations related to your database.</p>
+
+<h2>Creating the Views</h2>
+
+<p>CodeIgniter, as most frameworks, use the MVC pattern. It separates the visualization of the data (views: HTML, CSS, &hellip;) from the business logic (models: PHP itself, including database queries) and it has a controller that serves as a bridge between the two.</p>
+
+<p>Let&rsquo;s start creating the views, and right after the models and for last the controller.</p>
+
+<p>To create a new view, go to your project&rsquo;s folder > views and create a new HTML or PHP file right there. It&rsquo;s cool to make subfolders, to keep it well organized, you know?</p>
+
+<p>Because of it, we are going to create the login and register views inside a subfolder called &ldquo;<em>auth</em>&rdquo;.</p>
+
+<p>Inside this subfolder, create four files: <em>login.php</em>, <em>register.php</em>, <em>success.php</em> and <em>fail.php</em>.</p>
+
+<p>At first, you could think in each file containing the following structure:</p>
+
+<pre><code class="HTML">&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+&lt;head&gt;
+...
+&lt;/head&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>But here&rsquo;s where the framework comes at the play! You don&rsquo;t need to repeat any HTML structure. You can refactor it into a file apart and reuse it in all files.</p>
+
+<p>Because of that, we are going to create two other files: <em>header.php</em> and <em>footer.php</em>. The first containing the HTML header and the second containg the tags closure.</p>
+
+<pre><code class="PHP header.php">&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;title&gt;CodeIgniter User Auth&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+</code></pre>
+
+<pre><code class="PHP footer.php">    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Now let&rsquo;s come back to the other four files we had created previously, starting with <em>login.php</em>:</p>
+
+<pre><code class="PHP login.php">&lt;?php echo form_open('login'); ?&gt;
+    &lt;input type="text" name="login" placeholder="Login" required /&gt;
+    &lt;input type="password" name="password" placeholder="Password" required /&gt;
+    &lt;button type="submit"&gt;Log in&lt;/button&gt;
+&lt;/form&gt;     
+&lt;a href="&lt;?php echo base_url(); ?&gt;index.php/register"&gt;Click here to register!&lt;/a&gt;   
+</code></pre>
+
+<p>This file is basically a form contaning two input fields: One for the login and another for the password.</p>
+
+<p>Now there&rsquo;s a strange file in this file. Can you notice it? Actually two!</p>
+
+<p>The first one is the <strong>echo form_open(&lsquo;login)</strong> statement. What does it do?</p>
+
+<p>It basically creates a new form with the tag <code>&lt;form&gt;</code>, but with the difference it already set the action with the correct route. Don&rsquo;t worry, we&rsquo;ll talk about rotes later.</p>
+
+<p>And the second strange thing is the <strong>echo base_url()</strong> statement right below the <code>&lt;/form&gt;</code>. It simply print the base url of our website. For example, in the case of this blog, it would print <em><a href="http://picoledelimao.github.io/">http://picoledelimao.github.io/</a></em>. It&rsquo;s important because sometimes you want to put a link based on the absolute path, but you don&rsquo;t want to say your site domain explicitly.</p>
+
+<p><em>Take a breath now</em></p>
+
+<p>Rested? Now let&rsquo;s go to the <em>register.php</em> file:</p>
+
+<pre><code class="PHP register.php">&lt;?php echo form_open('new_register'); ?&gt;
+    &lt;input type="text" name="name" placeholder="Name" required maxlength="100" autofocus /&gt; 
+    &lt;input type="text" name="login" placeholder="Login" required maxlength="30" /&gt;
+    &lt;input type="password" name="password" placeholder="Password" required maxlength="30" /&gt;
+    &lt;button type="submit"&gt;Cadastrar&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>It follows the same logic of the login.php file. Just noticed the additional attribute &ldquo;<em>maxlength</em>&rdquo; on the input fields. I put it so it can match the constraints I defined on our database. It&rsquo;s not really essential.</p>
+
+<p>And, for last, the <em>success.php</em> and <em>fail.php</em> files, that will show messages to ther user based on his success in logging in. They don&rsquo;t have any trick:</p>
+
+<pre><code class="PHP fail.php">Fail to log in. &lt;a href="index"&gt;Try again.&lt;/a&gt;
+</code></pre>
+
+<pre><code class="PHP success.php">Hello, &lt;?php echo $user; ?&gt;. You are logged in!
+&lt;a href="logout"&gt;Click here to log out.&lt;/a&gt;
+</code></pre>
+
+<blockquote><p>Hey!! You said it didn&rsquo;t have any trick! So what about this variable $user?</p></blockquote>
+
+<p>Yea, I lied&hellip; Sorry about that :P</p>
+
+<p>You can send some data to the views through the controllers (remember I said the controller was a bridge between models and views?). In this case, $user variable representates the user name. But don&rsquo;t worry, we&rsquo;ll use how it works with more details later.</p>
+
+<p><strong>Done</strong>! Your views folder must have the following structure:</p>
+
+<ul>
+<li>views
+
+<ul>
+<li>auth
+
+<ul>
+<li>header.php</li>
+<li>footer.php</li>
+<li>login.php</li>
+<li>register.php</li>
+<li>fail.php</li>
+<li>success.php</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Creating the models</h2>
+
+<p>The models, in CodeIgniter, stand in the application > models folder. Let&rsquo;s start creating our own. We are just going to need one, and to it we will delegate all the database queries.</p>
+
+<p>Create a file called <strong>usermodel.php</strong>. Every model in CodeIgniter has the following structure:</p>
+
+<pre><code class="PHP">&lt;?php
+class NAME extends CI_Model {
+
+}?&gt;
+</code></pre>
+
+<p>In our case, it&rsquo;d be something like that:</p>
+
+<pre><code class="PHP usermodel.php">&lt;?php
+class UserModel extends CI_Model {
+
+}?&gt;
+</code></pre>
+
+<p>Another important thing is, before we use our database, we need to load it! We can do it in the own class constructor:</p>
+
+<pre><code class="PHP usermodel.php">&lt;?php
+class UserModel extends CI_Model {
+
+    public function __construct() {
+        $this-&gt;load-&gt;database();
+    }
+
+}?&gt;
+</code></pre>
+
+<p>Our simple model will have only two methods: <em>login</em> and <em>register</em>.</p>
+
+<pre><code class="PHP usermodel.php">&lt;?php
+class UserModel extends CI_Model {
+
+    public function __construct() {
+        $this-&gt;load-&gt;database();
+    }
+
+    function login($login, $password) {
+
+    }
+
+    function register($name, $login, $password) {
+
+    }
+
+}?&gt;
+</code></pre>
+
+<p>Let&rsquo;s start with the <em>login</em> method. What it does is basically pretty simple: It looks the User table searching for a user containg the same login and password passed through the parameters. In case it finds it, it returns true.</p>
+
+<p>Of course, we aren&rsquo;t fool to the point to put the original password on our database. We need some kind of encryption to store the password. I will use a famous one called <a href="http://pt.wikipedia.org/wiki/MD5">MD5</a>.</p>
+
+<p>Now to search the table for a user containg the same login and password, we are going to need a SELECT clausure. Gladly, CodeIgniter gives us a simpler way to do that, using <a href="https://ellislab.com/codeigniter/user-guide/database/active_record.html">Active Record</a>.</p>
+
+<pre><code class="PHP usermodel.php">function login($login, $password) {
+    $this-&gt;db-&gt;select("*");
+    $this-&gt;db-&gt;from("User");
+    $this-&gt;db-&gt;where("login", $login);
+    $this-&gt;db-&gt;where("password", md5($password));
+}
+</code></pre>
+
+<p>Active Record is called that way because some queries are kept in the memory, avoiding double work in case you use the same query again later.</p>
+
+<p>The above block statement is selecting all columns where its login is equals to the passed login and its password is equals to the passed <strong>encrypted</strong> password.</p>
+
+<p>Now to get the resulting rows, we just need to apply the method &ldquo;<em>get</em>&rdquo;. We don&rsquo;t need to get any other information other than if there is any resulting row or not (if there&rsquo;s, it means the passed user is valid and so it can login). To check the number of resulting rows, we can use the method &ldquo;<em>num_rows</em>&rdquo;:</p>
+
+<pre><code class="PHP usermodel.php">function login($login, $password) {
+    $this-&gt;db-&gt;select("*");
+    $this-&gt;db-&gt;from("User");
+    $this-&gt;db-&gt;where("login", $login);
+    $this-&gt;db-&gt;where("password", md5($password));
+    $query = $this-&gt;db-&gt;get();
+    return $query-&gt;num_rows() &gt; 0;
+}
+</code></pre>
+
+<p>And so the method login is ready! It wasn&rsquo;t complicated, was it?</p>
+
+<p>Now let&rsquo;s go to the register method now. It works in a similiar way, but now we aren&rsquo;t interesting in selecting rows, but inserting them. Gladly, there&rsquo;s also a magical method for this task:</p>
+
+<pre><code class="PHP usermodel.php">function register($name, $login, $password) {
+    if ($this-&gt;exists($login)) return;
+    $this-&gt;db-&gt;insert('User', array(
+        'name' =&gt; $name,
+        'login' =&gt; $login,
+        'password' =&gt; md5($password)
+    ));
+}
+</code></pre>
+
+<p>The magical method I&rsquo;m talking about is the &ldquo;<em>$this->db->insert</em>&rdquo;. It receives two arguments: A string containing the table name, and an associative array containing the columns name and their values.</p>
+
+<p>In the above example, I&rsquo;m inserting a new row to the <strong>User</strong> table with the name, login and password passed through the parameters.</p>
+
+<p>There&rsquo;s another thing in our code: The method &ldquo;<em>exists</em>&rdquo;. What it does is to search the table for an user containing the given login and returns true if it finds it. Remember! The login is unique. So we need to check it before to insert it.</p>
+
+<p>However, it is not a built-in method. Therefore, here is its code:</p>
+
+<pre><code class="PHP usermodel.php">private function exists($login) {
+    $this-&gt;db-&gt;select("*");
+    $this-&gt;db-&gt;from("User");
+    $this-&gt;db-&gt;where("login", $login);
+    $query = $this-&gt;db-&gt;get();
+    return $query-&gt;num_rows() &gt; 0;
+}
+</code></pre>
+
+<p>I think you can figure it out from the <em>login</em> method, since they are both very similar.</p>
+
+<p>And it&rsquo;s <strong>done</strong>! Our complete model is here:</p>
+
+<pre><code class="PHP usermodel.php">&lt;?php
+class UserModel extends CI_Model {
+
+    public function __construct() {
+        $this-&gt;load-&gt;database();
+    }
+
+    function login($login, $password) {
+        $this-&gt;db-&gt;select("*");
+        $this-&gt;db-&gt;from("User");
+        $this-&gt;db-&gt;where("login", $login);
+        $this-&gt;db-&gt;where("password", md5($password));
+        $query = $this-&gt;db-&gt;get();
+        return $query-&gt;num_rows() &gt; 0;
+    }
+
+    private function exists($login) {
+        $this-&gt;db-&gt;select("*");
+        $this-&gt;db-&gt;from("User");
+        $this-&gt;db-&gt;where("login", $login);
+        $query = $this-&gt;db-&gt;get();
+        return $query-&gt;num_rows() &gt; 0;
+    }
+
+    function register($name, $login, $password) {
+        if ($this-&gt;exists($login)) return;
+        $this-&gt;db-&gt;insert('User', array(
+            'name' =&gt; $name,
+            'login' =&gt; $login,
+            'password' =&gt; md5($password)
+        ));
+    }
+
+}?&gt;
+</code></pre>
+
+<h2>Creating the controller</h2>
+
+<p>Finally! Let&rsquo;s work on the controller. Let&rsquo;s start creating a file called <strong>user.php</strong> on application > controllers folder. This file has the following structure:</p>
+
+<pre><code class="PHP user.php">&lt;?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class User extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        }
+
+}
+</code></pre>
+
+<p>That is, as you assumed, the default structure of a controller in CodeIginiter. All them inherit from CI_Controller.</p>
+
+<p>We can also define which models we are going to use. It must be done inside your controller constructor in the following way:</p>
+
+<pre><code class="PHP user.php">public function __construct() {
+    parent::__construct();  
+    $this-&gt;load-&gt;model("usermodel");
+}
+</code></pre>
+
+<p>If you need more models, just copy/paste the &ldquo;<em>$this->load->model</em>&rdquo; statement and pass to it the name of the file where the model is.</p>
+
+<p>We also need to load some utils:</p>
+
+<pre><code class="PHP user.php">public function __construct() {
+    parent::__construct();
+        $this-&gt;load-&gt;helper(array('url', 'form'));
+        $this-&gt;load-&gt;model("usermodel");
+}
+</code></pre>
+
+<p>Now let&rsquo;s create the <strong>view</strong> method, that will receive a file inside the views folder and will join it with the header and the footer to make the complete page. CodeIgniter gives us an interesting method to do that, called &ldquo;<em>$this->load->view</em>&rdquo;.</p>
+
+<pre><code class="PHP user.php">private function view($page) {
+    $this-&gt;load-&gt;view("auth/header");
+    $this-&gt;load-&gt;view($page);
+    $this-&gt;load-&gt;view("auth/footer");
+}
+</code></pre>
+
+<p>Now we already have a method to visualize our pages, let&rsquo;s start creating methods to show those pages.</p>
+
+<p>The first one is the &ldquo;<em>index</em>&rdquo; method, that will show the initial page.</p>
+
+<pre><code class="PHP user.php">public function index() {
+    $this-&gt;view("auth/login");
+}
+</code></pre>
+
+<p>Hmmmm&hellip; Quite easy. :)
+It just call the method &ldquo;view&rdquo; passing as argument the page &ldquo;auth/login&rdquo; we had create on the beginning of this tutorial.</p>
+
+<p>Now let&rsquo;s do the same thing to the pages &ldquo;<em>register</em>&rdquo;, &ldquo;<em>fail</em>&rdquo; and &ldquo;<em>success</em>&rdquo;:</p>
+
+<pre><code class="PHP user.php">public function register() {
+    $this-&gt;view("auth/register");
+}
+
+public function fail() {
+    $this-&gt;view("auth/fail");
+}
+
+public function success() {
+    $this-&gt;view("auth/success");
+}
+</code></pre>
+
+<p>Those are cool methods, but how do we access them through a URL? It&rsquo;s time to talk about routing. Routing is just like that: The process of associate a method to an URL!</p>
+
+<p>By default, each public method inside the controller is accessible through the following link:</p>
+
+<pre><code class="HTML">&lt;url_base&gt;/index.php/&lt;controller_name&gt;/&lt;method_name&gt;
+</code></pre>
+
+<p>But what do we really want is to reduce the URL to the following:</p>
+
+<pre><code class="HTML">&lt;url_base&gt;/index.php/&lt;method_name&gt;
+</code></pre>
+
+<p>Because it&rsquo;s simpler! :)</p>
+
+<p>In order to do that, go to application > config > routes.php. On line 41, change &ldquo;default_controller&rdquo; to &ldquo;user&rdquo;:</p>
+
+<pre><code class="PHP routes.php">$route['default_controller'] = "user";
+</code></pre>
+
+<p>And now let&rsquo;s define the routes to the methods we created in the controller:</p>
+
+<pre><code class="PHP routes.php">$route['index'] = "user/index";
+$route['success'] = "user/success";
+$route['fail'] = "user/fail";
+$route['register'] = "user/register";
+</code></pre>
+
+<p>It&rsquo;s simple to understand: The key of the <em>$route</em> array is actually the link after the base url. For example:</p>
+
+<p><code>$route["success"] will turn into base_url/success</code></p>
+
+<p>And its value is the method of the controller that it&rsquo;s associated. In the case of success, for example, it&rsquo;s associated with the method &ldquo;success&rdquo; of the controller &ldquo;user&rdquo;.</p>
+
+<p>Gotcha? Good! :)</p>
+
+<p>We also need to define some other routes necessary for our site. They are: <strong>login</strong> (route that will allow us to login), <strong>logout</strong> (routes that will allow us to log out) and <strong>new_register</strong> (route that will allow us to register a new user).</p>
+
+<pre><code class="PHP routes.php">$route['login'] = "user/login";
+$route['logout'] = "user/logout";
+$route['new_register'] = "user/new_register";
+</code></pre>
+
+<p>Those routes are a bit different from the others we created previously. They are not intended to show any page, but to proccess some information passed through the forms (a POST requisition). If you scroll up, remember we used the statement &ldquo;<em>form_open(&rdquo;&hellip;&ldquo;)</em>&rdquo; to create a new form? The passed argument to this method now representates a route here.</p>
+
+<p>Of course, they, like any other route, are associate with a controller method, methods we didn&rsquo;t create yet, so let&rsquo;s do it!</p>
+
+<p>Let&rsquo;s start with the login method. We know the form will send a <strong>POST</strong> requisition to this method. Let&rsquo;s get the fields data through the method &ldquo;<em>$this->input->post</em>&rdquo;, where the passed argument is the field name.</p>
+
+<pre><code class="PHP user.php">public function login() {
+    $login = $this-&gt;input-&gt;post("login");
+    $password = $this-&gt;input-&gt;post("password");
+}
+</code></pre>
+
+<p>The above code is getting the values of the login and password fields.</p>
+
+<p>Now we have them, we can use the <strong>UserModel</strong> model to validate those informations and check if the user is valid:</p>
+
+<pre><code class="PHP user.php">public function login() {
+    $login = $this-&gt;input-&gt;post("login");
+    $password = $this-&gt;input-&gt;post("password");
+    if ($this-&gt;usermodel-&gt;login($login, $password)) {
+
+    } else {
+
+    }
+}
+</code></pre>
+
+<p>As showed, to use a model method, you use the following syntax; &ldquo;<em>$this->modelname->methodName(&hellip;)</em>&rdquo;.</p>
+
+<p>Even more interesting: We didn&rsquo;t instanciate any model! So how can we use its methods? It&rsquo;s simple: When we load a model, CodeIgniter implicity create a class attribute named with the same name of the model but in lowercase and set it to a new instance of this model. That&rsquo;s why we can use &ldquo;<em>$this->modelname</em>&rdquo; without problems.</p>
+
+<p>Now let&rsquo;s go back to our method. We know if the code enter on if block, the user is valid so it can login. But which actions should we do to indicate to the user that he is logged in? More importantly, how to notify the system that the <em>which</em> user is logged in?</p>
+
+<p>We are going to need the information that which user is logged in in a PHP session. CodeIgniter provides us utility methods to ease the managment of sessions. In order to use them, we need to load the library on the controller constructor:</p>
+
+<pre><code class="PHP user.php">public function __construct() {
+    ...
+    $this-&gt;load-&gt;library('session');
+}
+</code></pre>
+
+<p>To raise the security level, CodeIgniter forces us to use a encription key to our sessions. To define it, go to application > config > config.php, on line 227, and set the value of the variable <strong>$config[&lsquo;encription_key&rsquo;]</strong> to any really long number.</p>
+
+<p>Now back to our controller, add the following lines to our &ldquo;<em>login</em>&rdquo; method:</p>
+
+<pre><code class="PHP user.php">public function login() {
+    $login = $this-&gt;input-&gt;post("login");
+    $password = $this-&gt;input-&gt;post("password");
+    if ($this-&gt;usermodel-&gt;login($login, $password)) {
+        $this-&gt;session-&gt;set_userdata("user", $login);
+    } else {
+
+    }
+}
+</code></pre>
+
+<p>Basically, it&rsquo;s setting a new variable to our session named &ldquo;user&rdquo; and its value containing the login of the logged user. We can access the stored value through the following statement:</p>
+
+<pre><code class="PHP">$this-&gt;session-&gt;userdata("user");
+</code></pre>
+
+<p>This way we can now know which user is logged in, or null if there&rsquo;s any user logged in at the moment.</p>
+
+<p>If you also need to store more informations about the user, we can follow the same logic, just by replacing &ldquo;user&rdquo; by another variable you want to use.</p>
+
+<p>Now we already store the user, let&rsquo;s redirect the user to the success page.</p>
+
+<pre><code class="PHP user.php">public function login() {
+    $login = $this-&gt;input-&gt;post("login");
+    $password = $this-&gt;input-&gt;post("password");
+    if ($this-&gt;usermodel-&gt;login($login, $password)) {
+        $this-&gt;session-&gt;set_userdata("user", $login);
+        redirect("success", "refresh");
+    } else {
+
+    }
+}
+</code></pre>
+
+<p>And you need to redirect the user to the fail page in case the login is incorrect:</p>
+
+<pre><code class="PHP user.php">public function login() {
+    $login = $this-&gt;input-&gt;post("login");
+    $password = $this-&gt;input-&gt;post("password");
+    if ($this-&gt;usermodel-&gt;login($login, $password)) {
+        $this-&gt;session-&gt;set_userdata("user", $login);
+        redirect("success", "refresh");
+    } else {
+        redirect("fail", "refresh");
+    }
+}
+</code></pre>
+
+<p>Now, if you remember, there was a little trick on &ldquo;sucess.php&rdquo; view page. The variable &ldquo;<em>$user</em>&rdquo;! From where did it come from? We&rsquo;ll work on it now.</p>
+
+<p>Before that, modify the method &ldquo;view&rdquo; on the controller to now receive an array called $data. This parameter will be optional, so set it as false as default value. On &ldquo;$this->load->view&rdquo; statement inside this method, pass the array too, so the pages can access it.</p>
+
+<pre><code class="PHP user.php">private function view($page, $data=false) {
+    $this-&gt;load-&gt;view("auth/header.php", $data);
+    $this-&gt;load-&gt;view($page, $data);
+    $this-&gt;load-&gt;view("auth/footer.php", $data);
+}
+</code></pre>
+
+<p>Now, on &ldquo;success&rdquo; method, add the following method before calling the &ldquo;view&rdquo; method:</p>
+
+<pre><code class="PHP user.php">public function success() {
+    $data["user"] = $this-&gt;session-&gt;userdata("user");
+    ...
+}
+</code></pre>
+
+<p>And now modify the method call right below to pass this array too:</p>
+
+<pre><code class="PHP user.php">public function success() {
+    $data["user"] = $this-&gt;session-&gt;userdata("user");
+    $this-&gt;load-&gt;view("auth/success.php", $data);
+}
+</code></pre>
+
+<p>This way the array $data containing the key &ldquo;user&rdquo; is passed to the page &ldquo;<em>success.php</em>&rdquo;, but there each array key is accessible through independent variables. For example, $data[&ldquo;user&rdquo;] becomes $user there. :)</p>
+
+<p>Now we just need to add a little defailt on &ldquo;index&rdquo; method. If the user is already logged in, instead of showing the initial page where he can log in, it redirects him to the success page. It can be done easily through the &ldquo;redirect&rdquo; method:</p>
+
+<pre><code class="PHP user.php">public function index() {
+    if ($this-&gt;session-&gt;userdata("user")) {
+        redirect("success", "refresh");
+        return;
+    }
+    $this-&gt;view("auth/login");
+}
+</code></pre>
+
+<p>As said previously, &ldquo;<em>$this->session->userdata</em>&rdquo; stores the user that is currently logged or null if there isn&rsquo;t any. Therefore, if there&rsquo;s a user logged in, this expression will evaluates true.</p>
+
+<p>The &ldquo;<em>new_register</em>&rdquo; method is very similar to login method:</p>
+
+<pre><code class="PHP user.php">public function new_register() {
+    $login = $this-&gt;input-&gt;post("login");
+    $password = $this-&gt;input-&gt;post("password");
+    $password = $this-&gt;input-&gt;post("name");
+    $this-&gt;usermodel-&gt;register($name, $login, $password);
+    redirect("index", "refresh");
+}
+</code></pre>
+
+<p>And now, for last, the logout method:</p>
+
+<pre><code class="PHP user.php">public function logout() {
+    $this-&gt;session-&gt;unset_userdata('user');
+    session_destroy();
+    redirect('index', 'refresh');
+}
+</code></pre>
+
+<p>It basically destroys the session and redirects to the initial page.</p>
+
+<p>And it&rsquo;s <strong>done</strong>! Our complete controller is this way:</p>
+
+<pre><code class="PHP user.php">&lt;?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class User extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this-&gt;load-&gt;helper(array('url', 'form'));
+        $this-&gt;load-&gt;model("usermodel");
+        $this-&gt;load-&gt;library('session');
+    }
+
+    private function view($page, $data=false) {
+        $this-&gt;load-&gt;view("auth/header.php");
+        $this-&gt;load-&gt;view($page, $data);
+        $this-&gt;load-&gt;view("auth/footer.php");
+    }
+
+    public function index() {
+        if ($this-&gt;session-&gt;userdata("user")) {
+            redirect("success", "refresh");
+            return;
+        }
+        $this-&gt;view("auth/login");
+    }
+
+    public function register() {
+        $this-&gt;view("auth/register");
+    }
+
+    public function fail() {
+        $this-&gt;view("auth/fail");
+    }
+
+    public function success() {
+        $data["user"] = $this-&gt;session-&gt;userdata("user");
+        $this-&gt;view("auth/success", $data);
+    }
+
+    public function login() {
+        $login = $this-&gt;input-&gt;post("login");
+        $password = $this-&gt;input-&gt;post("password");
+        if ($this-&gt;usermodel-&gt;login($login, $password)) {
+            $this-&gt;session-&gt;set_userdata("user", $login);
+            redirect("success", "refresh");
+        } else {
+            redirect("fail", "refresh");
+        }
+    }
+
+    public function new_register() {
+        $login = $this-&gt;input-&gt;post("login");
+        $password = $this-&gt;input-&gt;post("password");
+        $name = $this-&gt;input-&gt;post("name");
+        $this-&gt;usermodel-&gt;register($name, $login, $password);
+        redirect("index", "refresh");
+    }
+
+     public function logout() {
+        $this-&gt;session-&gt;unset_userdata('user');
+        session_destroy();
+        redirect('index', 'refresh');
+    }
+
+}
+</code></pre>
+
+<p><strong>Wehoo!!</strong></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Unit Tests With PHPUnit]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/09/26/creating-unit-tests-with-phpunit/"/>
+    <updated>2014-09-26T19:04:37-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/09/26/creating-unit-tests-with-phpunit</id>
+    <content type="html"><![CDATA[<p>Hi there, people and aliens (I&rsquo;m hoping that this post was preserved as humanity&rsquo;s historic treasure and it&rsquo;s being read by extraterrestrials civilizations right now. Joking, obviously :P).</p>
+
+<p>In today&rsquo;s post we&rsquo;ll learn about something that everybody likes, it&rsquo;s just like cakes (whoever doesn&rsquo;t like cakes?! I dare you!). I&rsquo;m talking about TESTS, obviously! Wehooo! It chills me just by talking about.</p>
+
+<p>Our focus, however, will be tests in PHP using a tool called PHPUnit. Don&rsquo;t worry, it&rsquo;s like taking candy from a baby. Follow me!</p>
+
+<!-- more -->
+
+
+<h2>Installing the environment</h2>
+
+<p>Install is easy&hellip;</p>
+
+<p>I&rsquo;m assuming here that you already have PHP installed, along with a HTTP server and all those stuff.</p>
+
+<p>In order to install PHPUnit, we&rsquo;ll use the awesome <strong>Composer</strong>, a dependency manager very popular in PHPUnit community.</p>
+
+<p>Download the composer through <a href="https://getcomposer.org/download/">this link</a> (scroll down, on Manual Download section), and place it inside your project&rsquo;s folder.</p>
+
+<p>Now create a file inside your project&rsquo;s folder called <strong>composer.json</strong>, and write in it the following commands:</p>
+
+<pre><code class="Javascript">{
+    "require-dev": {
+        "phpunit/phpunit": "4.2.*",
+        "phpunit/php-invoker": "*"
+    }
+}
+</code></pre>
+
+<p>In order to install the dependencies (in this case, PHPUnit), the Composer receives a file in JSON format, where you just need to put the name of your dependencies and their version as a node of &ldquo;<em>require-dev</em>&rdquo; and it will magically install it for you. :) Fantastic, isn&rsquo;t it?</p>
+
+<p>Now open the terminal, go to your project&rsquo;s folder, and type the following command:</p>
+
+<pre><code class="Bash">php composer.phar install
+</code></pre>
+
+<p>Done! The composer will now install it for you.</p>
+
+<p>To run the downloaded tool, you just need to type it in the terminal:</p>
+
+<pre><code class="Bash">php ./vendor/bin/phpunit &lt;Unit_Test_File&gt;
+</code></pre>
+
+<p>But, of course, we don&rsquo;t have any unit test file yet! Let&rsquo;s fix it on next section.</p>
+
+<h2>Creating unit tests</h2>
+
+<p>Now here is the interesting part. Creating unit tests is an easy task with PHPHUnit. Whoever used some unit test tool will feel at ease.</p>
+
+<blockquote><p>Hey! I don&rsquo;t have anything to test!</p></blockquote>
+
+<p>Slow down, young man. I already took it for you. For didatic reasons, we are going to test some simple class that representates a number in scientific notation.</p>
+
+<p><figure class='code'><figcaption><span> (ScientificNotation.php)</span> <a href='/downloads/code/ScientificNotation.php'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">ScientificNotation</span> <span class="p">{</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">private</span> <span class="nv">$mantissa</span><span class="p">;</span>
+</span><span class='line'>	<span class="k">private</span> <span class="nv">$exponent</span><span class="p">;</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">,</span> <span class="nv">$exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setMantissa</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setExponent</span><span class="p">(</span><span class="nv">$exponent</span><span class="p">);</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">getMantissa</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setMantissa</span><span class="p">(</span><span class="nv">$mantissa</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">=</span> <span class="nv">$mantissa</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">getExponent</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setExponent</span><span class="p">(</span><span class="nv">$exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">=</span> <span class="nv">$exponent</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">add</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">if</span> <span class="p">(</span><span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t add two numbers with different exponents.&quot;</span><span class="p">);</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">+=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">subtract</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">if</span> <span class="p">(</span><span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t subtract two numbers with different exponents.&quot;</span><span class="p">);</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">-=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">multiply</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">*=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">+=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">divide</span><span class="p">(</span><span class="nv">$number</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">/=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">-=</span> <span class="nv">$number</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">();</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">normalize</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">while</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">/=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>		<span class="k">while</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">mantissa</span> <span class="o">*=</span> <span class="mi">10</span><span class="p">;</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exponent</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>		<span class="p">}</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>As you can see, this is indeed a very simple class. I assume here it was long ago since you&rsquo;ve been on high-school, so I&rsquo;ll refresh your memory about some simple operations that can be done with scientific notation&hellip; (<a href="#tests">Click here</a> if you wish to cut the explanation off).</p>
+
+<p>First, every number in scientific notation is composed by two parts: The mantissa (the &ldquo;literal&rdquo; part of the number) and the exponent. For example, in the number:</p>
+
+<p>2,5 x 10<sup>8</sup></p>
+
+<p>Mantissa is 2,5 and exponent is 8.</p>
+
+<p>Second, in order to multiply two numbers in scientific notation, we multiply the mantissas and sum the exponents. For example:</p>
+
+<p>(2,5 x 10<sup>8</sup>) x (2,0 x 10<sup>2</sup>) = (5,0 x 10<sup>10</sup>)</p>
+
+<p>And the division follows the same principle, we divide the mantissas and subtract the exponents.</p>
+
+<p>The addition and subtraction is a bit troublesome, because it&rsquo;s just allowed between numbers that have the same exponent. In this case, we simply add or subtract the mantissas and keep the exponents.</p>
+
+<p>The normalization of a number into scientific notation format is basically turning the mantissa in a single digit number. Doing this, we increment or decrement its exponent.</p>
+
+<div id="tests"></div>
+
+
+<p><strong>Done</strong>! Now get to work!</p>
+
+<p>Create a file called <strong>ScientificNotationTest.php</strong>. This file will have the following template:</p>
+
+<pre><code class="PHP ">&lt;?php
+class ScientificNotationTest extends PHPUnit_Framework_TestCase {
+
+}
+?&gt;
+</code></pre>
+
+<p>This is the default template of an unit test in PHPUnit. Notice it must inherit from <strong>PHPUnit_Framework_TestCase</strong> class.</p>
+
+<p>Also, it&rsquo;s important to import the class or file that is being tested. Usually it&rsquo;s done inside the <strong>setUp</strong> method, a special method that is called every time a test is about to be runned. Therefore, our classe will now include this method:</p>
+
+<pre><code class="PHP ">&lt;?php
+class ScientificNotationTest extends PHPUnit_Framework_TestCase {
+
+    public function setUp() {
+        require_once 'ScientificNotation.php';
+    }
+
+}
+?&gt;
+</code></pre>
+
+<p>OK! Now we finally are ready to create the tests. The testing methods must <em>always</em> contain the prefix <strong>test</strong>, i.e., testXXX, testXYZ, &hellip; you got the idea.</p>
+
+<p>The first test we are going to create is for the multiply operation. For this test, we just need two instances of ScientificNotation and call <em>multiply</em> over them.</p>
+
+<pre><code class="PHP ">public function testMultiply() {
+    $number1 = new ScientificNotation(2.0, 3);
+    $number2 = new ScientificNotation(4.0, 2);
+    $number1-&gt;multiply($number2);
+}
+</code></pre>
+
+<p>Now we need some asserts to ensure our method is doing what it&rsquo;s supposed to do. The asserts I use most are: <em>testEquals</em> (test if two objects are equal), <em>assertTrue</em> (test if a boolean expression evaluates true) and <em>assertFalse</em>. You can see the complest list <a href="https://phpunit.de/manual/current/en/appendixes.assertions.html">here</a>.</p>
+
+<p>If an assert evaluate false, for example, when I use assertEquals for two objects that are not really equal, then the program will print an error on PHPUnit console denoted by the letter &ldquo;F&rdquo;. Else, it will show the character &ldquo;.&rdquo;, indicating that the test is OK!</p>
+
+<p>I will use assertEquals to compare the expected result with the returned result:</p>
+
+<pre><code class="PHP ">public function testMultiply() {
+    $number1 = new ScientificNotation(2.0, 3);
+    $number2 = new ScientificNotation(4.0, 2);
+    $number1-&gt;multiply($number2);
+    $this-&gt;assertEquals(8.0, $number1-&gt;getMantissa());
+    $this-&gt;assertEquals(5, $number1-&gt;getExponent());
+}
+</code></pre>
+
+<p>Quite easy, isn&rsquo;t it? :)</p>
+
+<p>Let&rsquo;s skip the divide method, since it follows the same logic of the multiply. The next method to be tested is the <strong>add</strong>.</p>
+
+<p>The add method must throw an exception case the parameter have a different exponent from the number I&rsquo;m adding. How to test it?</p>
+
+<p>Simple! Surround the call inside a try/catch block, and make the test fail case the code <em>pass</em> through the point where it should throw an exception. Example:</p>
+
+<pre><code class="PHP">try {
+    //should throw exception here
+    $this-&gt;fail();
+} catch(Exception $e) { } 
+</code></pre>
+
+<p>If it really throw an exception, then the $this->fail statement will never be called!</p>
+
+<pre><code class="PHP ">public function testAdd() {
+    //must be ok
+    $number1 = new ScientificNotation(2.0, 5);
+    $number2 = new ScientificNotation(4.0, 5);
+    $number1-&gt;add($number2);
+    $this-&gt;assertEquals(6.0, $number1-&gt;getMantissa());
+    $this-&gt;assertEquals(5, $number1-&gt;getExponent());
+    //must throw exception
+    $number1 = new ScientificNotation(3.0, 4);
+    $number2 = new ScientificNotation(2.0, 3);
+    try {
+        $number1-&gt;add($number2);
+        $this-&gt;fail();
+    } catch(Exception $e) { } 
+}
+</code></pre>
+
+<p>In the end, here is our complete test unit class:</p>
+
+<p><figure class='code'><figcaption><span> (ScientificNotationTest.php)</span> <a href='/downloads/code/ScientificNotationTest.php'>download</a></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">ScientificNotationTest</span> <span class="k">extends</span> <span class="nx">PHPUnit_Framework_TestCase</span> <span class="p">{</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="k">require_once</span> <span class="s1">&#39;ScientificNotation.php&#39;</span><span class="p">;</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testMultiply</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">multiply</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testDivide</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">divide</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testAdd</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="c1">//must be ok</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>		<span class="c1">//must throw exception</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="k">try</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fail</span><span class="p">();</span>
+</span><span class='line'>		<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testSubtract</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="c1">//must be ok</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">subtract</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>		<span class="c1">//must throw exception</span>
+</span><span class='line'>		<span class="nv">$number1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$number2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span><span class='line'>		<span class="k">try</span> <span class="p">{</span>
+</span><span class='line'>			<span class="nv">$number1</span><span class="o">-&gt;</span><span class="na">subtract</span><span class="p">(</span><span class="nv">$number2</span><span class="p">);</span>
+</span><span class='line'>			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fail</span><span class="p">();</span>
+</span><span class='line'>		<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'>	<span class="k">public</span> <span class="k">function</span> <span class="nf">testNormalize</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>		<span class="nv">$unmormalizedNumber1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">800.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$unnormalizedNumber2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScientificNotation</span><span class="p">(</span><span class="mf">0.08</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">);</span>
+</span><span class='line'>		<span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">normalize</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nv">$unmormalizedNumber1</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">normalize</span><span class="p">();</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">getMantissa</span><span class="p">());</span>
+</span><span class='line'>		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertEquals</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="nv">$unnormalizedNumber2</span><span class="o">-&gt;</span><span class="na">getExponent</span><span class="p">());</span>
+</span><span class='line'>	<span class="p">}</span>
+</span><span class='line'>	
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<p>To run the test, type in the terminal:</p>
+
+<pre><code class="Bash">php ./vendor/bin/phpunit ScientificNotationTest.php
+</code></pre>
+
+<h2>Creating a test suite</h2>
+
+<p>The example above serves us well if we intent to run a single test, but what if we need to run several tests? Then testing file-by-file would be extremely boring.</p>
+
+<p>Gladly, there&rsquo;s a thing called test suite, that allows us to inform a file containing the names of all the tests we want to run and it will run all them for us automatically. How can it be done?</p>
+
+<p>Easy! On your project&rsquo;s folder, create a file called <strong>phpunit.xml</strong>. This file must contain the following structure:</p>
+
+<pre><code class="XML">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;phpunit&gt;
+    &lt;testsuites&gt;
+        &lt;testsuite name=""&gt;
+        &lt;/testsuite&gt;
+  &lt;/testsuites&gt;
+&lt;/phpunit&gt;
+</code></pre>
+
+<p>For each test suite, we just need to add a new node of the type &ldquo;<em>testsuite</em>&rdquo; to the parent node &ldquo;<em>testsuites</em>&rdquo;. It&rsquo;s important to name your test suites in order to be able to distinguish them.</p>
+
+<p>To add a new unit test file to a test suite, we just need to add a new node of the type &ldquo;<em>file</em>&rdquo; to the parent node &ldquo;<em>testsuite</em>&rdquo;. Example:</p>
+
+<pre><code class="XML">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;phpunit&gt;
+    &lt;testsuites&gt;
+        &lt;testsuite name="suite1"&gt;
+            &lt;file&gt;ScientificNotationTest.php&lt;/file&gt;
+        &lt;/testsuite&gt;
+    &lt;/testsuites&gt;
+&lt;/phpunit&gt;
+</code></pre>
+
+<p>Now to run the test suite, type in the terminal:</p>
+
+<pre><code class="Bash">php ./vendor/bin/phpunit --testsuite &lt;Name_of_the_Test_Suite&gt;
+</code></pre>
+
+<h2>Analyzing the test coverage</h2>
+
+<p>An interesting thing I&rsquo;d like to talk about is test coverage. It is a quite important information, since the greater the coverage, the bigger the confidence you have in your code correctness.</p>
+
+<p>To run the test coverage tool, it&rsquo;s necessary to install <strong>xDebug</strong>. If you use Windows, you can install it through <a href="http://www.xdebug.org/download.php">this link</a>. But if you use Ubuntu, there&rsquo;s an even easier way:</p>
+
+<pre><code class="Bash">sudo apt-get install php5-xdebug
+</code></pre>
+
+<p>Now that you&rsquo;ve got the xDebug, to run the analysis you just need to type in the terminal:</p>
+
+<pre><code class="Bash">php ./vendor/bin/phpunit --coverage-&lt;Output_Format&gt; &lt;Output_File&gt;
+</code></pre>
+
+<p>The <em><code>&lt;Output_Format&gt;</code></em> representantes the format of the analysis result. It can be of different types: HTML, XML, PHP&hellip;</p>
+
+<p>The <em><code>&lt;Output_File&gt;</code></em> is&hellip; the output file! Pretty obvious. :)</p>
+
+<p>Example:</p>
+
+<pre><code class="Bash">php ./vendor/bin/phpunit --coverage-html result
+</code></pre>
+
+<p>It will generate a HTML page called result containing the results of the analysis. When I open it, it show me the following informations:</p>
+
+<p><img src="/images/posts/phpunit-coverage.png" alt="" /></p>
+
+<p>:)</p>
+
+<p>That&rsquo;s it guys! I really hopes you&rsquo;ve liked. Unit tests are not so boring, are they? Sometimes it can be pretty fun, I dare to admit. hehe :)</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,1302 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Creating User Authentification With Code Igniter - Tango with code</title>
+  <meta name="author" content="Abner Matheus">
+
+  
+  <meta name="description" content="I&rsquo;m a complete n00b in PHP. My first sites were done without a framework, I even got them to work, but the experience was a bit.. traumatizing &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/javascripts/spoiler.js"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Tango with code</a></h1>
+  
+    <h2>A blog about frustration and anger</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PicoleDeLimao.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
+  <li><a href="http://github.com/picoledelimao"><i class="fa fa-github"></i> Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Creating User Authentification With Code Igniter</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-30T07:45:45-03:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>7:45 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&rsquo;m a complete n00b in PHP. My first sites were done without a framework, I even got them to work, but the experience was a bit.. traumatizing, to say the least :P</p>
+
+<p>I badly needed a framework to help me, but that wasn&rsquo;t necessary to spend more time learning how to use it than to developing the site. Oh boy, Code Igniter <em>is</em> that framework!</p>
+
+<p>It&rsquo;s totally clean and intuitive, and it contains the only necessary to put it together.</p>
+
+<p>In today&rsquo;s post I show you how to make a simple code authentification using it. Let&rsquo;s go!</p>
+
+<p style="text-align:center;"> <a href="/downloads/code/auth.zip">Click here to download the complete example</a></p>
+
+<!-- more -->
+
+
+<p>I designed this tutorial to a completly novice person. So if you already know a bit about this framework, I apologize in advance.</p>
+
+<p>And was a prerequisite I assume that you aready have a HTTP local server that supports PHP. If you don&rsquo;t, don&rsquo;t worry, you can do it with a <a href="https://www.apachefriends.org/pt_br/index.html">LAMP software</a>.</p>
+
+<h2>&ldquo;Installing&rdquo; the framework</h2>
+
+<p>Now let&rsquo;s download the CodeIgniter! :D</p>
+
+<p>Go to <a href="https://ellislab.com/codeigniter">CodeIgniter site</a> and click on Download.</p>
+
+<p>To create a new project with it, you just need to copy and paste the CodeIgniter folder. Damn, the simplicity makes me want to cry! T_T</p>
+
+<h2>Creating our database</h2>
+
+<p>Our first task is to create our database. We are going to need a User containing name, login and password, so our database will have only one table, and it&rsquo;s pretty simple:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='SQL'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="o">`</span><span class="k">User</span><span class="o">`</span> <span class="p">(</span>
+</span><span class='line'>  <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+</span><span class='line'>  <span class="o">`</span><span class="n">login</span><span class="o">`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="o">`</span><span class="n">password</span><span class="o">`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+</span><span class='line'>  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">),</span>
+</span><span class='line'>  <span class="k">UNIQUE</span> <span class="k">KEY</span> <span class="o">`</span><span class="n">login</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">login</span><span class="o">`</span><span class="p">)</span>
+</span><span class='line'><span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">latin1</span> <span class="n">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">1</span> <span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To link your database to the CodeIgniter, go to your project&rsquo;s folder > application > config > database.php</p>
+
+<p>In the lines 52 to 54, you can find the following code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$db</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="s1">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$db</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$db</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="s1">&#39;database&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+You just need to fill it with the informations related to your database.</p>
+
+<h2>Creating the Views</h2>
+
+<p>CodeIgniter, as most frameworks, use the MVC pattern. It separates the visualization of the data (views: HTML, CSS, &hellip;) from the business logic (models: PHP itself, including database queries) and it has a controller that serves as a bridge between the two.</p>
+
+<p>Let&rsquo;s start creating the views, and right after the models and for last the controller.</p>
+
+<p>To create a new view, go to your project&rsquo;s folder > views and create a new HTML or PHP file right there. It&rsquo;s cool to make subfolders, to keep it well organized, you know?</p>
+
+<p>Because of it, we are going to create the login and register views inside a subfolder called &ldquo;<em>auth</em>&rdquo;.</p>
+
+<p>Inside this subfolder, create four files: <em>login.php</em>, <em>register.php</em>, <em>success.php</em> and <em>fail.php</em>.</p>
+
+<p>At first, you could think in each file containing the following structure:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="cp">&lt;!DOCTYPE HTML&gt;</span>
+</span><span class='line'><span class="nt">&lt;html&gt;</span>
+</span><span class='line'><span class="nt">&lt;head&gt;</span>
+</span><span class='line'>...
+</span><span class='line'><span class="nt">&lt;/head&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>But here&rsquo;s where the framework comes at the play! You don&rsquo;t need to repeat any HTML structure. You can refactor it into a file apart and reuse it in all files.</p>
+
+<p>Because of that, we are going to create two other files: <em>header.php</em> and <em>footer.php</em>. The first containing the HTML header and the second containg the tags closure.</p>
+
+<figure class='code'><figcaption><span>header.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;!</span><span class="nx">DOCTYPE</span> <span class="nx">HTML</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="nx">html</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="nx">head</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="nx">meta</span> <span class="nx">charset</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="o">&gt;</span>
+</span><span class='line'>      <span class="o">&lt;</span><span class="nx">title</span><span class="o">&gt;</span><span class="nx">CodeIgniter</span> <span class="nx">User</span> <span class="nx">Auth</span><span class="o">&lt;/</span><span class="nx">title</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;/</span><span class="nx">head</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="nx">body</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>footer.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;/</span><span class="nx">body</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="nx">html</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let&rsquo;s come back to the other four files we had created previously, starting with <em>login.php</em>:</p>
+
+<figure class='code'><figcaption><span>login.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nx">form_open</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;login&quot; placeholder=&quot;Login&quot; required /&gt;</span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required /&gt;</span>
+</span><span class='line'><span class="x">  &lt;button type=&quot;submit&quot;&gt;Log in&lt;/button&gt;</span>
+</span><span class='line'><span class="x">&lt;/form&gt;     </span>
+</span><span class='line'><span class="x">&lt;a href=&quot;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">base_url</span><span class="p">();</span> <span class="cp">?&gt;</span><span class="x">index.php/register&quot;&gt;Click here to register!&lt;/a&gt;    </span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This file is basically a form contaning two input fields: One for the login and another for the password.</p>
+
+<p>Now there&rsquo;s a strange file in this file. Can you notice it? Actually two!</p>
+
+<p>The first one is the <strong>echo form_open(&lsquo;login)</strong> statement. What does it do?</p>
+
+<p>It basically creates a new form with the tag <code>&lt;form&gt;</code>, but with the difference it already set the action with the correct route. Don&rsquo;t worry, we&rsquo;ll talk about rotes later.</p>
+
+<p>And the second strange thing is the <strong>echo base_url()</strong> statement right below the <code>&lt;/form&gt;</code>. It simply print the base url of our website. For example, in the case of this blog, it would print <em><a href="http://picoledelimao.github.io/">http://picoledelimao.github.io/</a></em>. It&rsquo;s important because sometimes you want to put a link based on the absolute path, but you don&rsquo;t want to say your site domain explicitly.</p>
+
+<p><em>Take a breath now</em></p>
+
+<p>Rested? Now let&rsquo;s go to the <em>register.php</em> file:</p>
+
+<figure class='code'><figcaption><span>register.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nx">form_open</span><span class="p">(</span><span class="s1">&#39;new_register&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span><span class="x"></span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Name&quot; required maxlength=&quot;100&quot; autofocus /&gt; </span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;text&quot; name=&quot;login&quot; placeholder=&quot;Login&quot; required maxlength=&quot;30&quot; /&gt;</span>
+</span><span class='line'><span class="x">  &lt;input type=&quot;password&quot; name=&quot;password&quot; placeholder=&quot;Password&quot; required maxlength=&quot;30&quot; /&gt;</span>
+</span><span class='line'><span class="x">  &lt;button type=&quot;submit&quot;&gt;Cadastrar&lt;/button&gt;</span>
+</span><span class='line'><span class="x">&lt;/form&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It follows the same logic of the login.php file. Just noticed the additional attribute &ldquo;<em>maxlength</em>&rdquo; on the input fields. I put it so it can match the constraints I defined on our database. It&rsquo;s not really essential.</p>
+
+<p>And, for last, the <em>success.php</em> and <em>fail.php</em> files, that will show messages to ther user based on his success in logging in. They don&rsquo;t have any trick:</p>
+
+<figure class='code'><figcaption><span>fail.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Fail</span> <span class="nx">to</span> <span class="nb">log</span> <span class="nx">in</span><span class="o">.</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="o">&gt;</span><span class="k">Try</span> <span class="nx">again</span><span class="o">.&lt;/</span><span class="nx">a</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>success.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nx">Hello</span><span class="p">,</span> <span class="o">&lt;?</span><span class="nx">php</span> <span class="k">echo</span> <span class="nv">$user</span><span class="p">;</span> <span class="cp">?&gt;</span><span class="x">. You are logged in!</span>
+</span><span class='line'><span class="x">&lt;a href=&quot;logout&quot;&gt;Click here to log out.&lt;/a&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<blockquote><p>Hey!! You said it didn&rsquo;t have any trick! So what about this variable $user?</p></blockquote>
+
+<p>Yea, I lied&hellip; Sorry about that :P</p>
+
+<p>You can send some data to the views through the controllers (remember I said the controller was a bridge between models and views?). In this case, $user variable representates the user name. But don&rsquo;t worry, we&rsquo;ll use how it works with more details later.</p>
+
+<p><strong>Done</strong>! Your views folder must have the following structure:</p>
+
+<ul>
+<li>views
+
+<ul>
+<li>auth
+
+<ul>
+<li>header.php</li>
+<li>footer.php</li>
+<li>login.php</li>
+<li>register.php</li>
+<li>fail.php</li>
+<li>success.php</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>Creating the models</h2>
+
+<p>The models, in CodeIgniter, stand in the application > models folder. Let&rsquo;s start creating our own. We are just going to need one, and to it we will delegate all the database queries.</p>
+
+<p>Create a file called <strong>usermodel.php</strong>. Every model in CodeIgniter has the following structure:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">NAME</span> <span class="k">extends</span> <span class="nx">CI_Model</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>In our case, it&rsquo;d be something like that:</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserModel</span> <span class="k">extends</span> <span class="nx">CI_Model</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Another important thing is, before we use our database, we need to load it! We can do it in the own class constructor:</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserModel</span> <span class="k">extends</span> <span class="nx">CI_Model</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">database</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+Our simple model will have only two methods: <em>login</em> and <em>register</em>.</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserModel</span> <span class="k">extends</span> <span class="nx">CI_Model</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">database</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'><span class="p">}</span><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let&rsquo;s start with the <em>login</em> method. What it does is basically pretty simple: It looks the User table searching for a user containg the same login and password passed through the parameters. In case it finds it, it returns true.</p>
+
+<p>Of course, we aren&rsquo;t fool to the point to put the original password on our database. We need some kind of encryption to store the password. I will use a famous one called <a href="http://pt.wikipedia.org/wiki/MD5">MD5</a>.</p>
+
+<p>Now to search the table for a user containg the same login and password, we are going to need a SELECT clausure. Gladly, CodeIgniter gives us a simpler way to do that, using <a href="https://ellislab.com/codeigniter/user-guide/database/active_record.html">Active Record</a>.</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">function</span> <span class="nf">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$password</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Active Record is called that way because some queries are kept in the memory, avoiding double work in case you use the same query again later.</p>
+
+<p>The above block statement is selecting all columns where its login is equals to the passed login and its password is equals to the passed <strong>encrypted</strong> password.</p>
+
+<p>Now to get the resulting rows, we just need to apply the method &ldquo;<em>get</em>&rdquo;. We don&rsquo;t need to get any other information other than if there is any resulting row or not (if there&rsquo;s, it means the passed user is valid and so it can login). To check the number of resulting rows, we can use the method &ldquo;<em>num_rows</em>&rdquo;:</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">function</span> <span class="nf">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$password</span><span class="p">));</span>
+</span><span class='line'>  <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">num_rows</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And so the method login is ready! It wasn&rsquo;t complicated, was it?</p>
+
+<p>Now let&rsquo;s go to the register method now. It works in a similiar way, but now we aren&rsquo;t interesting in selecting rows, but inserting them. Gladly, there&rsquo;s also a magical method for this task:</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exists</span><span class="p">(</span><span class="nv">$login</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>      <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;login&#39;</span> <span class="o">=&gt;</span> <span class="nv">$login</span><span class="p">,</span>
+</span><span class='line'>      <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$password</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The magical method I&rsquo;m talking about is the &ldquo;<em>$this->db->insert</em>&rdquo;. It receives two arguments: A string containing the table name, and an associative array containing the columns name and their values.</p>
+
+<p>In the above example, I&rsquo;m inserting a new row to the <strong>User</strong> table with the name, login and password passed through the parameters.</p>
+
+<p>There&rsquo;s another thing in our code: The method &ldquo;<em>exists</em>&rdquo;. What it does is to search the table for an user containing the given login and returns true if it finds it. Remember! The login is unique. So we need to check it before to insert it.</p>
+
+<p>However, it is not a built-in method. Therefore, here is its code:</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">private</span> <span class="k">function</span> <span class="nf">exists</span><span class="p">(</span><span class="nv">$login</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">num_rows</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I think you can figure it out from the <em>login</em> method, since they are both very similar.</p>
+
+<p>And it&rsquo;s <strong>done</strong>! Our complete model is here:</p>
+
+<figure class='code'><figcaption><span>usermodel.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserModel</span> <span class="k">extends</span> <span class="nx">CI_Model</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">database</span><span class="p">();</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$password</span><span class="p">));</span>
+</span><span class='line'>      <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">num_rows</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">private</span> <span class="k">function</span> <span class="nf">exists</span><span class="p">(</span><span class="nv">$login</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">select</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">();</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">num_rows</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">exists</span><span class="p">(</span><span class="nv">$login</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="s1">&#39;User&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>          <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">,</span>
+</span><span class='line'>          <span class="s1">&#39;login&#39;</span> <span class="o">=&gt;</span> <span class="nv">$login</span><span class="p">,</span>
+</span><span class='line'>          <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$password</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">));</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'><span class="p">}</span><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Creating the controller</h2>
+
+<p>Finally! Let&rsquo;s work on the controller. Let&rsquo;s start creating a file called <strong>user.php</strong> on application > controllers folder. This file has the following structure:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;BASEPATH&#39;</span><span class="p">))</span> <span class="k">exit</span><span class="p">(</span><span class="s1">&#39;No direct script access allowed&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">CI_Controller</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That is, as you assumed, the default structure of a controller in CodeIginiter. All them inherit from CI_Controller.</p>
+
+<p>We can also define which models we are going to use. It must be done inside your controller constructor in the following way:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span> 
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">model</span><span class="p">(</span><span class="s2">&quot;usermodel&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you need more models, just copy/paste the &ldquo;<em>$this->load->model</em>&rdquo; statement and pass to it the name of the file where the model is.</p>
+
+<p>We also need to load some utils:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">helper</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;form&#39;</span><span class="p">));</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">model</span><span class="p">(</span><span class="s2">&quot;usermodel&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now let&rsquo;s create the <strong>view</strong> method, that will receive a file inside the views folder and will join it with the header and the footer to make the complete page. CodeIgniter gives us an interesting method to do that, called &ldquo;<em>$this->load->view</em>&rdquo;.</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">private</span> <span class="k">function</span> <span class="nf">view</span><span class="p">(</span><span class="nv">$page</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/header&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="nv">$page</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/footer&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Now we already have a method to visualize our pages, let&rsquo;s start creating methods to show those pages.</p>
+
+<p>The first one is the &ldquo;<em>index</em>&rdquo; method, that will show the initial page.</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/login&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hmmmm&hellip; Quite easy. :)
+It just call the method &ldquo;view&rdquo; passing as argument the page &ldquo;auth/login&rdquo; we had create on the beginning of this tutorial.</p>
+
+<p>Now let&rsquo;s do the same thing to the pages &ldquo;<em>register</em>&rdquo;, &ldquo;<em>fail</em>&rdquo; and &ldquo;<em>success</em>&rdquo;:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/register&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">fail</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/fail&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">success</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/success&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Those are cool methods, but how do we access them through a URL? It&rsquo;s time to talk about routing. Routing is just like that: The process of associate a method to an URL!</p>
+
+<p>By default, each public method inside the controller is accessible through the following link:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="nt">&lt;url_base&gt;</span>/index.php/<span class="nt">&lt;controller_name&gt;</span>/<span class="nt">&lt;method_name&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But what do we really want is to reduce the URL to the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="nt">&lt;url_base&gt;</span>/index.php/<span class="nt">&lt;method_name&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Because it&rsquo;s simpler! :)</p>
+
+<p>In order to do that, go to application > config > routes.php. On line 41, change &ldquo;default_controller&rdquo; to &ldquo;user&rdquo;:</p>
+
+<figure class='code'><figcaption><span>routes.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;default_controller&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now let&rsquo;s define the routes to the methods we created in the controller:</p>
+
+<figure class='code'><figcaption><span>routes.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user/index&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user/success&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;fail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user/fail&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;register&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user/register&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s simple to understand: The key of the <em>$route</em> array is actually the link after the base url. For example:</p>
+
+<p><code>$route["success"] will turn into base_url/success</code></p>
+
+<p>And its value is the method of the controller that it&rsquo;s associated. In the case of success, for example, it&rsquo;s associated with the method &ldquo;success&rdquo; of the controller &ldquo;user&rdquo;.</p>
+
+<p>Gotcha? Good! :)</p>
+
+<p>We also need to define some other routes necessary for our site. They are: <strong>login</strong> (route that will allow us to login), <strong>logout</strong> (routes that will allow us to log out) and <strong>new_register</strong> (route that will allow us to register a new user).</p>
+
+<figure class='code'><figcaption><span>routes.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;login&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user/login&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;logout&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user/logout&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$route</span><span class="p">[</span><span class="s1">&#39;new_register&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;user/new_register&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Those routes are a bit different from the others we created previously. They are not intended to show any page, but to proccess some information passed through the forms (a POST requisition). If you scroll up, remember we used the statement &ldquo;<em>form_open(&rdquo;&hellip;&ldquo;)</em>&rdquo; to create a new form? The passed argument to this method now representates a route here.</p>
+
+<p>Of course, they, like any other route, are associate with a controller method, methods we didn&rsquo;t create yet, so let&rsquo;s do it!</p>
+
+<p>Let&rsquo;s start with the login method. We know the form will send a <strong>POST</strong> requisition to this method. Let&rsquo;s get the fields data through the method &ldquo;<em>$this->input->post</em>&rdquo;, where the passed argument is the field name.</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">login</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The above code is getting the values of the login and password fields.</p>
+
+<p>Now we have them, we can use the <strong>UserModel</strong> model to validate those informations and check if the user is valid:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">login</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">usermodel</span><span class="o">-&gt;</span><span class="na">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As showed, to use a model method, you use the following syntax; &ldquo;<em>$this->modelname->methodName(&hellip;)</em>&rdquo;.</p>
+
+<p>Even more interesting: We didn&rsquo;t instanciate any model! So how can we use its methods? It&rsquo;s simple: When we load a model, CodeIgniter implicity create a class attribute named with the same name of the model but in lowercase and set it to a new instance of this model. That&rsquo;s why we can use &ldquo;<em>$this->modelname</em>&rdquo; without problems.</p>
+
+<p>Now let&rsquo;s go back to our method. We know if the code enter on if block, the user is valid so it can login. But which actions should we do to indicate to the user that he is logged in? More importantly, how to notify the system that the <em>which</em> user is logged in?</p>
+
+<p>We are going to need the information that which user is logged in in a PHP session. CodeIgniter provides us utility methods to ease the managment of sessions. In order to use them, we need to load the library on the controller constructor:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">...</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">library</span><span class="p">(</span><span class="s1">&#39;session&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>To raise the security level, CodeIgniter forces us to use a encription key to our sessions. To define it, go to application > config > config.php, on line 227, and set the value of the variable <strong>$config[&lsquo;encription_key&rsquo;]</strong> to any really long number.</p>
+
+<p>Now back to our controller, add the following lines to our &ldquo;<em>login</em>&rdquo; method:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">login</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">usermodel</span><span class="o">-&gt;</span><span class="na">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">set_userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Basically, it&rsquo;s setting a new variable to our session named &ldquo;user&rdquo; and its value containing the login of the logged user. We can access the stored value through the following statement:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>This way we can now know which user is logged in, or null if there&rsquo;s any user logged in at the moment.</p>
+
+<p>If you also need to store more informations about the user, we can follow the same logic, just by replacing &ldquo;user&rdquo; by another variable you want to use.</p>
+
+<p>Now we already store the user, let&rsquo;s redirect the user to the success page.</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">login</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">usermodel</span><span class="o">-&gt;</span><span class="na">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">set_userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>
+And you need to redirect the user to the fail page in case the login is incorrect:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">login</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">usermodel</span><span class="o">-&gt;</span><span class="na">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">set_userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;fail&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, if you remember, there was a little trick on &ldquo;sucess.php&rdquo; view page. The variable &ldquo;<em>$user</em>&rdquo;! From where did it come from? We&rsquo;ll work on it now.</p>
+
+<p>Before that, modify the method &ldquo;view&rdquo; on the controller to now receive an array called $data. This parameter will be optional, so set it as false as default value. On &ldquo;$this->load->view&rdquo; statement inside this method, pass the array too, so the pages can access it.</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">private</span> <span class="k">function</span> <span class="nf">view</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span> <span class="nv">$data</span><span class="o">=</span><span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/header.php&quot;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/footer.php&quot;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Now, on &ldquo;success&rdquo; method, add the following method before calling the &ldquo;view&rdquo; method:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">success</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="o">...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now modify the method call right below to pass this array too:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">success</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/success.php&quot;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This way the array $data containing the key &ldquo;user&rdquo; is passed to the page &ldquo;<em>success.php</em>&rdquo;, but there each array key is accessible through independent variables. For example, $data[&ldquo;user&rdquo;] becomes $user there. :)</p>
+
+<p>Now we just need to add a little defailt on &ldquo;index&rdquo; method. If the user is already logged in, instead of showing the initial page where he can log in, it redirects him to the success page. It can be done easily through the &ldquo;redirect&rdquo; method:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/login&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>As said previously, &ldquo;<em>$this->session->userdata</em>&rdquo; stores the user that is currently logged or null if there isn&rsquo;t any. Therefore, if there&rsquo;s a user logged in, this expression will evaluates true.</p>
+
+<p>The &ldquo;<em>new_register</em>&rdquo; method is very similar to login method:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">new_register</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">usermodel</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">);</span>
+</span><span class='line'>  <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>And now, for last, the logout method:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="k">public</span> <span class="k">function</span> <span class="nf">logout</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">unset_userdata</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="nb">session_destroy</span><span class="p">();</span>
+</span><span class='line'>  <span class="nx">redirect</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;refresh&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It basically destroys the session and redirects to the initial page.</p>
+
+<p>And it&rsquo;s <strong>done</strong>! Our complete controller is this way:</p>
+
+<figure class='code'><figcaption><span>user.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+</pre></td><td class='code'><pre><code class='PHP'><span class='line'><span class="o">&lt;?</span><span class="nx">php</span> <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;BASEPATH&#39;</span><span class="p">))</span> <span class="k">exit</span><span class="p">(</span><span class="s1">&#39;No direct script access allowed&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">CI_Controller</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">helper</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;form&#39;</span><span class="p">));</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">model</span><span class="p">(</span><span class="s2">&quot;usermodel&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">library</span><span class="p">(</span><span class="s1">&#39;session&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">private</span> <span class="k">function</span> <span class="nf">view</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span> <span class="nv">$data</span><span class="o">=</span><span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/header.php&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">load</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/footer.php&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/login&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/register&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">fail</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/fail&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">success</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">view</span><span class="p">(</span><span class="s2">&quot;auth/success&quot;</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">login</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">usermodel</span><span class="o">-&gt;</span><span class="na">login</span><span class="p">(</span><span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">set_userdata</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="nv">$login</span><span class="p">);</span>
+</span><span class='line'>          <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;fail&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">new_register</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$login</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$password</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$name</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">input</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">usermodel</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$login</span><span class="p">,</span> <span class="nv">$password</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>   <span class="k">public</span> <span class="k">function</span> <span class="nf">logout</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">session</span><span class="o">-&gt;</span><span class="na">unset_userdata</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">);</span>
+</span><span class='line'>      <span class="nb">session_destroy</span><span class="p">();</span>
+</span><span class='line'>      <span class="nx">redirect</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;refresh&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p><strong>Wehoo!!</strong></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-09-30T07:45:45-03:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>7:45 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/php/'>php</a>, <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">	
+      
+        <a class="basic-alignment left" href="/blog/2014/09/28/java-hashboom/" title="Previous Post: (Java) Hashboom">&laquo; (Java) Hashboom</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/10/18/little-things-that-can-make-your-java-programs-better/" title="Next Post: Little things that can make your Java programs better">Little things that can make your Java programs better &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/">Building a RESTful Web Service in C++ (Is It Even Possible?)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/11/parallel-genetic-algorithm-in-c-plus-plus-using-tbb/">Parallel Genetic Algorithm in C++ Using TBB</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/21/red-black-tree-in-alloy-ii/">Red-Black Tree in Alloy II</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/15/red-black-tree-in-alloy/">Red-Black Tree in Alloy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/">Creating a Custom Widget on Android: The Loading Button</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/PicoleDeLimao">@PicoleDeLimao</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PicoleDeLimao',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Abner Matheus -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'deforadouniverso';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/30/creating-user-authentification-with-code-igniter/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

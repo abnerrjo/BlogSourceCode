@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Creating Your Own Blog on Github - Tango with code</title>
+  <meta name="author" content="Abner Matheus">
+
+  
+  <meta name="description" content="Hello world! Be welcomed to my newest blog (unhappily, my previous went to space&hellip;). Here you can find tutorials and tips about programming in &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link href="/atom.xml" rel="alternate" title="Tango with code" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="/javascripts/spoiler.js"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Tango with code</a></h1>
+  
+    <h2>A blog about frustration and anger</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:PicoleDeLimao.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/archives">Entries</a></li>
+  <li><a href="http://github.com/picoledelimao"><i class="fa fa-github"></i> Github</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Creating Your Own Blog on Github</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-16T23:32:43-03:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:32 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Hello world! Be welcomed to my newest blog (unhappily, my previous went to space&hellip;). Here you can find tutorials and tips about programming in general, and as it should be, my first post will be just about how to create your own blog on Github!</p>
+
+<h3>Why create a Github blog?</h3>
+
+<p>Github is awesome. It allows you to host your static pages for free, and using few tools, we can create a more professional and powerful blog than on the Blogger platform, for example, with a plus it&rsquo;s just ideal to share code.</p>
+
+<h3>I&rsquo;m interested! Where do I start?</h3>
+
+<p>Well, deploying this blog was a bit troublesome for me at first, but I&rsquo;ve just discovered some simpler ways that I&rsquo;ll tell you right now.</p>
+
+<!-- more -->
+
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+<li>Linux (Yea. Unhappily, there isn&rsquo;t a simple way to do that on Windows&hellip;);</li>
+<li>Git installed (Kinda obvious).</li>
+</ul>
+
+
+<p>The very first thing you need to do is create a Github repository. However, it must have the following name:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;Your_Github_Nickname&gt;.github.io</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Through the <strong>Github pages</strong> mechanism, Github allows you to host your static pages for free, as said previously. The thing is that it only allows one domain for each user, and this domain must have the same nickname of the user, with addition of &ldquo;<em>github.io</em>&rdquo; prefix.</p>
+
+<p>Created the repository, we now need a tool that helps us to create our blog. Basically, a CMS (Content Management System). We&rsquo;re going to use <strong>Jekyll</strong> for this task.</p>
+
+<p>You can install Jekyll and all its dependencies through a single line of code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>gem install github-pages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>Beyong Jekyll, the command will also try to install Ruby, since it&rsquo;s the language that Jekyll is built.</p>
+
+<p>Even so, Jekyll is still too &ldquo;low-level&rdquo;, and it can be tedious to build all your blog template manually. Because of it, we are going to use another tool called <strong>Octopress</strong>.</p>
+
+<p>Octopress exists to ease some functionalities. Through its rakes we can create posts, change themes, everything by command line.</p>
+
+<p>Configuring Octopress is pretty easy. First you need to clone its repository:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>git clone git://github.com/imathis/octopress.git octopress
+</span><span class='line'><span class="nb">cd </span>octopress
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you need to install its dependencies:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>bundle install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And finally configure it in a way it can deploy automatically to your Github repository:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake setup_github_pages
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Done! Now you can start blogging! :D</p>
+
+<p>To create your first post, type the following command on terminal:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake new_post<span class="o">[</span><span class="s2">&quot;Title&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And so it will generate a file on markdown format inside source/_posts folder. Markdown is a markup language that intends to be a cleaner and easier version of HTML. You can get more info about it <a href="http://en.wikipedia.org/wiki/Markdown">here</a>. It&rsquo;s simple, you can fully learn it in few minutes!</p>
+
+<p><strong>Type #1:</strong>
+You can define a <em>preview</em> of yor post (the infamous &ldquo;<em>read more</em>&rdquo;). Just add the line:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'><span class="c">&lt;!-- more --&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>wherever you want the post preview ends.</p>
+
+<p><strong>Type #2:</strong>
+Octopress provides a code highlighting API (otherwise it wouldn&rsquo;t any good for a programmer :P). Currently it can support more than 100 programming languages. To use it, just follow the syntax:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'>` ` ` [Language]
+</span><span class='line'>    code here
+</span><span class='line'>` ` `
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>PS:</strong> Remove white spaces between the apostrophes.</p>
+
+<p>Example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='HTML'><span class='line'>` ` ` Java
+</span><span class='line'>public class HelloWorld {
+</span><span class='line'>  public static void main(String[] args) {
+</span><span class='line'>      System.out.println(&quot;Hello World&quot;);
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>` ` `
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It will generate the following text:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='Java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorld</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Hello World&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So pretty :-)</p>
+
+<p>There are other cool features, like getting your code from a file. To learn more about it, I invite you to access <a href="http://octopress.org/docs/blogging/code/">this link</a>, it&rsquo;s really interesting!</p>
+
+<h3>Viewing our blog</h3>
+
+<p>You can view your blog without deploying it. Just type the following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake preview
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And so it will be available on address <a href="http://localhost:4000">http://localhost:4000</a>.</p>
+
+<p>You don&rsquo;t need to type it again if you modify anything. It will regenerate automatically.</p>
+
+<h3>Deploying our blog</h3>
+
+<p>Now the more important thing is to deploy the thing! For this task, just type the following commands:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake generate
+</span><span class='line'>rake deploy
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At first it will ask things like your Github repository link, your account name, etc., &hellip; But after that it will just commit everything automatically.</p>
+
+<h3>Applying themes</h3>
+
+<p>For last, although Octopress comes with a beautiful theme, it&rsquo;s possible to install third-parties themes, and it&rsquo;s quite easy!</p>
+
+<p><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">This site</a> contains a lot of themes for Octopress. To install them, first you need to clone the theme repository into the .theme folder inside your blog. Example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>git clone XXX .theme/XXX
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After that, just type:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='Bash'><span class='line'>rake install<span class="o">[</span><span class="s1">&#39;XXX&#39;</span><span class="o">]</span>
+</span><span class='line'>rake generate
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Where &ldquo;XXX&rdquo; is the theme name inside your .theme folder.</p>
+
+<p>After that it will ask if you really wish to override the files, and for that you answer yes (y). And now you can see your new theme! :D</p>
+
+<p>It was pretty simple, wasn&rsquo;t it?!
+I really hope you&rsquo;ve liked this tutorial. Here are some interesting links to get depth on this topic:</p>
+
+<ul>
+<li><a href="http://jekyllrb.com/docs/home/">http://jekyllrb.com/docs/home/</a></li>
+<li><a href="http://octopress.org/docs/">http://octopress.org/docs/</a></li>
+<li><a href="https://pages.github.com/">https://pages.github.com/</a></li>
+</ul>
+
+
+<p>Good luck with your new blog! Any question, don&rsquo;t hesitate to use the comments section right below.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Abner Matheus</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-09-16T23:32:43-03:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:32 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/tutorials/'>tutorials</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">	
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/09/17/python-2-dot-7-pysnake/" title="Next Post: (Python 2.7) PySnake">(Python 2.7) PySnake &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/13/building-a-restful-web-service-in-c-plus-plus-is-it-even-possible/">Building a RESTful Web Service in C++ (Is It Even Possible?)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/11/parallel-genetic-algorithm-in-c-plus-plus-using-tbb/">Parallel Genetic Algorithm in C++ Using TBB</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/21/red-black-tree-in-alloy-ii/">Red-Black Tree in Alloy II</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/03/15/red-black-tree-in-alloy/">Red-Black Tree in Alloy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/04/creating-a-custom-widget-on-android-the-loading-button/">Creating a Custom Widget on Android: The Loading Button</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/PicoleDeLimao">@PicoleDeLimao</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PicoleDeLimao',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Abner Matheus -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'deforadouniverso';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github/';
+        var disqus_url = 'http://PicoleDeLimao.github.io/blog/2014/09/16/creating-your-own-blog-on-github/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

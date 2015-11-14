@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Html5 | Tango with code]]></title>
+  <link href="http://PicoleDeLimao.github.io/blog/categories/html5/atom.xml" rel="self"/>
+  <link href="http://PicoleDeLimao.github.io/"/>
+  <updated>2015-10-13T19:27:02-03:00</updated>
+  <id>http://PicoleDeLimao.github.io/</id>
+  <author>
+    <name><![CDATA[Abner Matheus]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Taking Photos From Webcam Using HTML5]]></title>
+    <link href="http://PicoleDeLimao.github.io/blog/2014/12/24/taking-photos-from-webcam-using-html5/"/>
+    <updated>2014-12-24T11:57:06-03:00</updated>
+    <id>http://PicoleDeLimao.github.io/blog/2014/12/24/taking-photos-from-webcam-using-html5</id>
+    <content type="html"><![CDATA[<p>On today&rsquo;s tutorial I&rsquo;ll teach how to take snapshots from webcam using only HTML5.</p>
+
+<p>On the past, accessing user webcam was something onerous, sometimes falling back on Flash. Gladly, HTML5 brought an innovation to this area, thanks to the <code>&lt;video&gt;</code> tag.</p>
+
+<p style="text-align:center;"><img src="/images/posts/webcam-snapshot.png" alt="" /></p>
+
+<!-- more -->
+
+
+<h2>Getting webcam access</h2>
+
+<p>On our demo we&rsquo;re going to create a tag to display the live stream of webcam, a tag to display a webcam snapshot, and two buttons: One to take a snapshot and another to save (download) the photo.</p>
+
+<pre><code class="HTML">&lt;video id="video" width="640" height="480" autoplay&gt;&lt;/video&gt; &lt;!-- Live stream of webcam --&gt;
+&lt;canvas id="canvas" width="640" height="480"&gt;&lt;/canvas&gt; &lt;!-- Snapshot of webcam --&gt;
+&lt;button id="snap"&gt;Take snapshot&lt;/button&gt; &lt;!-- Button to take snapshot --&gt;
+&lt;a id="save" download&gt;&lt;button&gt;Download photo&lt;/button&gt;&lt;/a&gt; &lt;!-- Button to download photo --&gt;
+</code></pre>
+
+<p>However, that alone will not performe anything. We need a bit of Javascript to do the magic.</p>
+
+<p>There are three ways to get access to the user webcam, depending on his browser: getUserMedia (for IE and alike), webkitGetUserMedia (for Chrome and Safari) and mozGetUserMedia (for Firefox), so we need to handle all them.</p>
+
+<pre><code class="Javascript">window.addEventListener("DOMContentLoaded", function() {
+    var canvas = document.getElementById("canvas");
+    var video = document.getElementById("video");
+    if(navigator.getUserMedia) {
+        navigator.getUserMedia({ "video": true }, function(stream) {
+            video.src = stream;
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    } else if(navigator.webkitGetUserMedia) { 
+        navigator.webkitGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.webkitURL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    }
+    else if(navigator.mozGetUserMedia) { 
+        navigator.mozGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    }
+});
+</code></pre>
+
+<p>First I&rsquo;m creating a listener to when content is loaded. It&rsquo;s important, otherwise Javascript won&rsquo;t be able to find the tags! :-)</p>
+
+<p>Inside the listener there are three &ldquo;if&rdquo;, for compatibility reasons described above.</p>
+
+<p>Each &ldquo;if&rdquo; is similar, just some changes here and there: We are setting &ldquo;video.src&rdquo; to webcam stream (remember: video variable is the <code>&lt;video&gt;</code> tag we set previously) and immediately playing it through the function &ldquo;play()&rdquo;. We also need to pass a callback function in case of error (permission not given or webcam not found, for example).</p>
+
+<h2>Taking a snapshot</h2>
+
+<p>Now we&rsquo;re going to implement the take snapshot functionality. First thing: Create a listener to when button &ldquo;Take snapshot&rdquo; is clicked:</p>
+
+<pre><code class="Javascript">document.getElementById("snap").addEventListener("click", function() {
+
+});
+</code></pre>
+
+<p>This listener must be inside &ldquo;DOMContentLoaded&rdquo; listener created previously.</p>
+
+<p>Now, inside this new listener that we&rsquo;ve created, let&rsquo;s draw a webcam frame inside the <code>&lt;canvas&gt;</code> tag that we created on first section of this tutorial. To be able to draw an image inside a canvas, we first need to get its &ldquo;context&rdquo; and through it call the function &ldquo;drawImage(x, y, width, height)&rdquo;, where x, y representates the origin of source image (if you need to translate it&hellip;) and width, height the area you are going to take from source image (if you need to crop it&hellip;).</p>
+
+<pre><code class="Javascript">document.getElementById("snap").addEventListener("click", function() {
+    canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
+});
+</code></pre>
+
+<p>Aaaaaand it&rsquo;s done! Pretty easy, huh? :-)</p>
+
+<h2>Downloading a photo</h2>
+
+<p>Now we just need to implement the &ldquo;Download photo&rdquo; button. That is easy too. Inside the listener of &ldquo;Take snapshot&rdquo; button, add the following line:</p>
+
+<pre><code class="Javascript">document.getElementById("save").href = canvas.toDataURL("image/jpeg");
+</code></pre>
+
+<p>&ldquo;toDataURL()&rdquo; convert canvas image to a URL. We can also define the image extension.</p>
+
+<p>It&rsquo;s simple like that! :)</p>
+
+<p>Now the complete code:</p>
+
+<p>&#8220;` HTML
+<video id="video" width="640" height="480" autoplay></video> <!-- Live stream of webcam -->
+<canvas id="canvas" width="640" height="480"></canvas> <!-- Snapshot of webcam -->
+<button id="snap">Take snapshot</button> <!-- Button to take snapshot -->
+<a id="save" download><button>Download photo</button></a> <!-- Button to download photo --></p>
+
+<script type="text/javascript">
+window.addEventListener("DOMContentLoaded", function() {
+    var canvas = document.getElementById("canvas");
+    var video = document.getElementById("video");
+    if(navigator.getUserMedia) {
+        navigator.getUserMedia({ "video": true }, function(stream) {
+            video.src = stream;
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    } else if(navigator.webkitGetUserMedia) { 
+        navigator.webkitGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.webkitURL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    }
+    else if(navigator.mozGetUserMedia) { 
+        navigator.mozGetUserMedia({ "video": true }, function(stream) {
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+        }, function(error) {
+            console.log("Video capture error: ", error.code); 
+        });
+    }
+    document.getElementById("snap").addEventListener("click", function() {
+        canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
+        document.getElementById("save").href = canvas.toDataURL("image/jpeg");
+    });
+});
+</script>
+
+
+<p>&#8220;`</p>
+
+<p style="text-align:center;"><img src="/images/posts/webcam-snapshot.png" alt="" /></p>
+
+<p>I hope you&rsquo;ve enjoyed and Merry Christmas! :-)</p>
+]]></content>
+  </entry>
+  
+</feed>
