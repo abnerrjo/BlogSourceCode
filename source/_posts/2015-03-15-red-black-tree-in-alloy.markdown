@@ -11,7 +11,7 @@ Everyone who once worked as an analyst knows that one of the most ambiguous, err
 
 Bugs in the software specification are hundred, thousand times more expensive than bugs on internal logic, because in order to fix it you frequently need to change the behavior of your software, demanding a complete rethinking on your software architecture.
 
-**Alloy Analyzer** is a tool for building models. Its very purpose is to find a specific instance of your model that contradicts your expectations about it. Because a model can have thousand or even infinite instances, it's restricted to a certain scope. A model can be thought as a high-high-level abstraction of your software. It may not find a bug of implementation, but it can spots illegal states that your software can assume, hence helping to find bugs in specification level.
+**[Alloy Analyzer](http://alloy.mit.edu/alloy/)** is a tool for building models. Its very purpose is to find a specific instance of your model that contradicts your expectations about it. Because a model can have thousand or even infinite instances, it's restricted to a certain scope. A model can be thought as a high-high-level abstraction of your software. It may not find a bug of implementation, but it can spots illegal states that your software can assume, hence helping to find bugs in specification level.
 
 On today tutorial, we are going to learn how to specify a red-black tree in Alloy.
 

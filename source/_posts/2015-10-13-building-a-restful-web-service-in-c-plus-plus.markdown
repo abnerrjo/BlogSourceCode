@@ -3,7 +3,7 @@ layout: post
 title: "Building a RESTful web service in C++"
 date: 2015-10-13 08:38:35 -0300
 comments: true
-categories: Tutorials, C++, Web, Service, REST
+categories: [tutorials, C++, Web, Service, REST]
 ---
 If you ever thought about building a multi-platform system, you should know that a [Web Service](https://en.wikipedia.org/wiki/Web_service) will be an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it's better to move all those operations to a common Web Service and establish the communication through [HTTP requests](https://en.wikipedia.org/wiki/HTTP). 
 
