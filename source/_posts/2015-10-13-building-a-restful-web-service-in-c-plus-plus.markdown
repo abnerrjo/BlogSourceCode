@@ -5,7 +5,7 @@ date: 2015-10-13 08:38:35 -0300
 comments: true
 categories: [tutorials, C++, Web, Service, REST]
 ---
-If you ever thought about building a multi-platform system, you should know that a [Web Service](https://en.wikipedia.org/wiki/Web_service) will be an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it's better to move all those operations to a common Web Service and establish the communication through [HTTP requests](https://en.wikipedia.org/wiki/HTTP). 
+If you ever thought about building a multi-platform system, you should know that a [Web Service](https://en.wikipedia.org/wiki/Web_service) is an essential part of your system. Instead of duplicating common operations among the devices, like registering an user or retrieving a list of items sorted by price, for example, it's better to move all those operations to a common Web Service and establish the communication through [HTTP requests](https://en.wikipedia.org/wiki/HTTP). 
 
 <!-- more --> 
  
@@ -15,7 +15,7 @@ Recently, a class of web services has become pretty popular: [The REST web servi
 
 Web services can be implemented in almost any programming language you wish, though somes are more adequated to this task than others, like PHP or Javascript. When we are talking about programming languages which process HTTP requests, it's common the use of the term "[CGI](http://www.w3.org/CGI/)", which stands for **C**ommon **G**ateway **I**nterface. So here comes the C++ language: Can it be used as a CGI language? The answer is **yes**, THOUGH not recommended, and the reason is simple: Taks which could be easily implemented in languages like PHP would be a hell to be done in C++. But sometimes we have no choice. If that's your case, let's continue. 
 
-First, I'll assume that you are using a Unix-Variant SO with [Apache2](http://www.apache.org/) installed. For this tutorial, we are going to use the [FastCGI++](http://www.nongnu.org/fastcgipp/).
+First, I'll assume that you are using Ubuntu with [Apache2](http://www.apache.org/) installed. For this tutorial, we are going to use the [FastCGI++](http://www.nongnu.org/fastcgipp/).
 
 The very first step is to install mods on Apache2 to enable support for FastCGI. The mods are: ```mod_fastcgi``` and ```mod_fcgid``` (Download link: [here](http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html) and [here](http://httpd.apache.org/mod_fcgid/)). On Ubuntu, you can simply call:
 

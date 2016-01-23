@@ -15,12 +15,12 @@ On computer vision, the task of recognizing an object in the scene is very commo
 
 Firstly, let me present you OpenCV, a open-source library for computer vision and digital image processing. It has many facilities which makes our daily life so much easier. :) (If you don't have OpenCV, I recommend following [this](http://docs.opencv.org/2.4/doc/tutorials/introduction/table_of_content_introduction/table_of_content_introduction.html#table-of-content-introduction) tutorial).
 
-The first step beforing detecting the fingertips is to detect the hand, obviously. But how to do it? With color segmentation! You see, let's assume you're in front of a background with a much different color from your skin. Also, let's assume that your hand is the largest part of your body showing up. In this scenario, recognizing the hand would be easy, by simply selecting the pixels belonging to the color of your skin and then retrieving the largest area. That's precisely what we'll do! 
+The first step before detecting the fingertips is to detect the hand, obviously. But how to do it? With color segmentation! You see, let's assume you're in front of a background with a much different color from your skin. Also, let's assume that your hand is the largest part of your body showing up. In this scenario, recognizing the hand would be easy, by simply selecting the pixels belonging to the color of your skin and then retrieving the largest area. That's precisely what we'll do! 
 
 ## Segmenting the hand skin
 If you ever used any image manipulation software, you should know that there are several color spaces. The most common is the RGB, where any pixel is composed by the union of three colors (red, green, blue). However, for color segmenting, the HSV color space is much better, because in there the information of color is dissociated from the information of illumination. HSV stands for **H**ue (the color information), **S** (saturation, e.g., the percentage of 'color' present) and **V** (value/brightness, e.g., the percentage of 'white' color present). Generally, human skin lies between (H=0,S=58) and (H=50,S=173).
 
-Let's start implementating our detector. The first thing we need is to read the image from the webcam. OpenCV contains a module (imgproc) responsible for capturing images and videos. 
+Let's start implementing our detector. The first thing we need is to read the image from the webcam. OpenCV contains a module (imgproc) responsible for capturing images and videos. 
 
 ``` C++ fingertip_detector.cpp
 #include <iostream>
