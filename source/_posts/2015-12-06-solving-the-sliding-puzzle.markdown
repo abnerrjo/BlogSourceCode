@@ -15,7 +15,7 @@ Sliding puzzle is a game composed by 2^n - 1 pieces dispersed along a board and 
 
 ->![](http://www.olsonryan.com/images/slider.gif)<-
 
-You can rearrange the pieces "moving" the blank space across the board. Since you can only move it in four directions, it's a hell of a task to solve this game for a human, sometimes taking hours. Luckily, we dispose of some good algorithms to solve it, taking only few milliseconds even for the worst case. Let's explore them on this tutorial! :)
+You can rearrange the pieces "moving" the blank space across the board. Since you can only move it in four directions, it's a hell of a task to solve this game for a human, sometimes taking hours. Luckily, we dispose of some good algorithms to solve it, taking only few milliseconds even for the worst case. Let's explore them in this tutorial! :)
 
 <!-- more -->
 

@@ -412,7 +412,7 @@ int main()
 	return 0;
 }
 ```
-Now let's get the POST parameters. We expect the parameters be the same of the table attributes (except for ID). We can access the post parameters through the ```environment().posts``` list:
+Now let's get the POST parameters. We expect the parameters to be the same of the table attributes (except for ID). We can access the post parameters through the ```environment().posts``` list:
 
 ``` C++ post.cpp
 bool response()
@@ -470,7 +470,7 @@ bool response()
 	return true;
 }
 ```
-As you can notice, we are sending a JSON file indicating if the operation was successful or not. Using JSON or XML files as a protocol of communitation is another remarking aspect of REST architectures.
+As you can notice, we are sending a text in JSON format indicating if the operation was successful or not. Using JSON or XML formats as a protocol of communitation is another remarking aspect of REST architectures.
 
 Now compile it using:
 
@@ -804,7 +804,7 @@ RewriteRule comic/([0-9]+)$ comic/get.fcgi?id=$1
 ```
 
 Now if you save it, you'll notice that calling the URL http://localhost/comics/comic/10 has the same effect as http://localhost/comics/comic/get.fcgi?id=10. The reason is simple: We created a mapping rule where, if you call ```comics/comic/<A number>```, it will internally call the right URL defined on RewriteRule. $1 is the Regex ID (1 = the first one), from which the value will be 'copied'. 
-The other mapping rules are much more easier:
+The other mapping rules are much easier:
 
 ```
 

@@ -3,7 +3,7 @@ layout: post
 title: "Creating a Telegram bot in NodeJS"
 date: 2016-01-22 22:25:58 -0300
 comments: true
-categories: [telegram, nodejs] 
+categories: [telegram, nodejs, tutorials] 
 ---
 Hi there, people and fellow bots! In this tutorial, I'll show you how to create a Telegram bot in NodeJS framework (that I consider the easiest approach). 
 
@@ -37,7 +37,7 @@ Once you have created the application, clone its repository, enter it and instal
 npm install node-telegram-bot-api
 ```
 
-This is a module created by [@yagop](https://github.com/yagop/node-telegram-bot-api) that wraps some stuff so we don't need to worry about it.
+This is a module created by [@yagop](https://github.com/yagop/node-telegram-bot-api) that wraps some stuff so we don't need to worry about them.
 
 Now open the "server.js" file that came with your repository. Delete all its content, we aren't going to need it anyway. We can safely copy/paste the example inside the node-telegram-bot-api repository:
 
@@ -66,13 +66,13 @@ bot.on('message', function (msg) {
 
 Pay attention to the value of variable "token". You must replace it with the token that the BotFather gave.
 
-Notice that there are two listeners on our example. The first one listens to when a user type a text that matches the regex ```/\/echo (.*)/``` (that's precisely /echo ANYTHING), and will send back to the user (through the "sendMessage" method) the same message that it received. But before sending it, we need first to know for which user id the message will be sent. 
+Notice that there are two listeners in our example. The first one listens to when a user type a text that matches the regex ```/\/echo (.*)/``` (that's precisely /echo ANYTHING), and will send back to the user (through the "sendMessage" method) the same message that it received. But before sending it, we first need to know to which user id the message will be sent. 
 
 The first parameter of the callback (msg) is a variable of type Message, documented [here](https://core.telegram.org/bots/api#message). Through it we can access many informations about the message and the sender of the message itself. In the 'echo' example, we are getting the sender (through the "from" field, that returns an object of type [User](https://core.telegram.org/bots/api#user)) and then its id (through the "id" field), and use it to inform to the bot to which user it must send the message. 
 
 The second listener works in a similar way, but instead of listening to a specific command, it listens to any message and sends back to the user the picture of a lovely kitten.
 
-In my specific case of InsulterBot, I'm just going to need one single listener listening to the /insult command, that replies to the user a random insult. This can be easily taking the 'echo' listener as example.
+In my specific case of InsulterBot, I'm just going to need one single listener listening to the /insult command, that replies to the user a random insult. This can be easily done taking the 'echo' listener as example.
 
 ``` Javascript server.js
 bot.onText(/\/insult/, function(msg, match) {

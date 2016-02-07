@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Fingertip detection on OpenCV"
+title: "Fingertip detection in OpenCV"
 date: 2015-11-15 00:06:15 -0300
 comments: true
 categories: [tutorials,c++,computer vision,opencv]
@@ -11,7 +11,7 @@ Hi! In this tutorial, we will learn how to detect fingertips using OpenCV. You r
 
 <!-- more -->
 
-On computer vision, the task of recognizing an object in the scene is very common. Unhappily, there is no "silver bullet" which can solve this problem for all kinds of objects. Each case must be treated individually (luckily it's changing with the rising of convolutional neural networks). In this case, we are interested in discover the location of fingertips (if any is present) in the image.
+In computer vision, the task of recognizing an object in the scene is very common. Unhappily, there is no "silver bullet" which can solve this problem for all kinds of objects. Each case must be treated individually (luckily it's changing with the rising of convolutional neural networks). In this case, we are interested in discover the location of fingertips (if any is present) in the image.
 
 Firstly, let me present you OpenCV, a open-source library for computer vision and digital image processing. It has many facilities which makes our daily life so much easier. :) (If you don't have OpenCV, I recommend following [this](http://docs.opencv.org/2.4/doc/tutorials/introduction/table_of_content_introduction/table_of_content_introduction.html#table-of-content-introduction) tutorial).
 
