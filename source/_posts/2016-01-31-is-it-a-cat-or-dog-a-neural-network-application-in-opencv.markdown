@@ -9,10 +9,10 @@ categories: [opencv, c++, computer vision, neural networks, ai, tutorials]
 
 From time to time, a website named [Kaggle](http://www.kaggle.com) hosts several competitions in the fields of Data Science and Computer Vision. One of those competitions was the [Dogs vs. Cats](https://www.kaggle.com/c/dogs-vs-cats) challenge, where the objective was "to create an algorithm to distinguish dogs from cats". Although this particular challenge already has been finished, I thought that it'd give me a pretty good material to a tutorial. Let's learn how to solve this problem together using OpenCV!
 
+<!-- more --> 
+
 Here's a live demo:
 <iframe src="http://catordog-picoledelimao.rhcloud.com/" width="100%" height="500px"></iframe>
-
-<!-- more --> 
 
 I'll assume that you already have OpenCV 3.0 configured in your machine (if you don't, you can do it [here](http://docs.opencv.org/2.4/doc/tutorials/introduction/table_of_content_introduction/table_of_content_introduction.html#table-of-content-introduction)). Also, I'll use the Boost library to read files in a directory (you can perhaps skip it and replace my code by dirent.h. It should work in the same way). You can download Boost [here](http://www.boost.org/). Those are the only two external libraries that I'm going to use in this tutorial.
 
