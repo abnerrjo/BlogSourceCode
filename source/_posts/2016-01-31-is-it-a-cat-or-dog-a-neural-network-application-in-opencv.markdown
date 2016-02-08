@@ -14,10 +14,12 @@ From time to time, a website named [Kaggle](http://www.kaggle.com) hosts several
 Here's a live demo:
 <iframe src="http://catordog-picoledelimao.rhcloud.com/" width="100%" height="500px"></iframe>
 
+## Setup environment
 I'll assume that you already have OpenCV 3.0 configured in your machine (if you don't, you can do it [here](http://docs.opencv.org/2.4/doc/tutorials/introduction/table_of_content_introduction/table_of_content_introduction.html#table-of-content-introduction)). Also, I'll use the Boost library to read files in a directory (you can perhaps skip it and replace my code by dirent.h. It should work in the same way). You can download Boost [here](http://www.boost.org/). Those are the only two external libraries that I'm going to use in this tutorial.
 
 Ok, ok, let's start by downloading the training and test sets. Click [here](https://www.kaggle.com/c/dogs-vs-cats/data) and download the [test1.zip](https://www.kaggle.com/c/dogs-vs-cats/download/test1.zip) (271.15mb). You may need to register first. After downloading, extract them to a folder of your preference. The training set will be used to adjust the parameters of our neural network (we will talk in details later), while the test set will be used to check the performance of our neural network (how good it is at generalizing unseen examples). Unhappily, the provided test set by Kaggle is not labeled, so we will split the training set (in the provided link) and use a part of it as our test set.
 
+## Reading training samples
 Let's start coding! First, let's start by reading the list of files within the training set directory:
 
 ``` C++ opencv_ann.cpp
@@ -123,8 +125,9 @@ inline std::string getClassName(const std::string& filename)
 }
 ```
 
-Now what should the ```getDescriptors``` function looks like? 
+Now what should the ```getDescriptors``` function looks like? Let's figure out on the next topic.
 
+## Extracting features
 There are several approaches here. We could use the [**color histogram**](https://en.wikipedia.org/wiki/Color_histogram), or perhaps the [**histogram of oriented gradients**](https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients), etc., ... However, I'm going through a different approach. I'm going to use the [**KAZE**](http://isit.u-clermont1.fr/~ab/Publications/Alcantarilla_Bartoli_Davison_ECCV12.pdf) algorithm to extract local features from the image. Since we can't submit local features to a neural network (because the number of descriptors varies), I'm also going to use the [**Bag of words**](https://en.wikipedia.org/wiki/Bag-of-words_model_in_computer_vision) strategy in order to address this problem, turning all set of descriptors into a single **histogram of visual words**, and THAT will be used as input to our neural network. Got it? Excellent! So let's implement the ```getDescriptors``` to extract the KAZE features from an image, and later, after all KAZE features had been extracted, we'll apply the Bag of Words technique. 
 
 ```
@@ -192,6 +195,7 @@ int main(int argc, char** argv)
 
 I created a struct named ```ImageData```, with two fields: ```classname``` and ```bowFeatures```. Before calling the ```readImages``` function, I instanciated three variables: ```descriptorsSet``` (the set of descriptors of all read images), ```descriptorsMetadata``` (a vector of the struct we previously created. It's being filled in such way that it has the same number of elements as the number of rows of ```descriptorsSet```. That way, the i-th row of ```descriptorsSet``` can also be used to access its metadata (the class name, for instance)). And, for last, the ```classes``` variables (a set containing all found classes). 
 
+## Training the Bag of Words
 Now that we have the whole set of descriptors stored in the ```descriptorsSet``` variable, we can apply the Bag of words strategy. The Bag of Words algorithm is really simple: First we use a clustering algorithm (such as [**k-means**](https://en.wikipedia.org/wiki/K-means_clustering)) to obtain k centroids. Each centroid representates a **visual word** (the set of visual words is often called **vocabulary**). For each image, we create a histogram of size M, where M is the number of visual words. Now, for each extracted descriptor from the image, we measure its distance to all visual words, obtaining the index of the nearest one. We use that index to increment the position of histogram corresponding to that index, obtaining, that way, **a histogram of visual words**, that can later be submitted to our neural network. 
 
 ->![](/images/posts/ann_2.jpg)<br>
@@ -229,6 +233,7 @@ int main()
 
 We use OpenCV ```k-means``` function to obtain k centroids (where k is the size of our network input layer, since the size of our histogram must be compatible with it), stored in the ```vocabulary``` variable. We also pass an additional parameter, ```labels```, indicating the index of the nearest cluster for each descriptor, so we don't need to computer it twice. Now, iterating over each element of ```labels```, we fill our histograms, the ```bowFeatures``` field of our ```ImageData``` struct. The strategy of filling the ```descriptorsMetadata``` to make its number of elements as the number of rows of ```descriptorsSet``` seemed to be very convenient here, as we can directly access the histogram associated to each descriptor. 
 
+## Training the neural network
 Now that we have the histogram of visual words for each image, we can finally supply them to our neural network. But, before that, we need to tell to our neural network the expected output for each image. The reason for that is simple: A neural network, or more precisely, the variation of neural network that we are interested in using, called [**Multilayer perceptron**](https://en.wikipedia.org/wiki/Multilayer_perceptron), is a **supervised learning algorithm**. A supervised learning algorithm is one that tries to estimate a function H(x) (called **hypothesis function**) that correctly maps inputs to outputs (for instance, we are considering as input the images and as output the class associated to each image - cat or dog). 
 
 So we need to supply the class name associated to each image (or, more precisely, to each histogram of visual words) in order to enable it to "learn" the pattern. However, a neural network doesn't understand categorical data. It works by showing numbers in the input layer and numbers in the output layer, and then it will try to adjust its weights in order that a function (called **activation function**) applied to the input numbers results in the output numbers. This process is shown in the image below.
@@ -259,7 +264,9 @@ int main()
 	for (auto it = uniqueMetadata.begin(); it != uniqueMetadata.end(); )
 	{
 		ImageData* data = *it;
-		trainSamples.push_back(data->bowFeatures.clone());
+		cv::Mat normalizedHist;
+		cv::normalize(data->bowFeatures, normalizedHist, 0, data->bowFeatures.rows, cv::NORM_MINMAX, -1, cv::Mat());
+		trainSamples.push_back(normalizedHist);
 		trainResponses.push_back(getClassCode(classes, data->classname));
 		delete *it; // clear memory
 		it++;
@@ -268,7 +275,7 @@ int main()
 }
 ```
 
-Notice the use of the ```getClassCode```. It's a function that turns a class name into its binary codification. 
+Notice the use of the ```getClassCode```. It's a function that turns a class name into its binary codification. Also, pay attention to the ```cv::normalize``` function. We normalize the histogram of visual words in order to remove the bias of number of descriptors.
 
 ``` 
 /**
@@ -334,6 +341,7 @@ int main()
 
 The ```getTrainedNeuralNetwork``` function expects to receive as input the size of training samples and training outputs. Inside the function, I first set two variables: ```networkInputSize```, that is the number of columns (features) of our training samples and ```networkOutputSize```, that is the number of columns of our training outputs. I then set ```layerSizes```, that defines the number of layers and number of nodes for each layer of our network. For instance, I'm creating a network that only have one hidden layer (with size ```networkInputSize / 2```), since I think it'll be enough for our task. If you want improved accuracy, we can increase it, at cost of performance. 
 
+## Evaluating our network
 And now the training step is DONE! Let's use our trained neural network to evaluate our test samples and measure how good it is. First, let's train a FLANN model from the vocabulary, so we can calculate the histogram of visual words for each test sample much faster:
 
 ```
@@ -366,6 +374,7 @@ int main()
 		[&](const std::string& classname, const cv::Mat& descriptors) {
 		// Get histogram of visual words using bag of words technique
 		cv::Mat bowFeatures = getBOWFeatures(flann, descriptors, networkInputSize);
+		cv::normalize(bowFeatures, bowFeatures, 0, bowFeatures.rows, cv::NORM_MINMAX, -1, cv::Mat());
 		testSamples.push_back(bowFeatures);
 		testOutputExpected.push_back(getClassId(classes, classname));
 	});
@@ -373,7 +382,7 @@ int main()
 }
 ```
 
-We instanciated two variables: ```testSamples``` (set of histogram of visual words for each test samples) and ```testOutputExpected``` (the output expected for each test sample. We are using a number that correspond to the id of the class, obtained through the ```getClassId``` previously defined). What we still didn't define is the ```getBOWFeatures``` function, that turns a set of local KAZE features into a histogram of visual words. Let's do it:
+We instanciated two variables: ```testSamples``` (set of histogram of visual words for each test samples) and ```testOutputExpected``` (the output expected for each test sample. We are using a number that correspond to the id of the class, obtained through the ```getClassId``` previously defined). We then get the Bag of Words features through the ```getBOWFeatures``` function and normalize it. What we still didn't define is the ```getBOWFeatures``` function, that turns a set of local KAZE features into a histogram of visual words. Let's do it:
 
 ```
 /**
@@ -502,6 +511,7 @@ In possess of the confusion matrix, we can easily calculate the **accuracy**, th
 
 -> ![](/images/posts/ann_4.png) <-
 
+## Saving models
 Finally, let's save our models, so we can use it later on a production environment: 
 
 ```
@@ -854,7 +864,9 @@ int main(int argc, char** argv)
 	for (auto it = uniqueMetadata.begin(); it != uniqueMetadata.end(); )
 	{
 		ImageData* data = *it;
-		trainSamples.push_back(data->bowFeatures.clone());
+		cv::Mat normalizedHist;
+		cv::normalize(data->bowFeatures, normalizedHist, 0, data->bowFeatures.rows, cv::NORM_MINMAX, -1, cv::Mat());
+		trainSamples.push_back(normalizedHist);
 		trainResponses.push_back(getClassCode(classes, data->classname));
 		delete *it; // clear memory
 		it++;
@@ -888,6 +900,7 @@ int main(int argc, char** argv)
 		[&](const std::string& classname, const cv::Mat& descriptors) {
 		// Get histogram of visual words using bag of words technique
 		cv::Mat bowFeatures = getBOWFeatures(flann, descriptors, networkInputSize);
+		cv::normalize(bowFeatures, bowFeatures, 0, bowFeatures.rows, cv::NORM_MINMAX, -1, cv::Mat());
 		testSamples.push_back(bowFeatures);
 		testOutputExpected.push_back(getClassId(classes, classname));
 	});
@@ -916,13 +929,13 @@ Compile it by using:
 g++ opencv_ann.cpp -std=c++0x  -I/usr/local/include/opencv -I/usr/local/include/boost -I/usr/local/include -L/usr/local/lib -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_core -lopencv_hal -lboost_filesystem -lboost_system -o mlp
 ```
 
-For instance, here's the result I got from the Kaggle's training set (using networkInputSize = 256, trainSplitRatio = 0.7) 
+For instance, here's the result I got from the Kaggle's training set (using networkInputSize = 512, trainSplitRatio = 0.7) 
 ``` C++
 Confusion matrix: 
 cat dog 
-2617 1149 
-1146 2588 
-Accuracy: 0.694
+2669 1097 
+1053 2681 
+Accuracy: 0.713333
 ```
 Not bad! Not bad at all, considering the difficulty of some images! ;)
 
@@ -1061,6 +1074,7 @@ private:
 			{
 				// Processing image
 				cv::Mat bowFeatures = getBOWFeatures(context->flann, img, context->vocabulary.rows);
+				cv::normalize(bowFeatures, bowFeatures, 0, bowFeatures.rows, cv::NORM_MINMAX, -1, cv::Mat());
 				int predictedClass = getClass(bowFeatures, context->mlp);
 				result = context->classes[predictedClass];
 			}
