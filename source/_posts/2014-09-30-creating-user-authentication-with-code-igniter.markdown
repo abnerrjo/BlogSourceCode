@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Creating user authentification with Code Igniter"
+title: "Creating user authentication with Code Igniter"
 date: 2014-09-30 07:45:45 -0300
 comments: true
 categories: [PHP, Tutorials]
@@ -11,7 +11,7 @@ I badly needed a framework to help me, but that wasn't necessary to spend more t
 
 It's totally clean and intuitive, and it contains the only necessary to put it together.
  
-In today's post I show you how to make a simple code authentification using it. Let's go!
+In today's post I show you how to make a simple code authentication using it. Let's go!
 
 -> [Click here to download the complete example]({{ root_url }}/downloads/code/auth.zip) <-
 
