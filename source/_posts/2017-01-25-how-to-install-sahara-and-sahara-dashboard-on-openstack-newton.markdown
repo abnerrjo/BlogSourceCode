@@ -5,7 +5,7 @@ date: 2017-01-25 06:30:52 -0300
 comments: true
 categories: [openstack, sahara, cloud, tutorials]
 ---
-This week I was trying to install Sahara and tried to follow the link avaiable on [OpenStack page](http://docs.openstack.org/developer/sahara/userdoc/installation.guide.html), but that seemed kinda outdated, since I face several problems due to API compatibility. So I'll try to explain how to install it more thoroughly and explain some pitfalls that can happen.
+Last week I was trying to install Sahara and followed the link avaiable in [OpenStack page](http://docs.openstack.org/developer/sahara/userdoc/installation.guide.html), but that seemed kinda outdated, since I faced several problems due to API compatibility. So here I'll try to explain how to install it more thoroughly and point some pitfalls that may happen.
 
 <!-- more -->
 
@@ -17,11 +17,12 @@ First of all, Sahara has the following requirements:
 - Glance
 - Heat
 - Cinder
-- Swift
 
-I'll assume that you have all of them already installed and running properly!
+I'm going to assume that you have all of them already installed and running properly!
 
 ## Installing Sahara
+
+--- Note: Replace `controller` by the IP address of your controller node.
 
 Let's install Sahara and its python binding to the OpenStack client (it enables you to use **openstack dataprocessing** ...):
 
@@ -44,8 +45,6 @@ openstack endpoint create --region RegionOne data-processing public http://contr
 openstack endpoint create --region RegionOne data-processing internal http://controller:8386/v1.1/%\(project_id\)s;
 openstack endpoint create --region RegionOne data-processing admin http://controller:8386/v1.1/%\(project_id\)s;
 ```
-
-Replace `controller` by the IP address of your controller node.
 
 Create a user named `sahara` and add it to the `service` project.
 
@@ -79,7 +78,7 @@ use_neutron = true
 use_floating_ips = false 
 ```
 
-Replace `openstack` by the RabbitMQ username, `RABBIT_PASS` by the RabbitMQ password and `controller` by the IP address where RabbitMQ is being hosted.
+Replace `openstack` by the RabbitMQ username and `RABBIT_PASS` by the RabbitMQ password.
 
 - In `[DATABASE]`:
 
@@ -87,7 +86,7 @@ Replace `openstack` by the RabbitMQ username, `RABBIT_PASS` by the RabbitMQ pass
 connection = mysql://sahara:SAHARA_DBPASS@controller/sahara 
 ```
 
-Replace `SAHARA_DBPASS` by the password you set previously, and `controller` by the IP address of your controller node.
+Replace `SAHARA_DBPASS` by the password you set previously.
 
 - In `[keystone_authtoken]`:
 
@@ -100,7 +99,7 @@ admin_password = SAHARA_PASS
 admin_tenant_name = service
 ```
 
-Replace `SAHARA_PASS` by the password you set previously, and `controller` by the IP address of your controller node.
+Replace `SAHARA_PASS` by the password you set previously.
 
 Save and close the file.
 
