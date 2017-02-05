@@ -11,9 +11,17 @@ categories: [ai, algorithms, tutorials]
 
 <link href="/stylesheets/sliding-puzzle.css" rel="stylesheet" type="text/css">
 
-Sliding puzzle is a game composed by 2^n - 1 pieces dispersed along a board and a blank space. Those pieces are then shuffled and the objective is to rearrange them back to their original form, where the disposition of pieces is on ascending order, like shown in the image below:
+Sliding puzzle is a game composed by 2^n - 1 pieces dispersed along a board and a blank space. Those pieces are then shuffled and the objective is to rearrange them back to their original form, where the disposition of pieces is on ascending order, like shown below (go on, it's interactive):
 
-->![](http://www.olsonryan.com/images/slider.gif)<-
+<center>
+	<div>
+		<div id="container-a-example" class="puzzle"></div>
+	</div>
+</center> 
+
+<script type="text/javascript">
+	new PuzzleGUI($("#container-a-example"), 4, 50, 5, 100, 10, Algorithm.AManhattan);
+</script>
 
 You can rearrange the pieces "moving" the blank space across the board. Since you can only move it in four directions, it's a hell of a task to solve this game for a human, sometimes taking hours. Luckily, we dispose of some good algorithms to solve it, taking only few milliseconds even for the worst case. Let's explore them in this tutorial! :)
 

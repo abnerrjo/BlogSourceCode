@@ -76,6 +76,7 @@ Now open the configuration file `/etc/sahara/sahara.conf` and edit:
 transport_url = rabbit://openstack:RABBIT_PASS@controller 
 use_neutron = true 
 use_floating_ips = false 
+heat_enable_wait_condition = false 
 ```
 
 Replace `openstack` by the RabbitMQ username and `RABBIT_PASS` by the RabbitMQ password.
