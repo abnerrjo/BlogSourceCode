@@ -7,7 +7,7 @@ categories: [telegram, nodejs, tutorials]
 ---
 Hi there, people and fellow bots! In this tutorial, I'll show you how to create a Telegram bot in NodeJS framework (that I consider the easiest approach). 
 
-If you live in the cave and DON'T know what Telegram is, I'll tell you: [Telegram](https://telegram.org/) is an awesome multi-platform messaging app. More than that, it's an (partially) open source infrastructure for developers to design their own instant messaging apps.
+If you live in a cave and DON'T know what Telegram is, I'll tell you: [Telegram](https://telegram.org/) is an awesome multi-platform messaging app. More than that, it's an (partially) open source infrastructure for developers to design their own instant messaging apps.
 
 <!-- more -->
 Very well, let's start. The first step is to set a new bot account. And... there's also a bot responsible for it. On Telegram, search for @BotFather.

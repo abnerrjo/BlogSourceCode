@@ -28,13 +28,13 @@ You can rearrange the pieces "moving" the blank space across the board. Since yo
 <!-- more -->
 
 ## Finding the correct abstraction
-The hardest part of a problem is surely finding a useful abstraction for it, that allow a solution to be even thought! Like most path finding problems, the sliding puzzle can be correctly abstracted as a **graph**, i.e., a set of vertices connected by edges. 
+The hardest part of a problem is surely finding a useful abstraction for it, that allows a solution to be even thought! Like most path finding problems, the sliding puzzle can be correctly abstracted as a **graph**, i.e., a set of vertices connected by edges. 
 
-It's common the use of the term "**state**" to designate the vertices. The meaning of a state depends on the problem. For example, for the sliding puzzle, each state is a determined disposition of pieces. Logically, there's also a "**goal state**", a state where the problem is solved. Finally, the edges are the allowed actions that takes our problem from a state to another. For example, in the sliding puzzle, the set of allowed actions is to move the blank space in four directions (up, down, left, right). The figure below illustrates well those concepts.
+It's common to use the term "**state**" to designate vertices. The meaning of a state depends on the problem. For example, for the sliding puzzle, each state is a determined disposition of pieces. Logically, there's also a "**goal state**", a state where the problem is solved. Finally, the edges are the allowed actions that takes our problem from a state to another. For example, in the sliding puzzle, the set of allowed actions is to move the blank space in four directions (up, down, left, right). The figure below illustrates well those concepts.
 
 ->![](http://www.ibm.com/developerworks/library/j-ai-search/figure06.png)<-
 
-Assimilated those concepts, our job is simply finding a path from any state to the goal state, and that can be done with any graph search algorithm. Let's discuss the pros/cons of some approaches.
+Assimilated those concepts, our job is simply to find a path from any state to the goal state, and that can be done with any graph search algorithm. Let's discuss the pros/cons of some approaches.
 
 ## Javascript implementation of Sliding Puzzle
 Before discussing about specific algorithms, let's implement the building blocks. I'll start with a class called "Puzzle", containing basically four attributes: dimension (dimension of our puzzle, i.e., 3 = 8-puzzle, 4 = 15-puzzle, etc.,...), the board (two-dimensional numeric array), the path and the last performed move (we will cover those last two later).

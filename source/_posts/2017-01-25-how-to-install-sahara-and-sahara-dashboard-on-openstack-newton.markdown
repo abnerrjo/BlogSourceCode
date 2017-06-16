@@ -5,7 +5,7 @@ date: 2017-01-25 06:30:52 -0300
 comments: true
 categories: [openstack, sahara, cloud, tutorials]
 ---
-Last week I was trying to install Sahara and followed the link avaiable in [OpenStack page](http://docs.openstack.org/developer/sahara/userdoc/installation.guide.html), but that seemed kinda outdated, since I faced several problems due to API compatibility. So here I'll try to explain how to install it more thoroughly and point some pitfalls that may happen.
+Last week I was trying to install Sahara following link avaiable in [OpenStack page](http://docs.openstack.org/developer/sahara/userdoc/installation.guide.html), but it seemed kinda outdated, and thus I faced several problems due to API compatibility. So here I'll try to explain how to install it in a more thoroughly approach and point some pitfalls that may happen.
 
 <!-- more -->
 

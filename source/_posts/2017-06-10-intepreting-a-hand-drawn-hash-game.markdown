@@ -5,7 +5,7 @@ date: 2017-06-10 17:11:40 -0300
 comments: true
 categories: [c++, computer vision, opencv, tutorials]
 ---
-Hey! In this tutorial I will show you how to interpret a hand-drawn hash game to determine who's the winner (if any). See example below:
+Bonjour! In this tutorial I will show you how to interpret a hand-drawn hash game to determine who's the winner (if any). See the example below:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/XHP72q16iU8" frameborder="0" allowfullscreen></iframe>
 
@@ -68,7 +68,7 @@ int main()
 }
 ``` 
 
-Ok! In order to call the `connectedComponents` function, we need to pass a image of same dimension of the input image. It will store the label associated to each pixel. Then I iterate over pixel of the label image and save the position in a map that associates a label to a vector of positions. After that, I want to get bounding rect and a image containing only the pixels of a determined component. For that I'm calling the `getComponentImg` function. Let's see how it's implemented:
+Ok! In order to call the `connectedComponents` function, we need to pass a image of same dimension of the input image. It will store the label associated to each pixel. Then it iterates over each pixel of the label image and saves the position in a map that associates a label to a vector of positions. After that, we want to get bounding rect and a image containing only the pixels of a determined component. For that I'm calling the `getComponentImg` function. Let's see how it's implemented:
 
 ```c++ hash.cpp
 cv::Mat getComponentImg(const std::vector<cv::Point2i> &pixels, cv::Rect &boundingRect)
@@ -106,7 +106,7 @@ Ok!!! Now we have each element separated, as we can see below:
 
 ->![](/images/posts/hash4.png)<-
 
-How can we accomplish the detection now? Well, there are many many ways. I'm going to diver the machine learning path. We will train a neural network with many examples of 'x', 'o' and '#', in such way that the next time the user draw any of them, the classifier will know which of them the user drew. Once we know that, we just need to check the alignment and ta-dah! Very simple.
+How can we accomplish the detection now? Well, there are many many ways. I'm going to diver the machine learning path. We will train a neural network with many examples of 'x' and 'o', in such way that the next time the user draw any of them, the classifier will know which of them the user drew. Once we know that, we just need to check the alignment and ta-dah! Very simple.
 
 Obviously, we can't train with the raw images (because their dimension vary. we could draw at a time a big 'x' and then a small 'x'. we could resize, we then we were performing distortions). We need a feature descriptor. In this example, I'm going to user a **Histogram of oriented gradients**, because it makes the most sense, since the 'x' symbol have a very different gradient than a 'o'.
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Eyeball tracking for mouse control in OpenCV"
+title: "Eye tracking for mouse control in OpenCV"
 date: 2017-01-28 08:27:31 -0300
 comments: true
 categories: [c++, computer vision, opencv, tutorials]
@@ -68,7 +68,7 @@ Now let's get into the computer vision stuff!
 
 ## Face and eye detection with Viola-Jones algorithm (Theory)
  
-Here's a bit of theory (you can skip it and go to the next section if you are just not interested): Humans can detect a face very easily, but computers do not. When an image is prompted to the computer, all that it "sees" is a matrix of numbers. So, given that matrix, how can it predict if it represents or not a face? Answer: Building probability distribuitions through thousands of samples of faces and non-faces. And it's the role of a **classifier** to build those probability distribuitions. But here's the thing: A regular image is composed by thousands of pixels. Even a small 28x28 image is composed by 784 pixels. Each pixel can assume 255 values (if the image is using 8-bits grayscale representation). So that's 255^784 number of possible values. Wow! Estimate probability distribuitions with some many variables is not feasible. This is where the Viola-Jones algorithm kicks in: It extract much simpler representations of the image, and combine those simple representation into more high-level representations in a hierarchical way, making the problem in the highest level of representation much more simple and easier than it would be using the original image. Let's see all the steps of this algorithm.
+Here's a bit of theory (you can skip it and go to the next section if you are just not interested): Humans can detect a face very easily, but computers do not. When an image is prompted to the computer, all that it "sees" is a matrix of numbers. So, given that matrix, how can it predict if it represents or not a face? Answer: Building probability distribuitions through thousands of samples of faces and non-faces. And it's the role of a **classifier** to build those probability distribuitions. But here's the thing: A regular image is composed by thousands of pixels. Even a small 28x28 image is composed by 784 pixels. Each pixel can assume 255 values (if the image is using 8-bits grayscale representation). So that's 255^784 number of possible values. Wow! Estimate probability distribuitions with some many variables is not feasible. This is where the Viola-Jones algorithm kicks in: It extracts a much simpler representations of the image, and combine those simple representations into more high-level representations in a hierarchical way, making the problem in the highest level of representation much more simpler and easier than it would be using the original image. Let's see all the steps of this algorithm.
 
 ### Haar-like Feature Extraction 
 We have some primitive "masks", as shown below:
@@ -186,11 +186,11 @@ void detectEyes(...)
 
 Looking good so far!
 
-## Detecting eyeball
+## Detecting iris
 
-Now we have detected the eyes, the next step is to detect the eyeballs. For that, we are going to look for the most "circular" object in the eye region. Luckily, that's already a function in OpenCV that does just that! It's called `HoughCircles`, and it works as follows: It first apply an edge detector in the image, from which it make contours and from the contours made it tried to calculate a "circularity ratio", i.e., how much that contour looks like a circle. 
+Now we have detected the eyes, the next step is to detect the iris. For that, we are going to look for the most "circular" object in the eye region. Luckily, that's already a function in OpenCV that does just that! It's called `HoughCircles`, and it works as follows: It first apply an edge detector in the image, from which it make contours and from the contours made it tried to calculate a "circularity ratio", i.e., how much that contour looks like a circle. 
  
-First we are going to choose one of the eyes to detect the eyeball. I'm going to choose the leftmost.
+First we are going to choose one of the eyes to detect the iris. I'm going to choose the leftmost.
 
 ``` c++ eye_detector.cpp
 cv::Rect getLeftmostEye(std::vector<cv::Rect> &eyes)
@@ -291,7 +291,7 @@ void detectEyes(...)
 
 In order to know if a pixel is inside a pixel or not, we just test if the euclidean distance between the pixel location and the circle center is not higher than the circle radius. Piece of cake.
 
-That's good, now we supposely have the eyeball. However, the `HoughCircles` algorithms is very unstable, and therefore the eyeball location can vary a lot! We need to stabilize it to get better results. To do that, we simply calculate the mean of the last five detected eyeball locations.
+That's good, now we supposely have the iris. However, the `HoughCircles` algorithms is very unstable, and therefore the iris location can vary a lot! We need to stabilize it to get better results. To do that, we simply calculate the mean of the last five detected iris locations.
 
 ``` c++ eye_detector.cpp
 std::vector<cv::Point> centers;
@@ -328,7 +328,7 @@ void detectEyes(...)
 }
 ```
 
-Finally, let's draw the eyeball and test it!
+Finally, let's draw the iris location and test it!
 
 ``` c++ eye_detector.cpp
 void detectEyes(...)
@@ -361,7 +361,7 @@ In xdotool, the command to move the mouse is:
 xdotool mousemove x y
 ```
 
-Alright. Let's just create a variable that defines the mouse position and then set it each time the eyeball position changes:
+Alright. Let's just create a variable that defines the mouse position and then set it each time the iris position changes:
 
 ``` c++ eye_detector.cpp
 cv::Point lastPoint;
@@ -405,7 +405,7 @@ int main(...)
 }
 ```
 
-As you can see, I'm taking the difference of position between the current eyeball position and the previous eyeball position. Of course, this is not the best option. Ideally, we would detect the "gaze direction" in relation to difference between the eyeball position and the "rested" eyeball position. I let it for you to implement! Not that hard.
+As you can see, I'm taking the difference of position between the current iris position and the previous iris position. Of course, this is not the best option. Ideally, we would detect the "gaze direction" in relation to difference between the iris position and the "rested" iris position. I let it for you to implement! Not that hard.
 
 That's it! Here is the full source code:
 

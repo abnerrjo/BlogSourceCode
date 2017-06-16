@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Is it a cat or dog? A neural network application in OpenCV"
+title: "Is it a cat or a dog? A neural network application in OpenCV"
 date: 2016-01-31 13:23:41 -0300
 comments: true
 categories: [opencv, c++, computer vision, neural networks, ai, tutorials] 

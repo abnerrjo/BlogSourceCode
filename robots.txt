@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://PicoleDeLimao.github.io/sitemap.xml 
