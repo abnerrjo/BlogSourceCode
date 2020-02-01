@@ -7,6 +7,8 @@ categories: [java, multithread]
 ---
 Single-threaded algorithms are fine and intuitive. There's an single execution flow running our program in the exact order we specified it. However, modern CPUs have multiple cores sharing the same memory space, meaning that many instructions can be executed in the same clock cycle. Having an single execution flow would be a wasteful use of the resources we have available. That's where multithread applications come in: It allows the use of **true** parallelism. 
 
+<center><img src="/images/posts/Rplot02.png" /></center>
+
 <!-- more -->
 ## K-Means Clustering
 [K-Means](https://en.wikipedia.org/wiki/K-means_clustering) is a well-known clustering algorithm. Clustering is important in many areas: Machine learning, data mining, etc.,... Hence the importance of clustering algorithms. It's success is due to two factors: Its simplicity and computational feasibility (running in O(nkdi), where n is the input size, k is the number of clusters, d is the input data dimension and i is the number of iterations needed to converge). 
@@ -22,7 +24,7 @@ Knowing the number of clusters at priori (in the above case, 15), we want to kno
 
 The intuition behind K-Means is as follows: First, assign k random centers. For each data in the dataset calculate the nearest random point and add it to the "cluster set" of the nearest center. Then, for each cluster set, calculate the mean point and use this mean point as a substitute to the random center. This process is done iteratively until the mean points remain unchanged between one iteration and another (it's said that the algorithm "converged"). This gif explains the whole process nicely:  
 
-<center><img src="https://www.projectrhea.org/rhea/images/e/ef/RunyanKmeans.gif" /></center>
+<center><img src="/images/posts/kmeans.gif" /></center>
 
 Before implementing this in Java, let's write a simple pseudo-code:
 
